@@ -3,7 +3,9 @@ SgOVI - Sistema de Gestión de Oficina de Vida Independiente. Proyecto académic
 
 ## Instrucciones de acceso a la BBDD
 Para el acceso a la base de datos de db-aules usamos el siguiente comando →  psql -h db-aules.uji.es -U ei102725avn ei102725avn
+
 El nombre del grupo es →  ei102725avn
+
 La contraseña para el acceso a la base de datos es → vivaMessi1010
 
 Con ello, es posible acceder a la base de datos de forma exitosa :)
