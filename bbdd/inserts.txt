@@ -1,0 +1,135 @@
+-- 1. TUTORES (5 perfiles)
+INSERT INTO TUTOR (nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, relationshipWithUser) VALUES 
+('Rosa María García', '600111001', '1970-05-20', 'Calle Mayor 5, Madrid', 'rosa.garcia@email.com', 'Madre'),
+('Alberto Sanz', '600111002', '1965-10-12', 'Av. Constitución 12, Valencia', 'alberto.sanz@email.com', 'Padre'),
+('Elena Martínez', '600111003', '1980-02-25', 'Plaza España 1, Sevilla', 'elena.mtnez@email.com', 'Hermana'),
+('Jorge López', '600111004', '1975-11-30', 'Calle Río 45, Bilbao', 'jorge.lopez@email.com', 'Tutor Legal'),
+('Carmen Ruiz', '600111005', '1982-03-15', 'Calle Luna 3, Barcelona', 'carmen.ruiz@email.com', 'Madre');
+
+
+-- 2. OVI_USER (15 perfiles)
+INSERT INTO OVI_USER (nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, functionalDiversity, LOPDAcceptance, status, tutorID) VALUES 
+('Juan Pérez García', '611001001', '1995-04-10', 'Calle Sol 4, Madrid', 'juan.perez@email.com', 'Movilidad reducida', TRUE, 'active', 1),
+('María Rodríguez', '611001002', '2000-08-15', 'Av. Norte 20, Valencia', 'maria.rod@email.com', 'Auditiva', TRUE, 'active', 2),
+('Luis Gómez Sanz', '611001003', '1998-12-01', 'Plaza Oeste 5, Sevilla', 'luis.gomez@email.com', 'Cognitiva', TRUE, 'active', 3),
+('Sara León Tormo', '611001004', '1992-02-20', 'Calle Río 8, Bilbao', 'sara.leon@email.com', 'Visual', TRUE, 'active', 4),
+('Pedro Martín Vives', '611001005', '2001-07-07', 'Camino Viejo 3, Barcelona', 'pedro.martin@email.com', 'TEA', TRUE, 'active', 5),
+('Ana Belén Rius', '611001006', '1994-11-12', 'Calle Real 10, Madrid', 'ana.rius@email.com', 'Física', TRUE, 'active', NULL),
+('Carlos Valls', '611001007', '1988-06-05', 'Calle Paz 22, Valencia', 'carlos.valls@email.com', 'Auditiva', TRUE, 'active', NULL),
+('Lucía Ferrando', '611001008', '1997-01-25', 'Calle Alta 5, Castellón', 'lucia.fer@email.com', 'Motora', TRUE, 'active', NULL),
+('Marcos Peña', '611001009', '1999-03-14', 'Av. Sur 100, Málaga', 'marcos.p@email.com', 'TEA', TRUE, 'active', NULL),
+('Sofía Blanco', '611001010', '1993-09-09', 'Calle Nueva 12, Zaragoza', 'sofia.b@email.com', 'Visual', TRUE, 'active', NULL),
+('Raúl Giménez', '611001011', '1990-12-24', 'Plaza Mayor 2, Madrid', 'raul.g@email.com', 'Física', TRUE, 'active', NULL),
+('Julia Costa', '611001012', '2002-05-18', 'Calle Mar 30, Valencia', 'julia.c@email.com', 'Cognitiva', TRUE, 'active', NULL),
+('David Ortiz', '611001013', '1996-07-30', 'Calle Pino 1, Sevilla', 'david.o@email.com', 'Motora', TRUE, 'approvalPending', NULL),
+('Irene Mas', '611001014', '1991-02-14', 'Av. Estación 4, Alicante', 'irene.mas@email.com', 'Auditiva', TRUE, 'active', NULL),
+('Pablo Escribano', '611001015', '1998-10-10', 'Calle Segovia 9, Madrid', 'pablo.e@email.com', 'TEA', TRUE, 'active', NULL);
+
+
+-- 3. PAP_PATI (15 perfiles)
+INSERT INTO PAP_PATI (nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, academicBackground, professionalExperience, specializationAreas, documents, LOPDAcceptance, status) VALUES 
+('Ana García López', '622001001', '1990-05-15', 'Calle Mayor 1', 'ana.garcia@email.com', 'Grado Psicología', '5 años exp', 'Tercera edad', 'ana.pdf', TRUE, 'active'),
+('Carlos Ruiz Marín', '622001002', '1985-10-20', 'Av. Centro 45', 'carlos.ruiz@email.com', 'Técnico Int. Social', '10 años exp', 'Juventud', 'carlos.pdf', TRUE, 'active'),
+('Elena Beltrán', '622001003', '1993-02-02', 'Plaza España 12', 'elena.b@email.com', 'Grado Enfermería', 'Hospital General', 'Salud mental', 'elena.pdf', TRUE, 'active'),
+('Marcos Sanz', '622001004', '1988-12-30', 'Calle Luna 7', 'marcos.sanz@email.com', 'Magisterio Especial', 'Apoyo escolar', 'Discapacidad', 'marcos.pdf', TRUE, 'active'),
+('Lucía Méndez', '622001005', '1982-03-12', 'Calle Mayor 55', 'lucia.mendez@email.com', 'Trabajo Social', 'Gestión ONG', 'Coordinación', 'lucia.pdf', TRUE, 'active'),
+('Roberto Flos', '622001006', '1987-04-22', 'Calle Sol 12', 'roberto.f@email.com', 'Técnico Sociosanitario', 'Ayuda domicilio', 'Movilidad', 'rob.pdf', TRUE, 'active'),
+('Marta Ibáñez', '622001007', '1991-08-11', 'Av. Puerto 5', 'marta.i@email.com', 'Fisioterapia', 'Clínica privada', 'Rehabilitación', 'marta.pdf', TRUE, 'active'),
+('Víctor Jara', '622001008', '1994-01-05', 'Calle Norte 3', 'victor.j@email.com', 'Logopedia', 'Colegios', 'Comunicación', 'victor.pdf', TRUE, 'active'),
+('Sonia Terol', '622001009', '1980-06-25', 'Calle Jara 9', 'sonia.t@email.com', 'Terapia Ocupacional', 'Centros día', 'Autonomía', 'sonia.pdf', TRUE, 'active'),
+('Daniel Giner', '622001010', '1992-11-30', 'Calle Almas 2', 'daniel.g@email.com', 'Intérprete LSE', 'Eventos', 'Lengua Signos', 'dan.pdf', TRUE, 'active'),
+('Patricia Vila', '622001011', '1989-07-14', 'Av. Baleares 1', 'patricia.v@email.com', 'Educación Social', 'Menores', 'Conducta', 'pat.pdf', TRUE, 'active'),
+('Andrés Soler', '622001012', '1983-09-03', 'Calle Olivo 6', 'andres.s@email.com', 'Auxiliar Enfermería', 'Residencias', 'Cuidados básicos', 'andres.pdf', TRUE, 'active'),
+('Teresa Pons', '622001013', '1995-05-20', 'Plaza Real 8', 'teresa.p@email.com', 'Psicopedagogía', 'Gabinete', 'Aprendizaje', 'teresa.pdf', TRUE, 'active'),
+('Igor Doménech', '622001014', '1986-10-10', 'Calle Baja 4', 'igor.d@email.com', 'Integración Social', 'Inserción laboral', 'Empleo', 'igor.pdf', TRUE, 'active'),
+('Clara Vidal', '622001015', '1990-03-30', 'Av. Francia 15', 'clara.v@email.com', 'Grado Psicología', 'Atención temprana', 'Infantil', 'clara.pdf', TRUE, 'active');
+
+
+-- 4. SCHEDULE (Disponibilidad variada para los 15 PAP)
+INSERT INTO SCHEDULE (dayOfWeek, startHour, endHour, papID) VALUES 
+(1, '09:00:00', '14:00:00', 1), (3, '09:00:00', '14:00:00', 1),
+(2, '16:00:00', '21:00:00', 2), (4, '16:00:00', '21:00:00', 2),
+(5, '08:00:00', '16:00:00', 3),
+(1, '08:00:00', '13:00:00', 4), (2, '08:00:00', '13:00:00', 4),
+(1, '08:00:00', '15:00:00', 5), (2, '08:00:00', '15:00:00', 5), (3, '08:00:00', '15:00:00', 5),
+(1, '15:00:00', '20:00:00', 6), (3, '15:00:00', '20:00:00', 6),
+(2, '09:00:00', '14:00:00', 7), (4, '09:00:00', '14:00:00', 7),
+(3, '10:00:00', '18:00:00', 8),
+(5, '09:00:00', '15:00:00', 9),
+(1, '09:00:00', '14:00:00', 10), (2, '09:00:00', '14:00:00', 10),
+(4, '15:00:00', '21:00:00', 11), (5, '15:00:00', '21:00:00', 11),
+(1, '08:00:00', '12:00:00', 12), (3, '08:00:00', '12:00:00', 12),
+(2, '15:00:00', '19:00:00', 13), (4, '15:00:00', '19:00:00', 13),
+(5, '08:00:00', '20:00:00', 14),
+(1, '09:00:00', '18:00:00', 15);
+
+
+-- 5. ASSISTANCE_REQUEST (8 peticiones iniciales)
+INSERT INTO ASSISTANCE_REQUEST (serviceLocation, requiredAssistance, status, oviID) VALUES 
+('Madrid Centro', 'Apoyo en vida diaria y gestiones bancarias', 'inProgress', 1),
+('Valencia', 'Acompañamiento a clases universitarias', 'inProgress', 2),
+('Sevilla Este', 'Apoyo en higiene personal y desayuno', 'inProgress', 3),
+('Madrid', 'Asistencia en actividades de ocio', 'inProgress', 6),
+('Barcelona', 'Apoyo en movilidad para ir al trabajo', 'inProgress', 5),
+('Alicante', 'Intérprete para trámites administrativos', 'inProgress', 14),
+('Valencia', 'Refuerzo en organización del hogar', 'inProgress', 12),
+('Madrid', 'Acompañamiento a rehabilitación', 'inProgress', 15);
+
+
+-- 6. REQUEST_SCHEDULE (Horarios específicos para esas peticiones)
+INSERT INTO REQUEST_SCHEDULE (date, dayOfWeek, startHour, endHour, requestID) VALUES 
+('2026-04-06', 1, '09:00:00', '12:00:00', 1), -- Juan pide Lunes mañana
+('2026-04-07', 2, '17:00:00', '20:00:00', 2), -- María pide Martes tarde
+('2026-04-08', 3, '08:30:00', '10:30:00', 3), -- Luis pide Miércoles mañana
+('2026-04-06', 1, '16:00:00', '19:00:00', 4), -- Ana pide Lunes tarde
+('2026-04-06', 1, '09:00:00', '14:00:00', 5), -- Pedro pide Lunes mañana
+('2026-04-10', 5, '10:00:00', '13:00:00', 6), -- Irene pide Viernes mañana
+('2026-04-07', 2, '11:00:00', '13:00:00', 7), -- Julia pide Martes mañana
+('2026-04-06', 1, '10:00:00', '13:00:00', 8); -- Pablo pide Lunes mañana
+
+
+-- 7. RECOMMENDED_PAP_PATI (Cruces que encajan por horario)
+INSERT INTO RECOMMENDED_PAP_PATI (requestID, papID) VALUES 
+(1, 1), -- Ana encaja con Juan (Lunes mañana)
+(2, 2), -- Carlos encaja con María (Martes tarde)
+(5, 5), -- Lucía encaja con Pedro (Lunes mañana)
+(6, 14), -- Igor encaja con Irene (Viernes mañana)
+(8, 15); -- Clara encaja con Pablo (Lunes mañana)
+
+
+-- 8. NEGOTIATION (Procesos abiertos)
+INSERT INTO NEGOTIATION (duration, location, status, dateAndTime, conversation, requestID, papID) VALUES 
+('1 hora', 'Sede OVI Madrid', 'finished', '2026-03-25 10:00:00', 'Acuerdo total en tareas y horarios', 1, 1),
+('45 min', 'Videollamada', 'inProgress', '2026-03-26 18:00:00', 'Pendiente confirmar km transporte', 2, 2),
+('1 hora', 'Cafetería BCN', 'finished', '2026-03-25 09:30:00', 'Contrato listo para firma', 5, 5);
+
+
+-- 9. CONTRACT (Los que han terminado negociación con 'finished')
+INSERT INTO CONTRACT (version, startServiceDate, endServiceDate, status, documentURL, negotiationID) VALUES 
+(1, '2026-04-01', '2026-12-31', 'active', 'http://ovi.es/docs/cont_001.pdf', 1),
+(1, '2026-04-15', '2026-10-15', 'active', 'http://ovi.es/docs/cont_005.pdf', 3);
+
+
+-- 10. ACTIVITY (10 eventos variados)
+INSERT INTO ACTIVITY (title, description, dateAndTime, location, maxParticipants, availableSpots, status) VALUES
+('Taller Autonomía', 'Cocina accesible', '2026-05-10 10:00:00', 'Madrid', 10, 8, 'created'),
+('Curso LSE', 'Nivel básico', '2026-05-12 17:00:00', 'Valencia', 15, 12, 'created'),
+('Deporte Adaptado', 'Baloncesto silla', '2026-06-01 11:00:00', 'Sevilla', 20, 15, 'created'),
+('Salida Cultural', 'Museo del Prado', '2026-05-20 10:00:00', 'Madrid', 12, 5, 'created'),
+('Tecnología', 'Uso de JAWS', '2026-05-25 16:00:00', 'Bilbao', 8, 4, 'created'),
+('Derechos Sociales', 'Charla LOPD', '2026-04-15 18:00:00', 'Online', 50, 45, 'created'),
+('Teatro Inclusivo', 'Ensayo abierto', '2026-05-05 19:00:00', 'Barcelona', 15, 10, 'created'),
+('Senderismo', 'Ruta accesible', '2026-06-15 09:00:00', 'Sierra Madrid', 25, 20, 'created'),
+('Inglés Adaptado', 'Speaking inicial', '2026-05-02 17:30:00', 'Valencia', 10, 7, 'created'),
+('Cineforum', 'Proyección debate', '2026-04-30 18:00:00', 'Madrid', 30, 25, 'created');
+
+
+-- 11. INSCRIPTION (Repartidas por los 15 usuarios)
+INSERT INTO INSCRIPTION (oviID, activityID) VALUES 
+(1, 1), (6, 1), (11, 1), 		-- Taller Autonomía
+(2, 2), (7, 2), (14, 2), 		-- Curso LSE
+(3, 3), (13, 3), (9, 3), 		-- Deporte
+(1, 4), (6, 4), (15, 4), (11, 4), 	-- Museo
+(4, 5), (10, 5), 			-- Tecnología
+(5, 7), (12, 7), 			-- Teatro
+(2, 9), (7, 9), (14, 9); 		-- Inglés

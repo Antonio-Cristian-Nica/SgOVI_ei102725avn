@@ -1,0 +1,158 @@
+-- 1. TUTOR
+CREATE TABLE TUTOR (
+    tutorID SERIAL,
+    nameAndSurname VARCHAR(100) NOT NULL,
+    phoneNumber VARCHAR(20) NOT NULL,
+    birthDate DATE NOT NULL,
+    homeAddress VARCHAR(200) NOT NULL,
+    emailAddress VARCHAR(100) NOT NULL,
+    relationshipWithUser VARCHAR(100) NOT NULL,
+    CONSTRAINT cp_tutor PRIMARY KEY (tutorID),
+    CONSTRAINT calt_tutor_email UNIQUE (emailAddress),
+    CONSTRAINT ri_tutor_birth CHECK (birthDate <= CURRENT_DATE)
+);
+
+-- 2. OVI_USER
+CREATE TABLE OVI_USER (
+    oviID SERIAL,
+    nameAndSurname VARCHAR(100) NOT NULL,
+    phoneNumber VARCHAR(20) NOT NULL,
+    birthDate DATE NOT NULL,
+    homeAddress VARCHAR(200) NOT NULL,
+    emailAddress VARCHAR(100) NOT NULL,
+    functionalDiversity VARCHAR(150),
+    LOPDAcceptance BOOLEAN NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    tutorID INTEGER,
+    CONSTRAINT cp_ovi_user PRIMARY KEY (oviID),
+    CONSTRAINT calt_ovi_email UNIQUE (emailAddress),
+    CONSTRAINT ri_ovi_status CHECK (status IN ('active', 'inactive', 'approvalPending')),
+    CONSTRAINT ca_ovi_tutor FOREIGN KEY (tutorID) REFERENCES TUTOR(tutorID) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- 3. PAP_PATI
+CREATE TABLE PAP_PATI (
+    papID SERIAL,
+    nameAndSurname VARCHAR(100) NOT NULL,
+    phoneNumber VARCHAR(20) NOT NULL,
+    birthDate DATE NOT NULL,
+    homeAddress VARCHAR(200) NOT NULL,
+    emailAddress VARCHAR(100) NOT NULL,
+    academicBackground TEXT NOT NULL,
+    professionalExperience TEXT NOT NULL,
+    specializationAreas TEXT NOT NULL,
+    documents TEXT NOT NULL,
+    LOPDAcceptance BOOLEAN NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    CONSTRAINT cp_pap_pati PRIMARY KEY (papID),
+    CONSTRAINT calt_pap_email UNIQUE (emailAddress),
+    CONSTRAINT ri_pap_status CHECK (status IN ('active', 'inactive', 'approvalPending'))
+);
+
+-- 4. SCHEDULE
+CREATE TABLE SCHEDULE (
+    scheduleID SERIAL,
+    dayOfWeek INTEGER NOT NULL,
+    startHour TIME NOT NULL,
+    endHour TIME NOT NULL,
+    papID INTEGER NOT NULL,
+    CONSTRAINT cp_schedule PRIMARY KEY (scheduleID),
+    CONSTRAINT ri_day_range CHECK (dayOfWeek BETWEEN 1 AND 7),
+    CONSTRAINT ri_time_order CHECK (endHour > startHour),
+    CONSTRAINT ca_schedule_pap FOREIGN KEY (papID) REFERENCES PAP_PATI(papID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- 5. ASSISTANCE_REQUEST
+CREATE TABLE ASSISTANCE_REQUEST (
+    requestID SERIAL,
+    serviceLocation VARCHAR(200) NOT NULL,
+    requiredAssistance TEXT NOT NULL,
+    creationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(20) NOT NULL,
+    oviID INTEGER NOT NULL,
+    CONSTRAINT cp_assistance_request PRIMARY KEY (requestID),
+    CONSTRAINT ri_request_status CHECK (status IN ('accepted', 'rejected', 'inProgress')),
+    CONSTRAINT ca_request_ovi FOREIGN KEY (oviID) REFERENCES OVI_USER(oviID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- 6. REQUEST_SCHEDULE
+CREATE TABLE REQUEST_SCHEDULE (
+    reqScheduleID SERIAL,
+    date DATE NOT NULL,
+    dayOfWeek INTEGER NOT NULL,
+    startHour TIME NOT NULL,
+    endHour TIME NOT NULL,
+    requestID INTEGER NOT NULL,
+    CONSTRAINT cp_request_schedule PRIMARY KEY (reqScheduleID),
+    CONSTRAINT ri_req_day_range CHECK (dayOfWeek BETWEEN 1 AND 7),
+    CONSTRAINT ri_req_time_order CHECK (endHour > startHour),
+    CONSTRAINT ca_req_schedule_req FOREIGN KEY (requestID) REFERENCES ASSISTANCE_REQUEST(requestID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- 7. RECOMMENDED_PAP_PATI (Aquí fallaba antes)
+CREATE TABLE RECOMMENDED_PAP_PATI (
+    requestID INTEGER NOT NULL,
+    papID INTEGER NOT NULL,
+    dateOfRecommendation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT cp_recommended PRIMARY KEY (requestID, papID),
+    CONSTRAINT ca_rec_request FOREIGN KEY (requestID) REFERENCES ASSISTANCE_REQUEST(requestID) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT ca_rec_pap FOREIGN KEY (papID) REFERENCES PAP_PATI(papID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- 8. NEGOTIATION
+CREATE TABLE NEGOTIATION (
+    negotiationID SERIAL,
+    duration VARCHAR(50),
+    location VARCHAR(200),
+    status VARCHAR(20) NOT NULL,
+    dateAndTime TIMESTAMP NOT NULL,
+    conversation TEXT,
+    requestID INTEGER NOT NULL,
+    papID INTEGER NOT NULL,
+    CONSTRAINT cp_negotiation PRIMARY KEY (negotiationID),
+    CONSTRAINT ri_negotiation_status CHECK (status IN ('inCourse', 'inProgress', 'finished')),
+    CONSTRAINT ca_neg_recommended FOREIGN KEY (requestID, papID) REFERENCES RECOMMENDED_PAP_PATI(requestID, papID) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- 9. CONTRACT
+CREATE TABLE CONTRACT (
+    contractID SERIAL,
+    version INTEGER DEFAULT 1,
+    creationDate DATE DEFAULT CURRENT_DATE,
+    startServiceDate DATE NOT NULL,
+    endServiceDate DATE NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    documentURL VARCHAR(255) UNIQUE,
+    negotiationID INTEGER NOT NULL,
+    CONSTRAINT cp_contract PRIMARY KEY (contractID),
+    CONSTRAINT ri_contract_status CHECK (status IN ('active', 'inactive', 'ended', 'cancelled')),
+    CONSTRAINT ri_service_dates CHECK (endServiceDate >= startServiceDate),
+    CONSTRAINT ri_creation_logic CHECK (creationDate <= startServiceDate),
+    CONSTRAINT ca_contract_neg FOREIGN KEY (negotiationID) REFERENCES NEGOTIATION(negotiationID) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- 10. ACTIVITY
+CREATE TABLE ACTIVITY (
+    activityID SERIAL,
+    title VARCHAR(150) NOT NULL,
+    description TEXT,
+    dateAndTime TIMESTAMP NOT NULL,
+    location VARCHAR(200) NOT NULL,
+    maxParticipants INTEGER NOT NULL,
+    availableSpots INTEGER NOT NULL,
+    registeredUsers INTEGER DEFAULT 0,
+    status VARCHAR(20) NOT NULL,
+    CONSTRAINT cp_activity PRIMARY KEY (activityID),
+    CONSTRAINT ri_spots_logic CHECK (availableSpots <= maxParticipants),
+    CONSTRAINT ri_activity_status CHECK (status IN ('created', 'InProgress', 'ended'))
+);
+
+-- 11. INSCRIPTION
+CREATE TABLE INSCRIPTION (
+    oviID INTEGER,
+    activityID INTEGER,
+    dateAndTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT cp_inscription PRIMARY KEY (oviID, activityID),
+    CONSTRAINT ca_inscription_oviuser FOREIGN KEY (oviID) REFERENCES OVI_USER(oviID) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT ca_inscription_activity FOREIGN KEY (activityID) REFERENCES ACTIVITY(activityID) ON DELETE CASCADE ON UPDATE CASCADE
+);
