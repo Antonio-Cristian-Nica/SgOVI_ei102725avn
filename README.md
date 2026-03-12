@@ -14,4 +14,9 @@ A continuación se muestra el diagrama de clases UML que sirve como punto de par
 
 ![Diagrama UML del Proyecto](./documentacion/DIAGRAMA_DE_CLASES.png)
 
+### Cambios realizados sobre el diseño
+- Hay algunos atributos que han sido modificados, suprimidos o añadidos.
+- Contract ahora es una entidad relacionada con Negotiation.
+- Una Assistance Request puede tener 1 o muchos Request Schedule, al igual que lo que ocurre con PAP/PATI  y Schedule
+
 
