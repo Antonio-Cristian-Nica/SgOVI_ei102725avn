@@ -22,3 +22,5 @@ A continuación se muestra el diagrama de clases UML que sirve como punto de par
 
 ## Diseño del SiteMap
 A continuación se muestra el SiteMap del proyecto que sirve como guia para el flujo y diseño de la experiencia de usuario en nuestro sistema de información:
+
+![Sitemap del Proyecto](./documentacion/SitemapSgOVI.png)
