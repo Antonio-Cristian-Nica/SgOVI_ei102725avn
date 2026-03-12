@@ -1,0 +1,82 @@
+--  ******* TABLA PAP / PATI  *****************************
+
+-- Usuario 1: Perfil de Psicología
+
+INSERT INTO PAP_PATI (papID, nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, academicBackground, professionalExperience, specializationAreas, documents, LOPDAcceptance, status)
+VALUES ('PAP-001', 'Ana García López', 611222333, '1990-05-15', 'Calle Mayor 1', 'ana.garcia@email.com', 'Grado en Psicología', '5 años en centros sociales', 'Tercera edad', 'DNI_Ana.pdf', TRUE, 'active');
+
+-- Usuario 2: Perfil de Integración Social
+
+INSERT INTO PAP_PATI (papID, nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, academicBackground, professionalExperience, specializationAreas, documents, LOPDAcceptance, status)
+VALUES ('PAP-002', 'Carlos Ruiz Marín', 622333444, '1985-10-20', 'Avenida Centro 45', 'carlos.ruiz@email.com', 'Técnico Integración Social', '10 años experiencia', 'Juventud', 'Certificado_Delitos.pdf', TRUE, 'active');
+
+-- Usuario 3: Perfil de Enfermería
+
+INSERT INTO PAP_PATI (papID, nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, academicBackground, professionalExperience, specializationAreas, documents, LOPDAcceptance, status)
+VALUES ('PAP-003', 'Elena Beltrán Soler', 633444555, '1993-02-02', 'Plaza España 12', 'elena.b@email.com', 'Grado en Enfermería', 'Prácticas en hospital', 'Salud mental', 'Titulo_Enf.pdf', TRUE, 'approvalPending');
+
+-- Usuario 4: Perfil de Educación Especial
+
+INSERT INTO PAP_PATI (papID, nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, academicBackground, professionalExperience, specializationAreas, documents, LOPDAcceptance, status)
+VALUES ('PAP-004', 'Marcos Sanz Bosch', 644555666, '1988-12-30', 'Calle Luna 7', 'marcos.sanz@email.com', 'Magisterio Especial', 'Profesor de apoyo', 'Discapacidad', 'Vida_Laboral.pdf', TRUE, 'active');
+
+
+-- Usuario 5: Perfil de Coordinación Social
+
+INSERT INTO PAP_PATI (papID, nameAndSurname, phoneNumber, birthDate, homeAddress,  emailAddress, academicBackground, professionalExperience, specializationAreas, documents, LOPDAcceptance, status) 
+VALUES ( 'PAP-005',  'Lucía Méndez Valls',   655666777,   '1982-03-12',   'Calle Mayor 55, Valencia',   'lucia.mendez@email.com',   'Grado en Trabajo Social',   '15 años en gestión de voluntariado',   'Coordinación de equipos',   'Certificado_Experiencia.pdf',   TRUE,   'active');
+
+
+
+-- *****************   TABLA SCHEDULE  ******************************************
+
+-- Horarios para Ana (Lunes y Miércoles mañana)
+
+INSERT INTO SCHEDULE (scheduleID, day, startHour, endHour, papID) 
+VALUES (1, 'Lunes', '09:00:00', '14:00:00', 'PAP-001');
+
+INSERT INTO SCHEDULE (scheduleID, day, startHour, endHour, papID) 
+VALUES (2, 'Miércoles', '09:00:00', '14:00:00', 'PAP-001');
+
+-- Horarios para Carlos (Martes y Jueves tarde)
+
+INSERT INTO SCHEDULE (scheduleID, day, startHour, endHour, papID) 
+VALUES (3, 'Martes', '16:00:00', '20:00:00', 'PAP-002');
+
+INSERT INTO SCHEDULE (scheduleID, day, startHour, endHour, papID) 
+VALUES (4, 'Jueves', '16:00:00', '20:00:00', 'PAP-002');
+
+-- Horarios para Elena (Solo Viernes intensivo)
+
+INSERT INTO SCHEDULE (scheduleID, day, startHour, endHour, papID) 
+VALUES (5, 'Viernes', '08:00:00', '18:00:00', 'PAP-003');
+
+-- Horarios para Marcos (Lunes, Martes y Miércoles mañana)
+
+INSERT INTO SCHEDULE (scheduleID, day, startHour, endHour, papID) 
+VALUES (6, 'Lunes', '08:30:00', '13:30:00', 'PAP-004');
+
+INSERT INTO SCHEDULE (scheduleID, day, startHour, endHour, papID) 
+VALUES (7, 'Martes', '08:30:00', '13:30:00', 'PAP-004');
+
+INSERT INTO SCHEDULE (scheduleID, day, startHour, endHour, papID) 
+VALUES (8, 'Miércoles', '08:30:00', '13:30:00', 'PAP-004');
+
+-- Horarios para Lucía (Lunes a Viernes con el mismo horario)
+
+INSERT INTO SCHEDULE (scheduleID, day, startHour, endHour, papID) 
+VALUES (9, 'Lunes', '08:00:00', '15:00:00', 'PAP-005');
+
+INSERT INTO SCHEDULE (scheduleID, day, startHour, endHour, papID) 
+VALUES (10, 'Martes', '08:00:00', '15:00:00', 'PAP-005');
+
+INSERT INTO SCHEDULE (scheduleID, day, startHour, endHour, papID) 
+VALUES (11, 'Miércoles', '08:00:00', '15:00:00', 'PAP-005');
+
+INSERT INTO SCHEDULE (scheduleID, day, startHour, endHour, papID) 
+VALUES (12, 'Jueves', '08:00:00', '15:00:00', 'PAP-005');
+
+INSERT INTO SCHEDULE (scheduleID, day, startHour, endHour, papID) 
+VALUES (13, 'Viernes', '08:00:00', '15:00:00', 'PAP-005');
+
+

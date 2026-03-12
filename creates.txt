@@ -1,0 +1,30 @@
+CREATE TABLE PAP_PATI (
+	papID			VARCHAR(50),
+	nameAndSurname	VARCHAR(100) 	NOT NULL,
+	phoneNumber		INTEGER 		NOT NULL,
+	birthDate		DATE			NOT NULL,
+	homeAddress		VARCHAR(200)		NOT NULL,
+	emailAddress		VARCHAR(100)		NOT NULL,
+	academicBackground	TEXT			NOT NULL,
+	professionalExperience	TEXT			NOT NULL,
+	specializationAreas	TEXT			NOT NULL,
+	documents		TEXT			NOT NULL,
+	LOPDAcceptance	BOOLEAN		NOT NULL,
+	status			VARCHAR(20)		NOT NULL,
+	CONSTRAINT  cp_pap_pati  PRIMARY KEY (papID),
+	CONSTRAINT  calt_pap_email	UNIQUE (emailAddress),
+	CONSTRAINT	ri_pap_status CHECK (status  IN  ('active', 'inactive', 'approvalPending'))
+);
+
+
+CREATE TABLE SCHEDULE (
+	scheduleID  		INTEGER,
+	day			DATE		NOT NULL,
+	startHour		TIME		NOT NULL,
+	endHour		TIME		NOT NULL,
+papID			VARCHAR	NOT NULL,
+CONSTRAINT  cp_schedule  PRIMARY KEY (scheduleID),
+CONSTRAINT	ca_schedule_pap  FOREIGN KEY (papID)
+	REFERENCES  PAP_PATI(papID)
+	ON DELETE CASCADE ON UPDATE CASCADE
+);
