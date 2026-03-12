@@ -80,3 +80,81 @@ INSERT INTO SCHEDULE (scheduleID, day, startHour, endHour, papID)
 VALUES (13, 'Viernes', '08:00:00', '15:00:00', 'PAP-005');
 
 
+-- ************************** TABLA OVI USER********************************************
+
+-- Usuario 1: Diversidad funcional motora
+INSERT INTO OVI_USER (OVIID, nameAndSurname, phoneNumber, birthDate, homeAddress, functionalDiversity, OVILearning, LOPDAcceptance, status)
+VALUES ('OVI-001', 'Juan Pérez García', 600111222, '1995-04-10', 'Calle Sol 4, Madrid', 'Movilidad reducida', 'Apoyo en desplazamientos y organización', TRUE, 'active');
+
+-- Usuario 2: Diversidad funcional auditiva
+INSERT INTO OVI_USER (OVIID, nameAndSurname, phoneNumber, birthDate, homeAddress, functionalDiversity, OVILearning, LOPDAcceptance, status)
+VALUES ('OVI-002', 'María Rodríguez', 600222333, '2000-08-15', 'Av. Norte 20, Valencia', 'Discapacidad auditiva', 'Lenguaje de signos y lectura', TRUE, 'active');
+
+-- Usuario 3: Sin diversidad especificada (Pendiente de aprobación)
+INSERT INTO OVI_USER (OVIID, nameAndSurname, phoneNumber, birthDate, homeAddress, functionalDiversity, OVILearning, LOPDAcceptance, status)
+VALUES ('OVI-003', 'Luis Gómez Sanz', 600333444, '1998-12-01', 'Plaza Oeste 5, Sevilla', 'Ninguna', 'Refuerzo en competencias digitales', TRUE, 'approvalPending');
+
+-- Usuario 4: Diversidad visual (Inactivo)
+INSERT INTO OVI_USER (OVIID, nameAndSurname, phoneNumber, birthDate, homeAddress, functionalDiversity, OVILearning, LOPDAcceptance, status)
+VALUES ('OVI-004', 'Sara León Tormo', 600444555, '1992-02-20', 'Calle Río 8, Bilbao', 'Discapacidad visual', 'Herramientas de accesibilidad', TRUE, 'inactive');
+
+-- Usuario 5: Neurodivergencia
+INSERT INTO OVI_USER (OVIID, nameAndSurname, phoneNumber, birthDate, homeAddress, functionalDiversity, OVILearning, LOPDAcceptance, status)
+VALUES ('OVI-005', 'Pedro Martín Vives', 600555666, '2001-07-07', 'Camino Viejo 3, Barcelona', 'TEA (Trastorno del Espectro Autista)', 'Habilidades sociales y comunicación', TRUE, 'active');
+
+-- ****************************************** TABLAS ACTIVITY E INSCRIPTION PERO REVISAR QUE TENGAN EL MISMO FORMATO QUE EL RESTO ****************************
+INSERT INTO ACTIVITY (activityID, title, description, dateAndTime, location, maxParticipants, availableSpots, activityStatus) VALUES
+('ACT-001', 'Taller de Vida Independiente', 'Técnicas de autonomía en el hogar.', '2026-05-10 10:00:00', 'Sede OVI Castellón', 20, 18, 'created'),
+('ACT-002', 'Curso de LSE (Lengua de Signos)', 'Nivel A1 de Lengua de Signos Española.', '2026-02-20 17:00:00', 'Centro Cívico', 15, 13, 'InProgress'),
+('ACT-003', 'Taller de Habilidades Sociales', 'Dinámicas de grupo y comunicación asertiva.', '2025-11-15 11:00:00', 'Sala Multiusos', 10, 0, 'ended'),
+('ACT-004', 'Informática y Accesibilidad', 'Uso de lectores de pantalla y software adaptado.', '2026-06-05 09:30:00', 'Aula Digital', 12, 9, 'created'),
+('ACT-005', 'Excursión Accesible a la Playa', 'Ruta por el paseo marítimo con asistencia.', '2026-02-25 10:00:00', 'Playa del Pinar', 25, 24, 'InProgress'),
+('ACT-006', 'Charla: Derechos Laborales y Discapacidad', 'Conferencia sobre cuotas de reserva y adaptación de puestos.', '2025-10-20 18:30:00', 'Salón de Actos', 50, 0, 'ended'),
+('ACT-007', 'Grupo de Apoyo Mutuo', 'Espacio seguro para compartir experiencias sobre diversidad funcional.', '2026-04-12 18:00:00', 'Sede OVI Castellón', 15, 13, 'created'),
+('ACT-008', 'Taller de Arte y Expresión', 'Pintura y escultura adaptada para todos los perfiles.', '2026-02-22 16:00:00', 'Taller Creativo', 10, 9, 'InProgress'),
+('ACT-009', 'Jornada de Deporte Adaptado', 'Prueba de diferentes deportes paralímpicos (Boccia, Slalom...).', '2025-09-30 09:00:00', 'Polideportivo Municipal', 30, 0, 'ended'),
+('ACT-010', 'Cine-Fórum Inclusivo', 'Proyección de película con subtitulado y audiodescripción.', '2026-05-20 19:00:00', 'Teatro del Raval', 40, 37, 'created');
+
+
+
+
+INSERT INTO INSCRIPTION (OVIID, activityID, dateAndTime) VALUES
+-- Actividad 1: Vida Independiente
+('OVI-001', 'ACT-001', '2026-03-01 09:15:00'),
+('OVI-005', 'ACT-001', '2026-03-02 11:30:00'),
+
+-- Actividad 2: Curso de LSE
+('OVI-001', 'ACT-002', '2026-01-15 10:00:00'),
+('OVI-002', 'ACT-002', '2026-01-16 12:45:00'),
+
+-- Actividad 3: Habilidades Sociales
+('OVI-005', 'ACT-003', '2025-10-10 18:00:00'),
+
+-- Actividad 4: Informática
+('OVI-001', 'ACT-004', '2026-04-10 09:00:00'),
+('OVI-002', 'ACT-004', '2026-04-12 16:20:00'),
+('OVI-005', 'ACT-004', '2026-04-15 10:30:00'),
+
+-- Actividad 5: Excursión
+('OVI-001', 'ACT-005', '2026-01-20 11:15:00'),
+
+-- Actividad 6: Derechos Laborales
+('OVI-002', 'ACT-006', '2025-09-05 10:00:00'),
+('OVI-005', 'ACT-006', '2025-09-08 12:10:00'),
+
+-- Actividad 7: Grupo de Apoyo
+('OVI-001', 'ACT-007', '2026-03-10 17:00:00'),
+('OVI-005', 'ACT-007', '2026-03-12 18:30:00'),
+
+-- Actividad 8: Taller de Arte
+('OVI-002', 'ACT-008', '2026-01-10 09:45:00'),
+
+-- Actividad 9: Deporte Adaptado
+('OVI-001', 'ACT-009', '2025-08-15 10:00:00'),
+('OVI-002', 'ACT-009', '2025-08-20 11:20:00'),
+
+-- Actividad 10: Cine Inclusivo
+('OVI-001', 'ACT-010', '2026-04-01 12:00:00'),
+('OVI-002', 'ACT-010', '2026-04-02 16:30:00'),
+('OVI-005', 'ACT-010', '2026-04-05 09:15:00');
+

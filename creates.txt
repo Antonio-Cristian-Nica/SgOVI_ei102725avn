@@ -28,3 +28,48 @@ CONSTRAINT	ca_schedule_pap  FOREIGN KEY (papID)
 	REFERENCES  PAP_PATI(papID)
 	ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+
+CREATE TABLE OVI_USER (
+	OVIID	VARCHAR(50),
+	nameAndSurname	VARCHAR(100)	NOT NULL,
+	phoneNumber	INTEGER	NOT NULL,
+	birthDate	DATE	NOT NULL,
+	homeAddress	VARCHAR(200)	NOT NULL,
+	functionalDiversity	VARCHAR(150),
+	OVILearning	TEXT,
+	LOPDAcceptance	BOOLEAN	NOT NULL,
+	status	VARCHAR(20)	NOT NULL,
+	CONSTRAINT cp_ovi_user PRIMARY KEY (OVIID),
+	CONSTRAINT ri_ovi_status CHECK (status IN ('active', 'inactive', 'approvalPending'))
+);
+
+-- Revisar
+CREATE TABLE ACTIVITY (
+        activityID      VARCHAR(50),
+        title   VARCHAR(150)    NOT NULL,
+        description     TEXT,
+        dateAndTime     TIMESTAMP       NOT NULL,
+        location        VARCHAR(200)    NOT NULL,
+        maxParticipants INTEGER NOT NULL,
+        availableSpots  INTEGER NOT NULL,
+        activityStatus  VARCHAR(20)     NOT NULL,
+        CONSTRAINT cp_activity PRIMARY KEY (activityID),
+        CONSTRAINT ri_activity_status CHECK (activityStatus IN ('created', 'InProgress', 'ended'))
+);
+
+-- Revisar
+CREATE TABLE INSCRIPTION (
+        OVIID   VARCHAR(50),
+        activityID      VARCHAR(50),
+        dateAndTime     TIMESTAMP       NOT NULL,
+        CONSTRAINT cp_inscription PRIMARY KEY (OVIID, activityID),
+        CONSTRAINT ca_inscription_oviuser FOREIGN KEY (OVIID)
+                REFERENCES OVI_USER(OVIID)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE,
+        CONSTRAINT ca_inscription_activity FOREIGN KEY (activityID)
+                REFERENCES ACTIVITY(activityID)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE
+);
