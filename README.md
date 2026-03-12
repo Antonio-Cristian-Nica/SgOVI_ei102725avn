@@ -19,3 +19,6 @@ A continuación se muestra el diagrama de clases UML que sirve como punto de par
 - Cambios sobre atributos
 - Contract ahora está relacionada únicamente con Negotiation
 - Assistance Request puede tener 1 o muchos Resquest Schedule, igual que PAP/PATI con SCHEDULE
+
+## Diseño del SiteMap
+A continuación se muestra el SiteMap del proyecto que sirve como guia para el flujo y diseño de la experiencia de usuario en nuestro sistema de información:
