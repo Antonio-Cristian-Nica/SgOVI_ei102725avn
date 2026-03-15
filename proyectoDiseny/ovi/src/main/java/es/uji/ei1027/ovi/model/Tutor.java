@@ -1,11 +1,14 @@
 package es.uji.ei1027.ovi.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 
 public class Tutor {
     private int tutorID;
     private String nameAndSurname;
     private String phoneNumber;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate birthDate;
     private String homeAddress;
     private String emailAddress;

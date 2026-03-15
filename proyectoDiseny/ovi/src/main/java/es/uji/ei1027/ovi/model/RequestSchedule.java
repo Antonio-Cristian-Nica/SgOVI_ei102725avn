@@ -1,10 +1,13 @@
 package es.uji.ei1027.ovi.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class RequestSchedule {
     private int reqScheduleID;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
     private int dayOfWeek; // 1-7
     private LocalTime startHour;
