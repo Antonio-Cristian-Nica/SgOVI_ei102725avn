@@ -2,6 +2,8 @@ package es.uji.ei1027.ovi;
 
 import java.util.logging.Logger;
 
+import es.uji.ei1027.ovi.dao.OviUserRowMapper;
+import es.uji.ei1027.ovi.model.OviUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -33,11 +35,5 @@ public class OVIApplication implements CommandLineRunner {
 	// Funció principal
 	public void run(String... strings) throws Exception {
 		log.info("Ací va el meu codi");
-
-		log.info("Selecciona la nadadora Gemma Mengual");
-		User n1 = jdbcTemplate.queryForObject(
-				"SELECT * FROM ovi_user WHERE oviid='OVI-001'",
-				new UserRowMapper());
-		log.info(n1.toString());
 	}
 }
