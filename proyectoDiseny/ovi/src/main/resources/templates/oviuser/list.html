@@ -37,8 +37,10 @@
             <td th:text="${oviUser.status}"></td>
             <td th:text="${oviUser.tutorID}"></td>
             <td>
-                <a th:href="@{/oviuser/edit/{id}(id=${oviUser.oviID})}" class="btn btn-warning">Edita</a>
-                <a th:href="@{/oviuser/delete/{id}(id=${oviUser.oviID})}" class="btn btn-danger">Esborra</a>
+                <div class="d-flex gap-2">
+                    <a th:href="@{/oviuser/edit/{id}(id=${oviUser.oviID})}" class="btn btn-warning">Edita</a>
+                    <a th:href="@{/oviuser/delete/{id}(id=${oviUser.oviID})}" class="btn btn-danger">Esborra</a>
+                </div>
             </td>
         </tr>
         </tbody>
