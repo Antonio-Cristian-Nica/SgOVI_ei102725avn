@@ -12,7 +12,7 @@ public class TutorDao {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+    public void setDataSource(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
