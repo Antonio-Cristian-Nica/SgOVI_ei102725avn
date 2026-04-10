@@ -1,0 +1,185 @@
+/* =========================================
+   VARIABLES Y CONFIGURACIÓN BASE
+   ========================================= */
+:root {
+    --bg-crema: #FDF5E6;
+    --color-primario: #004AAD;
+    --color-secundario: #008080;
+    --color-contraste: #FF8C00;
+    --texto-oscuro: #333333;
+}
+
+body {
+    background-color: var(--bg-crema);
+    color: var(--texto-oscuro);
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor Principal (1200px) */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 5%;
+    box-sizing: border-box;
+}
+
+/* Accesibilidad - Navegación por teclado */
+a:focus, button:focus, input:focus {
+    outline: 3px solid var(--color-contraste);
+    outline-offset: 2px;
+}
+
+/* =========================================
+   HEADER Y NAVEGACIÓN
+   ========================================= */
+header {
+    position: relative;
+    padding-top: 20px;
+}
+
+/* Redes y Botones de Sesión (Arriba a la derecha) */
+.top-right-bar {
+    position: absolute;
+    top: 20px;
+    right: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons a {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-color: var(--color-primario);
+    border-radius: 50%;
+    text-decoration: none;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* Botones generales */
+.btn {
+    background-color: var(--color-contraste);
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilos específicos para el Logotipo y Nombre */
+.logo-section {
+    text-align: center;
+    margin: 40px auto;
+}
+
+.logo-img {
+    width: 90px;
+    height: 90px;
+    display: block;
+    margin: 0 auto;
+}
+
+.org-name {
+    margin-top: 10px;
+    color: #000000;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+/* Primera línea: más gruesa (gordita) */
+.name-top {
+    font-weight: 900;
+    font-size: 22px;
+    display: block;
+}
+
+/* Segunda línea: grosor normal */
+.name-bottom {
+    font-weight: 400;
+    font-size: 18px;
+    display: block;
+}
+
+/* Menú de Navegación */
+nav {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--color-primario);
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 10px;
+}
+
+nav a.active, nav a:hover {
+    border-bottom: 3px solid var(--color-contraste);
+    color: var(--color-contraste);
+}
+
+/* =========================================
+   CONTENIDO PRINCIPAL Y FOOTER
+   ========================================= */
+main h1 {
+    color: var(--color-primario);
+    margin-bottom: 30px;
+}
+
+.hero-image {
+    width: 100%;
+    max-width: 1200px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 40px;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    background-color: #ccc;
+}
+
+/* Clase para ocultar texto visualmente pero mantenerlo para lectores de pantalla */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
