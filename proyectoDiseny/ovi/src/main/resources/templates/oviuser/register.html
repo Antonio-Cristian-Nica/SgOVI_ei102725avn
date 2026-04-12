@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SgOVI - Registro de Usuario OVI</title>
+
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+
+<header class="container">
+
+    <div class="top-right-bar">
+        <div class="social-icons">
+            <a href="#" aria-label="Visitar nuestro Facebook">
+                <span class="sr-only">Visitar nuestro Facebook</span>
+            </a>
+            <a href="#" aria-label="Visitar nuestro Instagram">
+                <span class="sr-only">Visitar nuestro Instagram</span>
+            </a>
+        </div>
+        <div class="auth-buttons">
+            <a href="/login" class="btn">INICIAR SESIÓN</a>
+            <a href="/oviuser/register" class="btn">REGISTRARSE</a>
+        </div>
+    </div>
+
+    <div class="logo-section">
+        <img src="https://ovicastello.org/wp-content/uploads/2020/08/LOGO_Mesa-de-trabajo-1-90x90.png"
+             alt="Logotipo de la OVI"
+             class="logo-img">
+
+        <h1 class="org-name">
+            <span class="name-top">OFICINA VIDA INDEPENDIENT</span>
+            <span class="name-bottom">SOLE ARNAU RIPOLLÉS</span>
+        </h1>
+    </div>
+
+    <nav>
+        <ul>
+            <li><a href="/">INICIO</a></li>
+            <li><a href="/noticias">NOTICIAS</a></li>
+            <li><a href="/ovi">OVI</a></li>
+            <li><a href="/mi-portal">MI PORTAL</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="container">
+    <h2 style="color: var(--color-primario); margin-bottom: 30px;">Sol·licitud de Registre - Usuari OVI</h2>
+
+    <form th:action="@{/oviuser/add}" th:object="${oviUser}" method="post" style="background: white; padding: 30px; border-radius: 8px;">
+
+        <fieldset style="border: 2px solid var(--color-primario); padding: 30px; border-radius: 8px; margin-bottom: 20px;">
+            <legend style="font-weight: bold; padding: 0 10px; color: var(--color-primario); font-size: 20px;">Dades Personals</legend>
+
+            <div style="margin-bottom: 25px;">
+                <label for="nameAndSurname" style="display: block; font-weight: bold; margin-bottom: 8px;">Nom i Cognoms *</label>
+                <input type="text" id="nameAndSurname" th:field="*{nameAndSurname}" required
+                       style="width: 100%; padding: 12px; border: 1px solid #ccc; font-size: 18px; border-radius: 4px; box-sizing: border-box;"/>
+            </div>
+
+            <div style="display: flex; gap: 20px; margin-bottom: 25px;">
+                <div style="flex: 1;">
+                    <label for="phoneNumber" style="display: block; font-weight: bold; margin-bottom: 8px;">Telèfon *</label>
+                    <input type="tel" id="phoneNumber" th:field="*{phoneNumber}" required pattern="[0-9]+" title="Aquest camp només admet números"
+                           style="width: 100%; padding: 12px; border: 1px solid #ccc; font-size: 18px; border-radius: 4px; box-sizing: border-box;"/>
+                </div>
+                <div style="flex: 1;">
+                    <label for="birthDate" style="display: block; font-weight: bold; margin-bottom: 8px;">Data de Naixement *</label>
+                    <input type="date" id="birthDate" th:field="*{birthDate}" required
+                           style="width: 100%; padding: 12px; border: 1px solid #ccc; font-size: 18px; border-radius: 4px; box-sizing: border-box;"/>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <label for="homeAddress" style="display: block; font-weight: bold; margin-bottom: 8px;">Adreça *</label>
+                <input type="text" id="homeAddress" th:field="*{homeAddress}" required
+                       style="width: 100%; padding: 12px; border: 1px solid #ccc; font-size: 18px; border-radius: 4px; box-sizing: border-box;"/>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <label for="emailAddress" style="display: block; font-weight: bold; margin-bottom: 8px;">Email *</label>
+                <input type="email" id="emailAddress" th:field="*{emailAddress}" required
+                       style="width: 100%; padding: 12px; border: 1px solid #ccc; font-size: 18px; border-radius: 4px; box-sizing: border-box;"/>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <label for="functionalDiversity" style="display: block; font-weight: bold; margin-bottom: 8px;">Diversitat Funcional (Opcional)</label>
+                <input type="text" id="functionalDiversity" th:field="*{functionalDiversity}"
+                       style="width: 100%; padding: 12px; border: 1px solid #ccc; font-size: 18px; border-radius: 4px; box-sizing: border-box;"/>
+            </div>
+
+            <div style="display: flex; gap: 20px; margin-bottom: 25px;">
+                <div style="flex: 1;">
+                    <label for="status" style="display: block; font-weight: bold; margin-bottom: 8px;">Estat</label>
+                    <select id="status" th:field="*{status}" style="width: 100%; padding: 12px; border: 1px solid #ccc; font-size: 18px; border-radius: 4px; box-sizing: border-box; background-color: white;">
+                        <option value="approvalPending" selected>Pendent d'aprovació</option>
+                        <option value="active">Actiu</option>
+                        <option value="inactive">Inactiu</option>
+                    </select>
+                </div>
+                <div style="flex: 1;">
+                    <label for="tutorID" style="display: block; font-weight: bold; margin-bottom: 8px;">Tutor</label>
+                    <select id="tutorID" th:field="*{tutorID}" style="width: 100%; padding: 12px; border: 1px solid #ccc; font-size: 18px; border-radius: 4px; box-sizing: border-box; background-color: white;">
+                        <option value="">Sense tutor</option>
+                        <option th:each="tutor : ${tutors}"
+                                th:value="${tutor.tutorID}"
+                                th:text="${tutor.nameAndSurname}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="LOPDAcceptance" th:field="*{LOPDAcceptance}" required style="width: 20px; height: 20px;"/>
+                <label for="LOPDAcceptance" style="font-weight: bold; font-size: 18px;">He llegit i accepto la LOPD (Llei de Protecció de Dades) *</label>
+            </div>
+        </fieldset>
+
+        <div style="display: flex; gap: 20px; margin-top: 30px;">
+            <button type="submit" class="btn" style="background-color: var(--color-secundario);">GUARDAR SOL·LICITUD</button>
+            <a href="/" class="btn" style="background-color: #666;">CANCEL·LAR</a>
+        </div>
+    </form>
+</main>
+
+<footer class="container" style="border-top: 2px solid var(--color-primario); padding-top: 20px; margin-top: 40px; margin-bottom: 40px;">
+    <p>Información legal y de contacto de la organización.</p>
+</footer>
+
+</body>
+</html>

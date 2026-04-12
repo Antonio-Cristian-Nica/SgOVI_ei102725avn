@@ -3,9 +3,11 @@ package es.uji.ei1027.ovi.controller;
 import es.uji.ei1027.ovi.dao.OviUserDao;
 import es.uji.ei1027.ovi.dao.TutorDao;
 import es.uji.ei1027.ovi.model.OviUser;
+import es.uji.ei1027.ovi.validator.OviUserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -23,6 +25,30 @@ public class OviUserController {
     @Autowired
     public void setTutorDao(TutorDao tutorDao) {
         this.tutorDao = tutorDao;
+    }
+
+    @GetMapping("/register")
+    public String mostrarPaginaRegistro(Model model) {
+        model.addAttribute("oviUser", new OviUser());
+        model.addAttribute("tutors", tutorDao.getTutors());
+        return "oviuser/register";
+    }
+
+
+    // Este sirve para PROCESAR los datos enviados
+    @PostMapping("/register") // <--- CAMBIADO DE /add A /register
+    public String add(@ModelAttribute("oviUser") OviUser oviUser, BindingResult bindingResult, Model model) {
+
+        OviUserValidator userValidator = new OviUserValidator();
+        userValidator.validate(oviUser, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("tutors", tutorDao.getTutors());
+            return "registerOviUser";
+        }
+
+        oviUserDao.addOviUser(oviUser);
+        return "redirect:/oviuser/list";
     }
 
     @GetMapping("/list")
