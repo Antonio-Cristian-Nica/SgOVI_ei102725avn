@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/pappati")
+@RequestMapping("/papPati")
 public class PapPatiController {
 
     private PapPatiDao papPatiDao;
@@ -29,7 +29,7 @@ public class PapPatiController {
     public String addPapPati(Model model) {
         // Creamos un objeto vacío y lo pasamos al modelo para que Thymeleaf lo use en th:object
         model.addAttribute("pappati", new PapPati());
-        return "pappati/add";
+        return "papPati/add";
     }
 
     // Procesa los datos enviados desde el formulario
