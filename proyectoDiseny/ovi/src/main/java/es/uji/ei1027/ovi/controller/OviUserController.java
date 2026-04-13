@@ -44,7 +44,7 @@ public class OviUserController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("tutors", tutorDao.getTutors());
-            return "registerOviUser";
+            return "oviuser/register";
         }
 
         oviUserDao.addOviUser(oviUser);
