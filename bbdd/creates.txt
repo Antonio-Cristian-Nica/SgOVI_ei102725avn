@@ -1,3 +1,12 @@
+-- 0. GESTIÓN DE CREDENCIALES
+CREATE TABLE CREDENTIALS (
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(100) NOT NULL, 
+    role VARCHAR(20) NOT NULL,
+    active BOOLEAN DEFAULT TRUE,
+    CONSTRAINT cp_system_user PRIMARY KEY (username),
+    CONSTRAINT ri_role_types CHECK (role IN ('admin', 'user_ovi', 'pap_pati'))
+);
 -- 1. TUTOR
 CREATE TABLE TUTOR (
     tutorID SERIAL,
@@ -24,10 +33,12 @@ CREATE TABLE OVI_USER (
     LOPDAcceptance BOOLEAN NOT NULL,
     status VARCHAR(20) NOT NULL,
     tutorID INTEGER,
+    username VARCHAR(50),
     CONSTRAINT cp_ovi_user PRIMARY KEY (oviID),
     CONSTRAINT calt_ovi_email UNIQUE (emailAddress),
     CONSTRAINT ri_ovi_status CHECK (status IN ('active', 'inactive', 'approvalPending')),
-    CONSTRAINT ca_ovi_tutor FOREIGN KEY (tutorID) REFERENCES TUTOR(tutorID) ON DELETE SET NULL ON UPDATE CASCADE
+    CONSTRAINT ca_ovi_tutor FOREIGN KEY (tutorID) REFERENCES TUTOR(tutorID) ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT ca_ovi_user_credentials FOREIGN KEY (username) REFERENCES CREDENTIALS(username) ON DELETE SET NULL
 );
 
 -- 3. PAP_PATI
@@ -44,9 +55,11 @@ CREATE TABLE PAP_PATI (
     documents TEXT NOT NULL,
     LOPDAcceptance BOOLEAN NOT NULL,
     status VARCHAR(20) NOT NULL,
+    username VARCHAR(50),
     CONSTRAINT cp_pap_pati PRIMARY KEY (papID),
     CONSTRAINT calt_pap_email UNIQUE (emailAddress),
-    CONSTRAINT ri_pap_status CHECK (status IN ('active', 'inactive', 'approvalPending'))
+    CONSTRAINT ri_pap_status CHECK (status IN ('active', 'inactive', 'approvalPending')),
+    CONSTRAINT ca_pap_credentials FOREIGN KEY (username) REFERENCES CREDENTIALS(username) ON DELETE SET NULL
 );
 
 -- 4. SCHEDULE
@@ -72,7 +85,7 @@ CREATE TABLE ASSISTANCE_REQUEST (
     oviID INTEGER NOT NULL,
     CONSTRAINT cp_assistance_request PRIMARY KEY (requestID),
     CONSTRAINT ri_request_status CHECK (status IN ('accepted', 'rejected', 'inProgress')),
-    CONSTRAINT ca_request_ovi FOREIGN KEY (oviID) REFERENCES OVI_USER(oviID) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT ca_request_ovi FOREIGN KEY (oviID) REFERENCES OVI_USER(oviID) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- 6. REQUEST_SCHEDULE
@@ -89,7 +102,7 @@ CREATE TABLE REQUEST_SCHEDULE (
     CONSTRAINT ca_req_schedule_req FOREIGN KEY (requestID) REFERENCES ASSISTANCE_REQUEST(requestID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- 7. RECOMMENDED_PAP_PATI (Aquí fallaba antes)
+-- 7. RECOMMENDED_PAP_PATI
 CREATE TABLE RECOMMENDED_PAP_PATI (
     requestID INTEGER NOT NULL,
     papID INTEGER NOT NULL,
