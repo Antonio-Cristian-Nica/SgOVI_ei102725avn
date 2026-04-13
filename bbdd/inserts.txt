@@ -1,25 +1,40 @@
--- 0. CREDENCIALES
-INSERT INTO CREDENTIALS (username, password, role, active) VALUES 
-('admin0', '1234', 'admin', TRUE),
-('admin1', '1234', 'admin', TRUE),
--- Usuarios OVI
-('juan.perez', '1234', 'user_ovi', TRUE), ('maria.rod', '1234', 'user_ovi', TRUE),
-('luis.gomez', '1234', 'user_ovi', TRUE), ('sara.leon', '1234', 'user_ovi', TRUE),
-('pedro.martin', '1234', 'user_ovi', TRUE), ('ana.rius', '1234', 'user_ovi', TRUE),
-('carlos.valls', '1234', 'user_ovi', TRUE), ('lucia.fer', '1234', 'user_ovi', TRUE),
-('marcos.p', '1234', 'user_ovi', TRUE), ('sofia.b', '1234', 'user_ovi', TRUE),
-('raul.g', '1234', 'user_ovi', TRUE), ('julia.c', '1234', 'user_ovi', TRUE),
-('david.o', '1234', 'user_ovi', TRUE), ('irene.mas', '1234', 'user_ovi', TRUE),
-('pablo.e', '1234', 'user_ovi', TRUE),
--- Candidatos PAP
-('ana.garcia', '1234', 'pap_pati', TRUE), ('carlos.ruiz', '1234', 'pap_pati', TRUE),
-('elena.b', '1234', 'pap_pati', TRUE), ('marcos.sanz', '1234', 'pap_pati', TRUE),
-('lucia.mendez', '1234', 'pap_pati', TRUE), ('roberto.f', '1234', 'pap_pati', TRUE),
-('marta.i', '1234', 'pap_pati', TRUE), ('victor.j', '1234', 'pap_pati', TRUE),
-('sonia.t', '1234', 'pap_pati', TRUE), ('daniel.g', '1234', 'pap_pati', TRUE),
-('patricia.v', '1234', 'pap_pati', TRUE), ('andres.s', '1234', 'pap_pati', TRUE),
-('teresa.p', '1234', 'pap_pati', TRUE), ('igor.d', '1234', 'pap_pati', TRUE),
-('clara.v', '1234', 'pap_pati', TRUE);
+-- 0. CREDENCIALES COMPLETAS
+INSERT INTO CREDENTIALS (username, password, role, id) VALUES 
+-- Administradores
+('admin0', '1234', 'admin', 990),
+('admin1', '1234', 'admin', 991),
+-- Credenciales para todos los OVI_USER
+('juan.perez', '1234', 'user_ovi', 1), 
+('maria.rod', '1234', 'user_ovi', 2),
+('luis.gomez', '1234', 'user_ovi', 3), 
+('sara.leon', '1234', 'user_ovi', 4),
+('pedro.martin', '1234', 'user_ovi', 5), 
+('ana.rius', '1234', 'user_ovi', 6),
+('carlos.valls', '1234', 'user_ovi', 7), 
+('lucia.fer', '1234', 'user_ovi', 8),
+('marcos.p', '1234', 'user_ovi', 9), 
+('sofia.b', '1234', 'user_ovi', 10),
+('raul.g', '1234', 'user_ovi', 11), 
+('julia.c', '1234', 'user_ovi', 12),
+('david.o', '1234', 'user_ovi', 13), 
+('irene.mas', '1234', 'user_ovi', 14),
+('pablo.e', '1234', 'user_ovi', 15),
+-- Credenciales para todos los PAP_PATI
+('ana.garcia', '1234', 'pap_pati', 1), 
+('carlos.ruiz', '1234', 'pap_pati', 2),
+('elena.b', '1234', 'pap_pati', 3), 
+('marcos.sanz', '1234', 'pap_pati', 4),
+('lucia.mendez', '1234', 'pap_pati', 5), 
+('roberto.f', '1234', 'pap_pati', 6),
+('marta.i', '1234', 'pap_pati', 7), 
+('victor.j', '1234', 'pap_pati', 8),
+('sonia.t', '1234', 'pap_pati', 9), 
+('daniel.g', '1234', 'pap_pati', 10),
+('patricia.v', '1234', 'pap_pati', 11), 
+('andres.s', '1234', 'pap_pati', 12),
+('teresa.p', '1234', 'pap_pati', 13), 
+('igor.d', '1234', 'pap_pati', 14),
+('clara.v', '1234', 'pap_pati', 15);
 
 -- 1. TUTORES
 INSERT INTO TUTOR (nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, relationshipWithUser) VALUES 
