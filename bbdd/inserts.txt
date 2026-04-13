@@ -116,9 +116,9 @@ INSERT INTO NEGOTIATION (duration, location, status, dateAndTime, conversation, 
 ('1 hora', 'Cafetería BCN', 'finished', '2026-03-25 09:30:00', 'Contrato listo para firma', 5, 5);
 
 -- 9. CONTRACT
-INSERT INTO CONTRACT (version, startServiceDate, endServiceDate, status, documentURL, negotiationID) VALUES 
-(1, '2026-04-01', '2026-12-31', 'active', 'http://ovi.es/docs/cont_001.pdf', 1),
-(1, '2026-04-15', '2026-10-15', 'active', 'http://ovi.es/docs/cont_005.pdf', 3);
+INSERT INTO CONTRACT (version, creationDate, startServiceDate, endServiceDate, status, documentURL, negotiationID) VALUES 
+(1, '2026-03-20', '2026-04-01', '2026-12-31', 'active', 'http://ovi.es/docs/cont_001.pdf', 1),
+(1, '2026-04-01', '2026-04-15', '2026-10-15', 'active', 'http://ovi.es/docs/cont_005.pdf', 3);
 
 -- 10. ACTIVITY
 INSERT INTO ACTIVITY (title, description, dateAndTime, location, maxParticipants, availableSpots, status) VALUES
