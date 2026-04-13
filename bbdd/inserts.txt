@@ -1,3 +1,26 @@
+-- 0. CREDENCIALES
+INSERT INTO SYSTEM_USER (username, password, role, active) VALUES 
+('admin0', '1234', 'admin', TRUE),
+('admin1', '1234', 'admin', TRUE),
+-- Usuarios OVI
+('juan.perez', '1234', 'user_ovi', TRUE), ('maria.rod', '1234', 'user_ovi', TRUE),
+('luis.gomez', '1234', 'user_ovi', TRUE), ('sara.leon', '1234', 'user_ovi', TRUE),
+('pedro.martin', '1234', 'user_ovi', TRUE), ('ana.rius', '1234', 'user_ovi', TRUE),
+('carlos.valls', '1234', 'user_ovi', TRUE), ('lucia.fer', '1234', 'user_ovi', TRUE),
+('marcos.p', '1234', 'user_ovi', TRUE), ('sofia.b', '1234', 'user_ovi', TRUE),
+('raul.g', '1234', 'user_ovi', TRUE), ('julia.c', '1234', 'user_ovi', TRUE),
+('david.o', '1234', 'user_ovi', TRUE), ('irene.mas', '1234', 'user_ovi', TRUE),
+('pablo.e', '1234', 'user_ovi', TRUE),
+-- Candidatos PAP
+('ana.garcia', '1234', 'pap_pati', TRUE), ('carlos.ruiz', '1234', 'pap_pati', TRUE),
+('elena.b', '1234', 'pap_pati', TRUE), ('marcos.sanz', '1234', 'pap_pati', TRUE),
+('lucia.mendez', '1234', 'pap_pati', TRUE), ('roberto.f', '1234', 'pap_pati', TRUE),
+('marta.i', '1234', 'pap_pati', TRUE), ('victor.j', '1234', 'pap_pati', TRUE),
+('sonia.t', '1234', 'pap_pati', TRUE), ('daniel.g', '1234', 'pap_pati', TRUE),
+('patricia.v', '1234', 'pap_pati', TRUE), ('andres.s', '1234', 'pap_pati', TRUE),
+('teresa.p', '1234', 'pap_pati', TRUE), ('igor.d', '1234', 'pap_pati', TRUE),
+('clara.v', '1234', 'pap_pati', TRUE);
+
 -- 1. TUTORES (5 perfiles)
 INSERT INTO TUTOR (nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, relationshipWithUser) VALUES 
 ('Rosa María García', '600111001', '1970-05-20', 'Calle Mayor 5, Madrid', 'rosa.garcia@email.com', 'Madre'),
