@@ -47,7 +47,7 @@ public class PapPatiController {
         if (bindingResult.hasErrors()) {
             // Volvemos a la vista del formulario (pappati/add.html)
             // IMPORTANTE: NO usamos redirect aquí, porque perderíamos los mensajes de error
-            return "pappati/add";
+            return "papPati/add";
         }
 
         // SI NO HAY ERRORES:

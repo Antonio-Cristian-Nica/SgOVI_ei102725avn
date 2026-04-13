@@ -1,114 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
     <title>SgOVI - Registre PAP/PATI</title>
-
-    <style>
-        /* Estilos específicos del formulario adaptados a tu diseño */
-        .form-section {
-            margin-top: 40px;
-            background-color: #FFFFFF;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        .form-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .form-group {
-            flex: 1;
-            margin-bottom: 25px;
-        }
-
-        /* Ajuste para que los grupos dentro de form-row no sumen margen doble */
-        .form-row .form-group {
-            margin-bottom: 0;
-        }
-
-        label {
-            display: block;
-            color: var(--color-primario);
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="date"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #E0E0E0;
-            border-radius: 4px;
-            font-family: inherit;
-            font-size: 16px;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: var(--color-primario);
-        }
-
-        /* Estilos de Error (Naranja Contraste) */
-        .input-error {
-            border-color: var(--color-contraste) !important;
-            background-color: rgba(255, 140, 0, 0.05);
-        }
-
-        .error-text {
-            color: var(--color-contraste);
-            font-size: 15px;
-            font-weight: bold;
-            margin-top: 8px;
-            display: block;
-        }
-
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-            padding: 15px;
-            background-color: var(--bg-crema);
-            border-radius: 4px;
-            border: 1px solid #E0E0E0;
-        }
-
-        .checkbox-container input {
-            width: 22px;
-            height: 22px;
-            accent-color: var(--color-primario);
-        }
-    </style>
 </head>
 <body>
 
-<header>
-    <div class="container">
-        <div class="logo-section">
-            <div class="org-name">
-                <span class="name-top">SgOVI</span>
-                <span class="name-bottom">Gestió de Comptes</span>
-            </div>
-        </div>
-    </div>
-</header>
-
-<div class="container">
+<div layout:fragment="content">
     <main class="form-section">
         <h1 style="color: var(--color-primario); margin-bottom: 10px;">Registre de nou PAP/PATI</h1>
         <p style="margin-bottom: 30px; color: #666;">Emplene tots els camps a continuació. Els camps marcats amb error s'han de corregir per a poder avançar.</p>
 
-        <form th:action="@{/pappati/add}" th:object="${pappati}" method="post">
+        <form th:action="@{/papPati/add}" th:object="${pappati}" method="post">
 
             <div class="form-group">
                 <label for="nameAndSurname">Nom i Cognoms</label>
@@ -164,6 +69,14 @@
             </div>
 
             <div class="form-group">
+                <label for="specializationAreas">Àrees d'Especialització</label>
+                <input type="text" id="specializationAreas" th:field="*{specializationAreas}"
+                       th:class="${#fields.hasErrors('specializationAreas')} ? 'input-error' : ''"
+                       placeholder="Ex: Fisioteràpia, Psicologia infantil, etc." />
+                <span class="error-text" th:if="${#fields.hasErrors('specializationAreas')}" th:errors="*{specializationAreas}"></span>
+            </div>
+
+            <div class="form-group">
                 <label for="academicBackground">Formació Acadèmica</label>
                 <textarea id="academicBackground" th:field="*{academicBackground}" rows="3"
                           th:class="${#fields.hasErrors('academicBackground')} ? 'input-error' : ''"
@@ -177,14 +90,6 @@
                           th:class="${#fields.hasErrors('professionalExperience')} ? 'input-error' : ''"
                           placeholder="Explique breument la seua experiència laboral rellevant..."></textarea>
                 <span class="error-text" th:if="${#fields.hasErrors('professionalExperience')}" th:errors="*{professionalExperience}"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="specializationAreas">Àrees d'Especialització</label>
-                <input type="text" id="specializationAreas" th:field="*{specializationAreas}"
-                       th:class="${#fields.hasErrors('specializationAreas')} ? 'input-error' : ''"
-                       placeholder="Ex: Fisioteràpia, Psicologia infantil, etc." />
-                <span class="error-text" th:if="${#fields.hasErrors('specializationAreas')}" th:errors="*{specializationAreas}"></span>
             </div>
 
             <div class="form-group">
@@ -203,7 +108,7 @@
                 <span class="error-text" th:if="${#fields.hasErrors('LOPDAcceptance')}" th:errors="*{LOPDAcceptance}"></span>
             </div>
 
-            <div style="text-align: right; margin-top: 40px; padding-top: 20px; border-top: 1px solid #E0E0E0;">
+            <div class="form-actions">
                 <a th:href="@{/}" style="margin-right: 25px; color: var(--color-secundario); text-decoration: none; font-weight: bold;">Cancel·lar</a>
                 <button type="submit" class="btn">Registrar PAP/PATI</button>
             </div>
@@ -211,10 +116,6 @@
         </form>
     </main>
 </div>
-
-<footer style="margin-top: 50px; text-align: center; padding: 20px; color: var(--color-primario);">
-    <p>&copy; 2026 SgOVI - Tots els drets reservats</p>
-</footer>
 
 </body>
 </html>

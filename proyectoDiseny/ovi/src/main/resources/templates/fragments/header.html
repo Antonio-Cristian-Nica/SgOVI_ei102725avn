@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header" class="container">
+    <div class="top-right-bar">
+        <div class="social-icons">
+            <a href="#" aria-label="Visitar nuestro Facebook">
+                <span class="sr-only">Visitar nuestro Facebook</span>
+            </a>
+            <a href="#" aria-label="Visitar nuestro Instagram">
+                <span class="sr-only">Visitar nuestro Instagram</span>
+            </a>
+        </div>
+
+        <div class="auth-buttons">
+            <th:block th:if="${session.user == null}">
+                <a th:href="@{/login}" class="btn">INICIAR SESIÓN</a>
+                <a th:href="@{/papPati/add}" class="btn" style="background-color: var(--color-secundario);">REGISTRO PAP/PATI</a>
+                <a th:href="@{/oviuser/register}" class="btn">REGISTRARSE</a>
+            </th:block>
+
+            <div th:if="${session.user != null}" role="status">
+                <span th:text="'Bienvenido, ' + ${session.user.username}" style="font-weight: bold; display: block; margin-bottom: 8px; text-align: right;"></span>
+                <a th:href="@{/logout}" class="btn" style="width: 100%;">CERRAR SESIÓN</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="logo-section">
+        <img src="https://ovicastello.org/wp-content/uploads/2020/08/LOGO_Mesa-de-trabajo-1-90x90.png"
+             alt="Logotipo de la OVI"
+             class="logo-img">
+        <h1 class="org-name">
+            <span class="name-top">OFICINA VIDA INDEPENDIENT</span>
+            <span class="name-bottom">SOLE ARNAU RIPOLLÉS</span>
+        </h1>
+    </div>
+
+    <nav>
+        <ul>
+            <li><a th:href="@{/}" th:class="${#execInfo.templateName == 'index' ? 'active' : ''}">INICIO</a></li>
+            <li><a th:href="@{/noticias}">NOTICIAS</a></li>
+            <li><a th:href="@{/ovi}">OVI</a></li>
+            <li><a th:href="@{/mi-portal}">MI PORTAL</a></li>
+        </ul>
+    </nav>
+</header>
+</body>
+</html>
