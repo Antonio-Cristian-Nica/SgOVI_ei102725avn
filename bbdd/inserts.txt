@@ -1,11 +1,7 @@
--- ======================================================
--- SgOVI - SCRIPT DE INSERCIÓN DE DATOS CORREGIDO
--- ======================================================
-
--- 0. CREDENCIALES (Deben existir antes que los perfiles)
+-- 0. CREDENCIALES
 INSERT INTO CREDENTIALS (username, password, role, active) VALUES 
 ('admin0', '1234', 'admin', TRUE),
-('tecnico1', '1234', 'tecnico', TRUE),
+('admin1', '1234', 'admin', TRUE),
 -- Usuarios OVI
 ('juan.perez', '1234', 'user_ovi', TRUE), ('maria.rod', '1234', 'user_ovi', TRUE),
 ('luis.gomez', '1234', 'user_ovi', TRUE), ('sara.leon', '1234', 'user_ovi', TRUE),
@@ -33,7 +29,7 @@ INSERT INTO TUTOR (nameAndSurname, phoneNumber, birthDate, homeAddress, emailAdd
 ('Jorge López', '600111004', '1975-11-30', 'Calle Río 45, Bilbao', 'jorge.lopez@email.com', 'Tutor Legal'),
 ('Carmen Ruiz', '600111005', '1982-03-15', 'Calle Luna 3, Barcelona', 'carmen.ruiz@email.com', 'Madre');
 
--- 2. OVI_USER (Vínculo con TutorID y Username añadido)
+-- 2. OVI_USER
 INSERT INTO OVI_USER (nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, functionalDiversity, LOPDAcceptance, status, tutorID, username) VALUES 
 ('Juan Pérez García', '611001001', '1995-04-10', 'Calle Sol 4, Madrid', 'juan.perez@email.com', 'Movilidad reducida', TRUE, 'active', 1, 'juan.perez'),
 ('María Rodríguez', '611001002', '2000-08-15', 'Av. Norte 20, Valencia', 'maria.rod@email.com', 'Auditiva', TRUE, 'active', 2, 'maria.rod'),
@@ -51,7 +47,7 @@ INSERT INTO OVI_USER (nameAndSurname, phoneNumber, birthDate, homeAddress, email
 ('Irene Mas', '611001014', '1991-02-14', 'Av. Estación 4, Alicante', 'irene.mas@email.com', 'Auditiva', TRUE, 'active', NULL, 'irene.mas'),
 ('Pablo Escribano', '611001015', '1998-10-10', 'Calle Segovia 9, Madrid', 'pablo.e@email.com', 'TEA', TRUE, 'active', NULL, 'pablo.e');
 
--- 3. PAP_PATI (Username añadido)
+-- 3. PAP_PATI
 INSERT INTO PAP_PATI (nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, academicBackground, professionalExperience, specializationAreas, documents, LOPDAcceptance, status, username) VALUES 
 ('Ana García López', '622001001', '1990-05-15', 'Calle Mayor 1', 'ana.garcia@email.com', 'Grado Psicología', '5 años exp', 'Tercera edad', 'ana.pdf', TRUE, 'active', 'ana.garcia'),
 ('Carlos Ruiz Marín', '622001002', '1985-10-20', 'Av. Centro 45', 'carlos.ruiz@email.com', 'Técnico Int. Social', '10 años exp', 'Juventud', 'carlos.pdf', TRUE, 'active', 'carlos.ruiz'),
