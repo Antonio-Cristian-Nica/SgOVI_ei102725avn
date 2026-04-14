@@ -4,6 +4,7 @@ CREATE TABLE CREDENTIALS (
     password VARCHAR(100) NOT NULL, 
     role VARCHAR(20) NOT NULL,
     id INTEGER NOT NULL,
+    activated BOOLEAN DEFAULT FALSE,
     CONSTRAINT cp_credentials PRIMARY KEY (username),
     CONSTRAINT ri_role_types CHECK (role IN ('admin', 'user_ovi', 'pap_pati'))
 );
