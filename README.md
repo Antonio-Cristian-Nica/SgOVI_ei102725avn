@@ -4,7 +4,7 @@ SgOVI - Sistema de Gestión de Oficina de Vida Independiente. Proyecto académic
 Enlaces de interés:
 - https://ovicastello.org/
 - https://docs.google.com/forms/d/e/1FAIpQLSelYRAnQE9fS0C3xpDTZJlK2HaI8BtbXQ1x3g4GEI60EKAYrQ/viewform
-- 
+
 
 ## Instrucciones de acceso a la BBDD
 Para el acceso a la base de datos de db-aules usamos el siguiente comando →  psql -h db-aules.uji.es -U ei102725avn ei102725avn
