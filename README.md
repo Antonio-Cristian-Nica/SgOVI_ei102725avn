@@ -12,6 +12,10 @@ Para el acceso a la base de datos de db-aules usamos el siguiente comando →  p
 El nombre del grupo es →  ei102725avn
 La contraseña para el acceso a la base de datos es → vivaMessi1010
 
+-- Administradores
+admin0 (1234)
+admin1 (1234)
+
 ## Lo que debe hacer la aplicación
 Gestión de Ovi Users --> El sistema tiene que posibilitar el alta y la modificación de datos personales y de contacto de cada ovi User, incluyendo el registro explícito del consentimiento informado según la normativa LOPD/RGPD. Como el registro de Ovi Users requiere una aceptación por parte del técnico responsable para poder tener acceso, la idea es que en el formulario de registro metamos una sección en la que el usuario nos indique el nombre de usuario y la contraseña que quiere usar para loggear. Nosotros meteremos esos datos en la tabla CREDENTIALS de nuestra BBDD pero en un principio la casilla de "activada" estará en false, indicando que la cuenta aún no ha sido activada. En este momento el usuario en cuestión solo podrá loggear para ver el estado de la activación de su cuenta. El técnico OVI por su parte, tendrá una opción que será validar usuarios, en la que podrá ver los distintos usuarios y cuando lo decida activar la cuenta del usuario que desee, marcando la casilla de activated a True. A partir de este momento, cuenta activada, cuando el usuario entre con sus credenciales podrá ver el menú completo con sus opciones correspondientes.
 
