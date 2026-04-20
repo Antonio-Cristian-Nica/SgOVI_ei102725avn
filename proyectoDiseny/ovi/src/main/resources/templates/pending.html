@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Estat del compte</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <main class="form-section">
+
+        <h1>Estat del teu compte</h1>
+
+        <p>Hola, <strong th:text="${username}"></strong>.</p>
+
+        <!-- Cuenta pendiente de aprobación -->
+        <div th:if="${status == 'approvalPending'}">
+            <p>El teu compte es troba pendent d'aprovació per part del tècnic OVI.</p>
+            <p>Una vegada activat, podràs accedir a totes les funcionalitats de l'aplicació.</p>
+        </div>
+
+        <!-- Cuenta inactiva -->
+        <div th:if="${status == 'inactive'}">
+            <p>El teu compte ha sigut desactivat per el tècnic OVI.</p>
+            <p>Si creus que és un error o vols més informació, posa't en contacte amb
+                l'organització a través dels canals habituals.</p>
+        </div>
+
+        <a th:href="@{/logout}" class="btn">Tancar Sessió</a>
+
+    </main>
+</div>
+
+</body>
+</html>

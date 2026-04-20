@@ -1,6 +1,7 @@
 package es.uji.ei1027.ovi.validator;
 
 import es.uji.ei1027.ovi.model.PapPati;
+import es.uji.ei1027.ovi.model.PapPatiRegistration; // ¡Importante importar el DTO!
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import java.time.LocalDate;
@@ -10,7 +11,9 @@ public class PapPatiValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return PapPati.class.equals(clazz);
+        // CAMBIO CLAVE: Usamos isAssignableFrom para que acepte tanto PapPati como PapPatiRegistration
+        // en un futuro nos ayudará cuando solo queramos editar los datos
+        return PapPati.class.isAssignableFrom(clazz);
     }
 
     @Override
@@ -24,6 +27,8 @@ public class PapPatiValidator implements Validator {
 
         if (papPati.getPhoneNumber() == null || papPati.getPhoneNumber().trim().isEmpty()) {
             errors.rejectValue("phoneNumber", "obligatori", "El teléfono es obligatorio");
+        } else if (!papPati.getPhoneNumber().matches("^(\\+34)?[0-9]{9}$")) {
+            errors.rejectValue("phoneNumber", "format", "El telèfon ha de tenir 9 dígits");
         }
 
         if (papPati.getHomeAddress() == null || papPati.getHomeAddress().trim().isEmpty()) {
@@ -34,8 +39,16 @@ public class PapPatiValidator implements Validator {
             errors.rejectValue("academicBackground", "obligatori", "Los antecedentes académicos son obligatorios");
         }
 
-        if (papPati.getStatus() == null || papPati.getStatus().trim().isEmpty()) {
-            errors.rejectValue("status", "obligatori", "El estado inicial es obligatorio");
+        if (papPati.getProfessionalExperience() == null || papPati.getProfessionalExperience().trim().isEmpty()) {
+            errors.rejectValue("professionalExperience", "obligatori", "L'experiència professional és obligatòria");
+        }
+
+        if (papPati.getSpecializationAreas() == null || papPati.getSpecializationAreas().trim().isEmpty()) {
+            errors.rejectValue("specializationAreas", "obligatori", "Les àrees d'especialització són obligatòries");
+        }
+
+        if (papPati.getDocuments() == null || papPati.getDocuments().trim().isEmpty()) {
+            errors.rejectValue("documents", "obligatori", "Has d'adjuntar almenys un document o enllaç");
         }
 
         // 2. Validación de Correo Electrónico (Obligatorio + Formato)
@@ -58,6 +71,27 @@ public class PapPatiValidator implements Validator {
         // 4. Aceptación de LOPD (Debe ser true)
         if (!papPati.isLOPDAcceptance()) {
             errors.rejectValue("LOPDAcceptance", "obligatori", "Debes aceptar la Ley de Protección de Datos para registrarte");
+        }
+
+        // =====================================================================
+        // 5. VALIDACIONES ESPECÍFICAS DE REGISTRO (Credenciales)
+        // =====================================================================
+        if (target instanceof PapPatiRegistration) {
+            PapPatiRegistration registration = (PapPatiRegistration) target;
+
+            // Validación del Usuario
+            if (registration.getUsername() == null || registration.getUsername().trim().isEmpty()) {
+                errors.rejectValue("username", "obligatori", "Debes elegir un nombre de usuario");
+            } else if (registration.getUsername().contains(" ")) {
+                errors.rejectValue("username", "format", "El nombre de usuario no puede contener espacios");
+            }
+
+            // Validación de la Contraseña
+            if (registration.getPassword() == null || registration.getPassword().trim().isEmpty()) {
+                errors.rejectValue("password", "obligatori", "La contraseña es obligatoria");
+            } else if (registration.getPassword().length() < 6) {
+                errors.rejectValue("password", "format", "La contraseña debe tener al menos 6 caracteres");
+            }
         }
     }
 }

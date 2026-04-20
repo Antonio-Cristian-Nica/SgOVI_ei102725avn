@@ -15,8 +15,7 @@
         <div class="auth-buttons">
             <th:block th:if="${session.user == null}">
                 <a th:href="@{/login}" class="btn">INICIAR SESIÓN</a>
-                <a th:href="@{/papPati/add}" class="btn" style="background-color: var(--color-secundario);">REGISTRO PAP/PATI</a>
-                <a th:href="@{/oviuser/register}" class="btn">REGISTRARSE</a>
+                <a th:href="@{/papPati/register}" class="btn" style="background-color: var(--color-secundario);">REGISTRARSE</a>
             </th:block>
 
             <div th:if="${session.user != null}" role="status">

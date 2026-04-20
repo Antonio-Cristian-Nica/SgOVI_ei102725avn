@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Registre completat</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <main class="form-section">
+
+        <h1>Registre completat correctament</h1>
+
+        <p>La teua sol·licitud ha sigut rebuda i es troba actualment en estat:</p>
+
+        <p><strong>Pendent d'aprovació</strong></p>
+
+        <p>
+            El tècnic OVI revisarà la teua sol·licitud i activarà el teu compte quan siga validada.
+            Una vegada activat, podràs accedir a totes les funcionalitats de l'aplicació.
+        </p>
+
+        <a th:href="@{/}" class="btn">Tornar a l'inici</a>
+
+    </main>
+</div>
+
+</body>
+</html>

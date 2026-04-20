@@ -1,7 +1,10 @@
 package es.uji.ei1027.ovi.controller;
 
-import es.uji.ei1027.ovi.dao.PapPatiDao;
-import es.uji.ei1027.ovi.model.PapPati;
+import es.uji.ei1027.ovi.dao.Credentials.CredentialsDao;
+import es.uji.ei1027.ovi.dao.PapPati.PapPatiDao;
+import es.uji.ei1027.ovi.model.Credentials;
+import es.uji.ei1027.ovi.model.PapPatiRegistration;
+import es.uji.ei1027.ovi.utils.PasswordUtils;
 import es.uji.ei1027.ovi.validator.PapPatiValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,54 +19,65 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class PapPatiController {
 
     private PapPatiDao papPatiDao;
+    private CredentialsDao credentialsDao;
 
     @Autowired
     public void setPapPatiDao(PapPatiDao papPatiDao) {
         this.papPatiDao = papPatiDao;
     }
 
-    // 1. MÉTODOS PARA EL REGISTRO (OPERACIÓN ADD)
-
-    // Muestra el formulario vacío
-    @RequestMapping("/add")
-    public String addPapPati(Model model) {
-        // Creamos un objeto vacío y lo pasamos al modelo para que Thymeleaf lo use en th:object
-        model.addAttribute("pappati", new PapPati());
-        return "papPati/add";
+    @Autowired
+    public void setCredentialsDao(CredentialsDao credentialsDao) {
+        this.credentialsDao = credentialsDao;
     }
 
-    // Procesa los datos enviados desde el formulario
-    @RequestMapping(value="/add", method=RequestMethod.POST)
-    public String processAddSubmit(@ModelAttribute("pappati") PapPati papPati,
+    @RequestMapping("/register")
+    public String addPapPati(Model model) {
+        model.addAttribute("pappati", new PapPatiRegistration());
+        return "papPati/register";
+    }
+
+    @RequestMapping(value="/register", method=RequestMethod.POST)
+    public String processAddSubmit(@ModelAttribute("pappati") PapPatiRegistration registration,
                                    BindingResult bindingResult) {
 
-        // INSTANCIAMOS Y EJECUTAMOS EL VALIDADOR
-        // Nota: Le pasamos el objeto 'papPati' con los datos y 'bindingResult' donde dejará los errores
-        PapPatiValidator papPatiValidator = new PapPatiValidator();
-        papPatiValidator.validate(papPati, bindingResult);
+        PapPatiValidator validator = new PapPatiValidator();
+        validator.validate(registration, bindingResult);
 
-        // CONTROL DE ERRORES:
-        // Si el validador ha encontrado fallos, bindingResult.hasErrors() será true
         if (bindingResult.hasErrors()) {
-            // Volvemos a la vista del formulario (pappati/add.html)
-            // IMPORTANTE: NO usamos redirect aquí, porque perderíamos los mensajes de error
-            return "papPati/add";
+            return "papPati/register";
         }
 
-        // SI NO HAY ERRORES:
-        // Llamamos al DAO para persistir los datos en la base de datos
-        papPatiDao.addPapPati(papPati);
+        // El status siempre es approvalPending al registrarse
+        registration.setStatus("approvalPending");
 
-        // REDIRECCIÓN (Post-Redirect-Get):
-        // Una vez guardado, redirigimos al listado para evitar que el usuario
-        // cree duplicados al refrescar la página (F5)
-        return "redirect:list";
+        // Primero guardamos las credenciales
+        Credentials credentials = new Credentials();
+        credentials.setUsername(registration.getUsername());
+        credentials.setPassword(PasswordUtils.encrypt(registration.getPassword()));
+        credentials.setRole("pap_pati");
+        credentials.setActivated(false);
+        credentials.setId(0); // ID temporal, se actualizará después
+        credentialsDao.addCredentials(credentials);
+
+        // Luego guardamos el PAP/PATI con el username ya existente en CREDENTIALS
+        papPatiDao.addPapPati(registration);
+
+        // 3. Actualizamos el ID en credenciales con el papID real
+        int papID = papPatiDao.getLastInsertedId();
+        credentialsDao.updateId(registration.getUsername(), papID);
+
+        return "redirect:registerSuccess";
     }
 
-    // 2. MÉTODO PARA EL LISTADO (OPCIONAL PARA PROBAR)
+    @RequestMapping("/registerSuccess")
+    public String registerSuccess() {
+        return "papPati/registerSuccess";
+    }
+
     @RequestMapping("/list")
     public String listPapPatis(Model model) {
         model.addAttribute("pappatis", papPatiDao.getPapPatis());
-        return "pappati/list";
+        return "papPati/list";
     }
 }

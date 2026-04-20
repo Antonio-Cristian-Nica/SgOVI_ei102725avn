@@ -5,6 +5,7 @@ public class Credentials {
     private String password;
     private String role;
     private int id;
+    private boolean activated;
 
     public Credentials() {}
 
@@ -20,4 +21,15 @@ public class Credentials {
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
+    public boolean getActivated() { return activated; }
+    public void setActivated(boolean activated) { this.activated = activated; }
+
+    @Override
+    public String toString() {
+        return "Credentials{" +
+                "username='" + username + '\'' +
+                ", role='" + role + '\'' +
+                ", activated=" + activated +
+                '}';
+    }
 }

@@ -191,6 +191,13 @@ footer {
 }
 
 /* =========================================
+   BOTON SECUNDARIO EN REGISTRO
+   ========================================= */
+.btn-secondary {
+    background-color: var(--color-secundario);
+}
+
+/* =========================================
    DISEÑO DE FORMULARIOS Y ERRORES
    ========================================= */
 .form-section {
@@ -291,4 +298,43 @@ input:focus, select:focus, textarea:focus {
     margin-top: 40px;
     padding-top: 20px;
     border-top: 1px solid #E0E0E0;
+}
+
+/* =========================================
+   PORTAL - TARJETAS DE OPCIONES
+   ========================================= */
+.portal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.portal-card {
+    background-color: #FFFFFF;
+    border: 2px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 30px;
+    text-decoration: none;
+    color: var(--texto-oscuro);
+    transition: border-color 0.3s, transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.portal-card:hover {
+    border-color: var(--color-primario);
+    transform: scale(1.02);
+}
+
+.portal-card h3 {
+    color: var(--color-primario);
+    margin: 0;
+}
+
+.portal-card p {
+    margin: 0;
+    color: #666;
+    font-size: 16px;
 }

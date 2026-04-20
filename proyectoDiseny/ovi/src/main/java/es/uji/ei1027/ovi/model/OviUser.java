@@ -13,8 +13,12 @@ public class OviUser {
     private boolean LOPDAcceptance;
     private String status; // 'active', 'inactive', 'approvalPending'
     private Integer tutorID; // Nullable (FK)
+    private String username;
 
     public OviUser() {}
+
+    public String getUsername() { return username;}
+    public void setUsername(String username) {this.username = username;}
 
     public int getOviID() { return oviID; }
     public void setOviID(int oviID) { this.oviID = oviID; }

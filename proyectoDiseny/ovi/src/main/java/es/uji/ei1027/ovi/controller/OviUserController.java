@@ -1,21 +1,27 @@
 package es.uji.ei1027.ovi.controller;
 
-import es.uji.ei1027.ovi.dao.OviUserDao;
-import es.uji.ei1027.ovi.dao.TutorDao;
-import es.uji.ei1027.ovi.model.OviUser;
+import es.uji.ei1027.ovi.dao.Credentials.CredentialsDao;
+import es.uji.ei1027.ovi.dao.OviUser.OviUserDao;
+import es.uji.ei1027.ovi.model.Credentials;
+import es.uji.ei1027.ovi.model.OviUserRegistration;
+import es.uji.ei1027.ovi.utils.PasswordUtils;
 import es.uji.ei1027.ovi.validator.OviUserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/oviuser")
+@RequestMapping("/oviUser")
 public class OviUserController {
 
     private OviUserDao oviUserDao;
-    private TutorDao tutorDao;
+    private CredentialsDao credentialsDao;
 
     @Autowired
     public void setOviUserDao(OviUserDao oviUserDao) {
@@ -23,70 +29,58 @@ public class OviUserController {
     }
 
     @Autowired
-    public void setTutorDao(TutorDao tutorDao) {
-        this.tutorDao = tutorDao;
+    public void setCredentialsDao(CredentialsDao credentialsDao) {
+        this.credentialsDao = credentialsDao;
     }
 
-    @GetMapping("/register")
-    public String mostrarPaginaRegistro(Model model) {
-        model.addAttribute("oviUser", new OviUser());
-        model.addAttribute("tutors", tutorDao.getTutors());
+    @RequestMapping("/register")
+    public String addOviUser(Model model) {
+        model.addAttribute("oviuser", new OviUserRegistration());
         return "oviuser/register";
     }
 
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String processAddSubmit(@ModelAttribute("oviuser") OviUserRegistration registration,
+                                   BindingResult bindingResult) {
 
-    // Este sirve para PROCESAR los datos enviados
-    @PostMapping("/register") // <--- CAMBIADO DE /add A /register
-    public String add(@ModelAttribute("oviUser") OviUser oviUser, BindingResult bindingResult, Model model) {
-
-        OviUserValidator userValidator = new OviUserValidator();
-        userValidator.validate(oviUser, bindingResult);
+        OviUserValidator validator = new OviUserValidator();
+        validator.validate(registration, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("tutors", tutorDao.getTutors());
             return "oviuser/register";
         }
 
-        oviUserDao.addOviUser(oviUser);
-        return "redirect:/oviuser/list";
+        registration.setStatus("approvalPending");
+
+        // 1. Primero las credenciales
+        Credentials credentials = new Credentials();
+        credentials.setUsername(registration.getUsername());
+        credentials.setPassword(PasswordUtils.encrypt(registration.getPassword()));
+        credentials.setRole("user_ovi");
+        credentials.setActivated(false);
+        credentials.setId(0);
+        credentialsDao.addCredentials(credentials);
+
+        // 2. Luego el OviUser
+        oviUserDao.addOviUser(registration);
+
+        // 3. Actualizamos el ID en credenciales con el oviID real
+        int oviID = oviUserDao.getLastInsertedId();
+        credentialsDao.updateId(registration.getUsername(), oviID);
+
+        return "redirect:registerSuccess";
     }
 
-    @GetMapping("/list")
-    public String list(Model model) {
-        model.addAttribute("oviUsers", oviUserDao.getOviUsers());
-        return "oviuser/list";
+    @RequestMapping("/registerSuccess")
+    public String registerSuccess() {
+        return "oviuser/registerSuccess";
     }
 
-    @GetMapping("/add")
-    public String addForm(Model model) {
-        model.addAttribute("oviUser", new OviUser());
-        model.addAttribute("tutors", tutorDao.getTutors());
-        return "oviuser/add";
-    }
-
-    @PostMapping("/add")
-    public String add(@ModelAttribute("oviUser") OviUser oviUser) {
-        oviUserDao.addOviUser(oviUser);
-        return "redirect:/oviuser/list";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable int id, Model model) {
-        model.addAttribute("oviUser", oviUserDao.getOviUser(id));
-        model.addAttribute("tutors", tutorDao.getTutors());
-        return "oviuser/edit";
-    }
-
-    @PostMapping("/edit/{id}")
-    public String edit(@PathVariable int id, @ModelAttribute("oviUser") OviUser oviUser) {
-        oviUser.setOviID(id);
-        oviUserDao.updateOviUser(oviUser);
-        return "redirect:/oviuser/list";
-    }
-
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable int id) {
-        oviUserDao.deleteOviUser(id);
-        return "redirect:/oviuser/list";
+    @RequestMapping("/portal")
+    public String portal(HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+        return "oviuser/portal";
     }
 }

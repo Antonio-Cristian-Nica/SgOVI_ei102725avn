@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Portal PAP/PATI</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <h2>Benvingut/da, <span th:text="${session.user.username}"></span></h2>
+    <p>Aquest és el teu espai personal. Selecciona una opció per a continuar.</p>
+
+    <div class="portal-grid">
+
+        <a th:href="@{/papPati/edit}" class="portal-card">
+            <h3>📋 Les meues dades</h3>
+            <p>Consulta i edita les teues dades personals i de contacte.</p>
+        </a>
+
+        <a th:href="@{/papPati/solicitudes}" class="portal-card">
+            <h3>📁 Les meues sol·licituds</h3>
+            <p>Consulta les sol·licituds d'assistència que tens assignades i el seu estat.</p>
+        </a>
+
+        <a th:href="@{/papPati/horaris}" class="portal-card">
+            <h3>🗓️ Els meus horaris</h3>
+            <p>Administra la teua disponibilitat horària per a ser assignat a sol·licituds.</p>
+        </a>
+
+        <a th:href="@{/papPati/activitats}" class="portal-card">
+            <h3>🎓 Les meues activitats</h3>
+            <p>Consulta les activitats en les quals ets instructor.</p>
+        </a>
+
+        <a th:href="@{/papPati/contractes}" class="portal-card">
+            <h3>📄 El meu historial</h3>
+            <p>Consulta el teu historial de contractes finalitzats.</p>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

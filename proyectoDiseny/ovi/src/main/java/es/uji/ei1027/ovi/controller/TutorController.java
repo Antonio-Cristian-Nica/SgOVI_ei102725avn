@@ -1,6 +1,6 @@
 package es.uji.ei1027.ovi.controller;
 
-import es.uji.ei1027.ovi.dao.TutorDao;
+import es.uji.ei1027.ovi.dao.OviUserTutor.TutorDao;
 import es.uji.ei1027.ovi.model.Tutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
