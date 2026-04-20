@@ -12,6 +12,7 @@ Para el acceso a la base de datos de db-aules usamos el siguiente comando →  p
 El nombre del grupo es →  ei102725avn
 La contraseña para el acceso a la base de datos es → vivaMessi1010
 Cuentas ya activadas desde el diseño físico:
+
       - Administrador --> admin0 (1234)
       - Usuario OVI --> juan.perez (1234)
       - PAP/PATI --> ana.garcia (1234)
