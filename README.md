@@ -10,7 +10,9 @@ Enlaces de interés:
 Para el acceso a la base de datos de db-aules usamos el siguiente comando →  psql -h db-aules.uji.es -U ei102725avn ei102725avn
 
 El nombre del grupo es →  ei102725avn
+
 La contraseña para el acceso a la base de datos es → vivaMessi1010
+
 Cuentas ya activadas desde el diseño físico:
 
       - Administrador --> admin0 (1234)
