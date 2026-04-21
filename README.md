@@ -16,12 +16,20 @@ La contraseña para el acceso a la base de datos es → vivaMessi1010
 Cuentas ya activadas desde el diseño físico:
 
       - Administrador --> admin0 (1234)
-      - Usuario OVI --> juan.perez (1234)
-      - PAP/PATI --> ana.garcia (1234)
+      - Usuario OVI --> juan.perez (patata)
+      - PAP/PATI --> ana.garcia (patata)
 
 
 ## Lo que debe hacer la aplicación
-1. Gestión de Ovi Users --> El sistema tiene que posibilitar el alta y la modificación de datos personales y de contacto de cada ovi User, incluyendo el registro explícito del consentimiento informado según la normativa LOPD/RGPD. Como el registro de Ovi Users requiere una aceptación por parte del técnico responsable para poder tener acceso, la idea es que en el formulario de registro metamos una sección en la que el usuario nos indique el nombre de usuario y la contraseña que quiere usar para loggear. Nosotros meteremos esos datos en la tabla CREDENTIALS de nuestra BBDD pero en un principio la casilla de "activada" estará en false, indicando que la cuenta aún no ha sido activada. En este momento el usuario en cuestión solo podrá loggear para ver el estado de la activación de su cuenta. El técnico OVI por su parte, tendrá una opción que será validar usuarios, en la que podrá ver los distintos usuarios y cuando lo decida activar la cuenta del usuario que desee, marcando la casilla de activated a True. A partir de este momento, cuenta activada, cuando el usuario entre con sus credenciales podrá ver el menú completo con sus opciones correspondientes.
+1. Gestión de Ovi Users --> El sistema posibilita el alta y la modificación de datos personales y de contacto de cada OVI User, incluyendo el registro explícito del consentimiento informado según la normativa LOPD/RGPD.
+Implementado:
+Registro de OVI Users mediante formulario con validación completa de todos los campos, incluyendo formato de email, teléfono, edad mínima de 3 años y aceptación LOPD.
+Las credenciales se guardan en la tabla CREDENTIALS con la cuenta desactivada (activated = false) y estado approvalPending hasta que el técnico la valide.
+Las contraseñas se encriptan con JASYPT antes de guardarse en la BD.
+El técnico OVI puede ver el listado de usuarios pendientes y activar su cuenta desde su portal, lo que cambia activated = true y status = active.
+Una vez activada la cuenta, el usuario puede acceder a su portal completo con todas las opciones disponibles. Si intenta acceder antes de ser validado, verá una página informativa con el estado actual de su cuenta.
+Los usuarios pueden modificar sus datos personales desde su portal.
+Los usuarios pueden cambiar su contraseña desde su portal, introduciendo la contraseña actual y la nueva (mínimo 6 caracteres).
 
       - Usuario creado con esta funcionalidad: LeoMessi (patata)
 
