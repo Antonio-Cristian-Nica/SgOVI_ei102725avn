@@ -13,29 +13,39 @@ El nombre del grupo es →  ei102725avn
 
 La contraseña para el acceso a la base de datos es → vivaMessi1010
 
-Cuentas ya activadas desde el diseño físico:
+Cuentas para probar las diferentes funcionalidades implementadas:
 
       - Administrador --> admin0 (1234)
-      - Usuario OVI --> juan.perez (patata)
-      - PAP/PATI --> ana.garcia (patata)
+      - Usuario OVI de diseño físico--> juan.perez (patata)
+      - PAP/PATI de diseño físico--> ana.garcia (patata)
+      - Usuario OVI post-activación --> LeoMessi (patata)
+      - Pap/Pati post-activación --> edgar.adell (patata)
+      - Usuario OVI pre-activación --> cancelado0 (patata)
+      - Pap/Pati pre-activación --> cancelado1 (patata)
 
 
 ## Lo que debe hacer la aplicación
-1. Gestión de Ovi Users --> El sistema posibilita el alta y la modificación de datos personales y de contacto de cada OVI User, incluyendo el registro explícito del consentimiento informado según la normativa LOPD/RGPD.
-Implementado:
-Registro de OVI Users mediante formulario con validación completa de todos los campos, incluyendo formato de email, teléfono, edad mínima de 3 años y aceptación LOPD.
-Las credenciales se guardan en la tabla CREDENTIALS con la cuenta desactivada (activated = false) y estado approvalPending hasta que el técnico la valide.
-Las contraseñas se encriptan con JASYPT antes de guardarse en la BD.
-El técnico OVI puede ver el listado de usuarios pendientes y activar su cuenta desde su portal, lo que cambia activated = true y status = active.
-Una vez activada la cuenta, el usuario puede acceder a su portal completo con todas las opciones disponibles. Si intenta acceder antes de ser validado, verá una página informativa con el estado actual de su cuenta.
-Los usuarios pueden modificar sus datos personales desde su portal.
-Los usuarios pueden cambiar su contraseña desde su portal, introduciendo la contraseña actual y la nueva (mínimo 6 caracteres).
+1. Gestión de Ovi Users --> El sistema posibilita el alta y la modificación de datos personales y de contacto de cada OVI User, incluyendo el registro explícito del consentimiento informado según la normativa LOPD/RGPD. Implementado:
 
-      - Usuario creado con esta funcionalidad: LeoMessi (patata)
+      - Registro de OVI Users mediante formulario con validación completa de todos los campos, incluyendo formato de email, teléfono, edad mínima de 3 años y aceptación LOPD.
+      - Las credenciales se guardan en la tabla CREDENTIALS con la cuenta desactivada (activated = false) y estado approvalPending hasta que el técnico la valide
+      - Las contraseñas se encriptan con JASYPT antes de guardarse en la BD
+      - El técnico OVI puede ver el listado de usuarios pendientes y activar su cuenta desde su portal, lo que cambia activated = true y status = active
+      - Una vez activada la cuenta, el usuario puede acceder a su portal completo con todas las opciones disponibles. Si intenta acceder antes de ser validado, verá una página informativa con el estado actual de su cuenta
+      - Los usuarios pueden modificar sus datos personales desde su portal
+      - Los usuarios pueden cambiar su contraseña desde su portal, introduciendo la contraseña actual y la nueva (mínimo 6 caracteres).
 
-2. Gestión de candidatos a PAP o PATI --> Cualquier persona interesada puede trabajar como asistente personal registrandose en la aplicación como PAP/PATI. Los datos a registrar se definirán en base a los formularios actuales que tiene la OVI. Al igual que pasaba con los OVI Users, aquí el pap/pati tendrá que poner sus credenciales en el formulario de registro pero su cuenta estará desactivada en un principio, por lo que solo podrá entrar para ver la activación de esa cuenta. El técnico OVI tendrá otra opción para validar Pap/Patis y será el que activará la cuenta de ese pap/pati y a partir de este momento ya podrá acceder a la sección "Mi portal" y ver todas las opciones que tiene. 
 
-      - Usuario creado con esta funcionalidad: edgar.adell (patata)
+2. Gestión de candidatos a PAP o PATI --> Cualquier persona interesada puede registrarse como PAP/PATI para trabajar como asistente personal. Implementado:
+
+      - Registro de PAP/PATI mediante formulario con validación completa, incluyendo formación académica, experiencia profesional, áreas de especialización, documentos adjuntos, edad mínima de 18 años y aceptación LOPD.
+      - Al igual que los OVI Users, las credenciales se guardan con la cuenta desactivada y estado approvalPending hasta validación del técnico.
+      - Las contraseñas se encriptan con JASYPT.
+      - El técnico OVI puede ver el listado de PAP/PATIs pendientes y activar su cuenta desde su portal.
+      - Una vez activada, el PAP/PATI accede a su portal con todas sus opciones. Si accede antes de ser validado, ve una página informativa con el estado de su cuenta.
+      - Los PAP/PATIs pueden modificar sus datos personales y cambiar su contraseña desde su portal.
+
+FALTAN ACABAR LAS DISTINTAS OPCIONES QUE TIENE CADA USUARIO DENTRO DE MI PORTAL, ES DECIR, QUE TODAS LLEVEN A ALGUNA PAGINA REAL
 
 3. Solicitudes de Asistencia Personal --> Las personas usuarias de la OVI deben poder registrar una petición de asistencia personal y seguir el estado de la misma (en revisión, aprobada, cerrada con contrato, cerrada con contrato finalizado o rechazada). La asignación se hará por parte del técnico directamente, es decir, lo hará este de forma manual a través de una opción que tendrá para ello en la sección "Mi portal". Si se llega a un acuerdo definitivo, se firmará un contrato, por lo que la aplicación debe guardar los datos de inicio y final de contrato, y el documento PDF del contrato definitivo. (Esto último preguntarle en clase). 
 
