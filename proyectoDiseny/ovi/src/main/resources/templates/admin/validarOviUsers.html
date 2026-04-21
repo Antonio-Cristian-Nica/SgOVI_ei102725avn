@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Validar Usuaris OVI</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <h1>Usuaris OVI pendents de validació</h1>
+
+    <div th:if="${oviusers.isEmpty()}">
+        <p>No hi ha usuaris pendents de validació en aquest moment.</p>
+    </div>
+
+    <div th:if="${!oviusers.isEmpty()}">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>Nom i Cognoms</th>
+                <th>Correu</th>
+                <th>Telèfon</th>
+                <th>Data Naixement</th>
+                <th>Diversitat Funcional</th>
+                <th>Usuari</th>
+                <th>Acció</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="oviuser : ${oviusers}">
+                <td th:text="${oviuser.nameAndSurname}"></td>
+                <td th:text="${oviuser.emailAddress}"></td>
+                <td th:text="${oviuser.phoneNumber}"></td>
+                <td th:text="${oviuser.birthDate}"></td>
+                <td th:text="${oviuser.functionalDiversity}"></td>
+                <td th:text="${oviuser.username}"></td>
+                <td>
+                    <form th:action="@{/admin/validarOviUsers/{username}(username=${oviuser.username})}" method="post">
+                        <button type="submit" class="btn">Activar</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-actions">
+        <a th:href="@{/admin/portal}" style="color: var(--color-secundario); text-decoration: none; font-weight: bold;">Tornar al portal</a>
+    </div>
+
+</div>
+
+</body>
+</html>

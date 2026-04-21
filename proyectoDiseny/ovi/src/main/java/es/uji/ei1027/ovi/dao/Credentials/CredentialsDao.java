@@ -45,4 +45,16 @@ public class CredentialsDao {
                 "UPDATE CREDENTIALS SET id=? WHERE username=?",
                 id, username);
     }
+
+    public void updatePassword(String username, String newPassword) {
+        jdbcTemplate.update(
+                "UPDATE CREDENTIALS SET password=? WHERE username=?",
+                newPassword, username);
+    }
+
+    public void activateCredentials(String username) {
+        jdbcTemplate.update(
+                "UPDATE CREDENTIALS SET activated=true WHERE username=?",
+                username);
+    }
 }

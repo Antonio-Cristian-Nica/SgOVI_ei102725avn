@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Portal Administrador</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <h2>Benvingut/da, <span th:text="${session.user.username}"></span></h2>
+    <p>Panel de gestió del tècnic OVI. Selecciona una opció per a continuar.</p>
+
+    <div class="portal-grid">
+
+        <a th:href="@{/admin/validarPapPati}" class="portal-card">
+            <h3>✅ Validar PAP/PATI</h3>
+            <p>Consulta els candidats pendents de validació i activa els seus comptes.</p>
+        </a>
+
+        <a th:href="@{/admin/validarOviUsers}" class="portal-card">
+            <h3>✅ Validar Usuaris OVI</h3>
+            <p>Consulta els usuaris OVI pendents de validació i activa els seus comptes.</p>
+        </a>
+
+        <a th:href="@{/admin/gestionarPapPati}" class="portal-card">
+            <h3>👥 Gestionar PAP/PATI</h3>
+            <p>Consulta, edita i activa o desactiva els candidats PAP/PATI registrats.</p>
+        </a>
+
+        <a th:href="@{/admin/gestionarOviUsers}" class="portal-card">
+            <h3>👥 Gestionar Usuaris OVI</h3>
+            <p>Consulta, edita i activa o desactiva els usuaris OVI registrats.</p>
+        </a>
+
+        <a th:href="@{/admin/solicitudes}" class="portal-card">
+            <h3>📁 Sol·licituds d'assistència</h3>
+            <p>Gestiona les sol·licituds d'assistència personal i assigna candidats.</p>
+        </a>
+
+        <a th:href="@{/admin/activitats}" class="portal-card">
+            <h3>🎓 Activitats</h3>
+            <p>Crea i gestiona les activitats de formació i divulgació.</p>
+        </a>
+
+        <a th:href="@{/admin/instructors}" class="portal-card">
+            <h3>🧑‍🏫 Instructors</h3>
+            <p>Registra i gestiona els instructors de les activitats.</p>
+        </a>
+
+        <a th:href="@{/admin/contractes}" class="portal-card">
+            <h3>📄 Certificados de asistencia</h3>
+            <p>Generar certificados de asistencia para las actividades realizadas.</p>
+        </a>
+
+        <a th:href="@{/admin/estadistiques}" class="portal-card">
+            <h3>📊 Estadístiques</h3>
+            <p>Consulta estadístiques generals del sistema.</p>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

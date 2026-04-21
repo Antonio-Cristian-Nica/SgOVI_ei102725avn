@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Portal Usuari OVI</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <h2>Benvingut/da, <span th:text="${session.user.username}"></span></h2>
+    <p>Aquest és el teu espai personal. Selecciona una opció per a continuar.</p>
+
+    <div class="portal-grid">
+
+        <a th:href="@{/oviUser/edit}" class="portal-card">
+            <h3>📋 Les meues dades</h3>
+            <p>Consulta i edita les teues dades personals i de contacte.</p>
+        </a>
+
+        <a th:href="@{/oviUser/solicitudes}" class="portal-card">
+            <h3>📁 Les meues sol·licituds</h3>
+            <p>Genera noves sol·licituds d'assistència i consulta l'estat de les existents.</p>
+        </a>
+
+        <a th:href="@{/oviUser/tutor}" class="portal-card">
+            <h3>👤 El meu tutor legal</h3>
+            <p>Gestiona les dades del teu tutor legal si en tens un assignat.</p>
+        </a>
+
+        <a th:href="@{/oviUser/activitats}" class="portal-card">
+            <h3>🎓 Activitats</h3>
+            <p>Consulta les activitats disponibles i gestiona les teues inscripcions.</p>
+        </a>
+
+        <a th:href="@{/oviUser/contractes}" class="portal-card">
+            <h3>📄 Els meus contractes</h3>
+            <p>Consulta el teu historial de contractes actius i finalitzats.</p>
+        </a>
+
+        <a th:href="@{/oviUser/canviarContrasenya}" class="portal-card">
+            <h3>🔒 Canviar contrasenya</h3>
+            <p>Modifica la teua contrasenya d'accés a l'aplicació.</p>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

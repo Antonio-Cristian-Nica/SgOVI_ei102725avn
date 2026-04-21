@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Canviar contrasenya</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <main class="form-section">
+
+        <h1>Canviar contrasenya</h1>
+        <p>Introdueix la teua contrasenya actual i la nova que vols utilitzar.</p>
+
+        <div th:if="${errorActual}" class="error-text">
+            <span th:text="${errorActual}"></span>
+        </div>
+
+        <form th:action="@{/papPati/canviarContrasenya}" th:object="${changePasswordForm}" method="post">
+
+            <div class="form-group">
+                <label for="currentPassword">Contrasenya actual</label>
+                <input type="password" id="currentPassword" th:field="*{currentPassword}"
+                       th:class="${#fields.hasErrors('currentPassword')} ? 'input-error' : ''"
+                       placeholder="La teua contrasenya actual" />
+                <span class="error-text" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="newPassword">Nova contrasenya</label>
+                <input type="password" id="newPassword" th:field="*{newPassword}"
+                       th:class="${#fields.hasErrors('newPassword')} ? 'input-error' : ''"
+                       placeholder="Mínim 6 caràcters" />
+                <span class="error-text" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirma la nova contrasenya</label>
+                <input type="password" id="confirmPassword" th:field="*{confirmPassword}"
+                       th:class="${#fields.hasErrors('confirmPassword')} ? 'input-error' : ''"
+                       placeholder="Repeteix la nova contrasenya" />
+                <span class="error-text" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/papPati/portal}" style="color: var(--color-secundario); text-decoration: none; font-weight: bold;">Cancel·lar</a>
+                <button type="submit" class="btn">Guardar contrasenya</button>
+            </div>
+
+        </form>
+    </main>
+</div>
+
+</body>
+</html>

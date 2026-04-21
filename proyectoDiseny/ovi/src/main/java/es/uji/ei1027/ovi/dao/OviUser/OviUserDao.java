@@ -24,6 +24,12 @@ public class OviUserDao {
         return jdbcTemplate.query("SELECT * FROM OVI_USER", new OviUserRowMapper());
     }
 
+    public List<OviUser> getOviUsersPendents() {
+        return jdbcTemplate.query(
+                "SELECT * FROM OVI_USER WHERE status='approvalPending'",
+                new OviUserRowMapper());
+    }
+
     public OviUser getOviUser(int oviID) {
         return jdbcTemplate.queryForObject(
                 "SELECT * FROM OVI_USER WHERE oviID=?",
@@ -43,8 +49,9 @@ public class OviUserDao {
     }
 
     public int getLastInsertedId() {
-        return jdbcTemplate.queryForObject(
+        Integer id = jdbcTemplate.queryForObject(
                 "SELECT MAX(oviID) FROM OVI_USER", Integer.class);
+        return id != null ? id : 0;
     }
 
     public void updateOviUser(OviUser oviUser) {
@@ -71,5 +78,11 @@ public class OviUserDao {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    public void activateOviUser(String username) {
+        jdbcTemplate.update(
+                "UPDATE OVI_USER SET status='active' WHERE username=?",
+                username);
     }
 }

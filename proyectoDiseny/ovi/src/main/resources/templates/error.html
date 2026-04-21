@@ -1,15 +1,34 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
 <head>
-    <meta charset="UTF-8">
-    <title>Error en SgOVI</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>SgOVI - Error</title>
 </head>
-<body class="container mt-5">
-<div class="alert alert-danger">
-    <h1 th:text="${errorName}">Nombre del Error</h1>
-    <p th:text="${message}">Mensaje detallado para el usuario.</p>
-    <a href="javascript:history.back()" class="btn btn-outline-danger">Volver atrás</a>
+<body>
+
+<div layout:fragment="content">
+    <main class="form-section">
+
+        <h1>S'ha produït un error</h1>
+
+        <!-- Error lanzado por SgOVIException -->
+        <div th:if="${errorName}">
+            <p><strong th:text="${errorName}"></strong></p>
+            <p th:text="${message}"></p>
+        </div>
+
+        <!-- Error lanzado por Spring (ruta no encontrada, etc.) -->
+        <div th:if="${errorName == null}">
+            <p><strong th:text="${status}"></strong></p>
+            <p th:text="${error}"></p>
+        </div>
+
+        <a th:href="@{/}" class="btn">Tornar a l'inici</a>
+
+    </main>
 </div>
+
 </body>
 </html>

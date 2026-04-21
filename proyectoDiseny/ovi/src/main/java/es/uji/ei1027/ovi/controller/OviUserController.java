@@ -2,9 +2,12 @@ package es.uji.ei1027.ovi.controller;
 
 import es.uji.ei1027.ovi.dao.Credentials.CredentialsDao;
 import es.uji.ei1027.ovi.dao.OviUser.OviUserDao;
+import es.uji.ei1027.ovi.model.ChangePasswordForm;
 import es.uji.ei1027.ovi.model.Credentials;
+import es.uji.ei1027.ovi.model.OviUser;
 import es.uji.ei1027.ovi.model.OviUserRegistration;
 import es.uji.ei1027.ovi.utils.PasswordUtils;
+import es.uji.ei1027.ovi.validator.ChangePasswordValidator;
 import es.uji.ei1027.ovi.validator.OviUserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -73,7 +76,7 @@ public class OviUserController {
 
     @RequestMapping("/registerSuccess")
     public String registerSuccess() {
-        return "oviuser/registerSuccess";
+        return "registerSuccess";
     }
 
     @RequestMapping("/portal")
@@ -82,5 +85,82 @@ public class OviUserController {
             return "redirect:/login";
         }
         return "oviuser/portal";
+    }
+
+    @RequestMapping("/edit")
+    public String editOviUser(HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+        Credentials credentials = (Credentials) session.getAttribute("user");
+        OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
+        model.addAttribute("oviuser", oviUser);
+        return "oviuser/edit";
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public String processEditSubmit(@ModelAttribute("oviuser") OviUser oviUser,
+                                    BindingResult bindingResult,
+                                    HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
+        OviUserValidator validator = new OviUserValidator();
+        validator.validate(oviUser, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return "oviuser/edit";
+        }
+
+        oviUserDao.updateOviUser(oviUser);
+        return "redirect:portal";
+    }
+
+    @RequestMapping("/canviarContrasenya")
+    public String canviarContrasenya(HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("changePasswordForm", new ChangePasswordForm());
+        return "oviuser/canviarContrasenya";
+    }
+
+    @RequestMapping(value = "/canviarContrasenya", method = RequestMethod.POST)
+    public String processCanviarContrasenya(@ModelAttribute("changePasswordForm") ChangePasswordForm form,
+                                            BindingResult bindingResult,
+                                            HttpSession session,
+                                            Model model) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
+        ChangePasswordValidator validator = new ChangePasswordValidator();
+        validator.validate(form, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return "oviuser/canviarContrasenya";
+        }
+
+        Credentials credentials = (Credentials) session.getAttribute("user");
+        try {
+            if (!PasswordUtils.check(form.getCurrentPassword(), credentials.getPassword())) {
+                model.addAttribute("errorActual", "La contrasenya actual no és correcta");
+                return "oviuser/canviarContrasenya";
+            }
+        } catch (Exception e) {
+            if (!credentials.getPassword().equals(form.getCurrentPassword())) {
+                model.addAttribute("errorActual", "La contrasenya actual no és correcta");
+                return "oviuser/canviarContrasenya";
+            }
+        }
+
+        String newEncryptedPassword = PasswordUtils.encrypt(form.getNewPassword());
+        credentialsDao.updatePassword(credentials.getUsername(), newEncryptedPassword);
+
+        credentials.setPassword(newEncryptedPassword);
+        session.setAttribute("user", credentials);
+
+        return "redirect:portal";
     }
 }

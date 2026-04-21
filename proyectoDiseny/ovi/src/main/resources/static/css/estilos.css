@@ -338,3 +338,34 @@ input:focus, select:focus, textarea:focus {
     color: #666;
     font-size: 16px;
 }
+
+/* =========================================
+   TABLAS
+   ========================================= */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.data-table th {
+    background-color: var(--color-primario);
+    color: #FFFFFF;
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 16px;
+}
+
+.data-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #E0E0E0;
+    font-size: 16px;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: var(--bg-crema);
+}
+
+.data-table tr:hover {
+    background-color: rgba(0, 74, 173, 0.05);
+}

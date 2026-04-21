@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Editar dades PAP/PATI</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <main class="form-section">
+        <h1>Les meues dades</h1>
+        <p>Modifica les teues dades personals i de contacte.</p>
+
+        <form th:action="@{/papPati/edit}" th:object="${pappati}" method="post">
+
+            <input type="hidden" th:field="*{papID}" />
+            <input type="hidden" th:field="*{status}" />
+            <input type="hidden" th:field="*{username}" />
+
+            <div class="form-group">
+                <label for="nameAndSurname">Nom i Cognoms</label>
+                <input type="text" id="nameAndSurname" th:field="*{nameAndSurname}"
+                       th:class="${#fields.hasErrors('nameAndSurname')} ? 'input-error' : ''"
+                       placeholder="Ex: Joan García i Pons" />
+                <span class="error-text" th:if="${#fields.hasErrors('nameAndSurname')}" th:errors="*{nameAndSurname}"></span>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="emailAddress">Correu Electrònic</label>
+                    <input type="email" id="emailAddress" th:field="*{emailAddress}"
+                           th:class="${#fields.hasErrors('emailAddress')} ? 'input-error' : ''"
+                           placeholder="usuari@exemple.com" />
+                    <span class="error-text" th:if="${#fields.hasErrors('emailAddress')}" th:errors="*{emailAddress}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneNumber">Telèfon de contacte</label>
+                    <input type="text" id="phoneNumber" th:field="*{phoneNumber}"
+                           th:class="${#fields.hasErrors('phoneNumber')} ? 'input-error' : ''"
+                           placeholder="Ex: 600123456" />
+                    <span class="error-text" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="birthDate">Data de Naixement</label>
+                <input type="date" id="birthDate" th:field="*{birthDate}"
+                       th:class="${#fields.hasErrors('birthDate')} ? 'input-error' : ''" />
+                <span class="error-text" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="homeAddress">Adreça Habitual</label>
+                <input type="text" id="homeAddress" th:field="*{homeAddress}"
+                       th:class="${#fields.hasErrors('homeAddress')} ? 'input-error' : ''"
+                       placeholder="Carrer, Número, Pis, Ciutat, Codi Postal" />
+                <span class="error-text" th:if="${#fields.hasErrors('homeAddress')}" th:errors="*{homeAddress}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="specializationAreas">Àrees d'Especialització</label>
+                <input type="text" id="specializationAreas" th:field="*{specializationAreas}"
+                       th:class="${#fields.hasErrors('specializationAreas')} ? 'input-error' : ''"
+                       placeholder="Ex: Fisioteràpia, Psicologia infantil, etc." />
+                <span class="error-text" th:if="${#fields.hasErrors('specializationAreas')}" th:errors="*{specializationAreas}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="academicBackground">Formació Acadèmica</label>
+                <textarea id="academicBackground" th:field="*{academicBackground}" rows="3"
+                          th:class="${#fields.hasErrors('academicBackground')} ? 'input-error' : ''"
+                          placeholder="Indique els seus estudis i titulacions..."></textarea>
+                <span class="error-text" th:if="${#fields.hasErrors('academicBackground')}" th:errors="*{academicBackground}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="professionalExperience">Experiència Professional</label>
+                <textarea id="professionalExperience" th:field="*{professionalExperience}" rows="3"
+                          th:class="${#fields.hasErrors('professionalExperience')} ? 'input-error' : ''"
+                          placeholder="Explique breument la seua experiència laboral rellevant..."></textarea>
+                <span class="error-text" th:if="${#fields.hasErrors('professionalExperience')}" th:errors="*{professionalExperience}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="documents">Documents Adjunts (URL o Referència)</label>
+                <input type="text" id="documents" th:field="*{documents}"
+                       th:class="${#fields.hasErrors('documents')} ? 'input-error' : ''"
+                       placeholder="Enllaç a la carpeta amb els certificats o currículum" />
+                <span class="error-text" th:if="${#fields.hasErrors('documents')}" th:errors="*{documents}"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-container" th:classappend="${#fields.hasErrors('LOPDAcceptance')} ? 'input-error' : ''">
+                    <input type="checkbox" id="LOPDAcceptance" th:field="*{LOPDAcceptance}" />
+                    <span>He llegit i accepte la <strong>Política de Protecció de Dades (LOPD)</strong></span>
+                </label>
+                <span class="error-text" th:if="${#fields.hasErrors('LOPDAcceptance')}" th:errors="*{LOPDAcceptance}"></span>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/papPati/portal}" style="margin-right: 25px; color: var(--color-secundario); text-decoration: none; font-weight: bold;">Cancel·lar</a>
+                <button type="submit" class="btn">Guardar canvis</button>
+            </div>
+
+        </form>
+    </main>
+</div>
+
+</body>
+</html>

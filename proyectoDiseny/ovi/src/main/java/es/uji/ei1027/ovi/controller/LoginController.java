@@ -52,7 +52,21 @@ public class LoginController {
         Credentials credentials = credentialsDao.getCredentials(username);
 
         // 1. Usuario no existe o contraseña incorrecta
-        if (credentials == null || !PasswordUtils.check(password, credentials.getPassword())) {
+        if (credentials == null) {
+            model.addAttribute("loginError", "Usuari o contrasenya incorrectes");
+            return "login";
+        }
+
+        // Comprobamos contraseña
+        boolean passwordOk;
+        try {
+            passwordOk = PasswordUtils.check(password, credentials.getPassword());
+        } catch (Exception e) {
+            // Si falla la desencriptación, la contraseña está en texto plano (usuario antiguo)
+            passwordOk = credentials.getPassword().equals(password);
+        }
+
+        if (!passwordOk) {
             model.addAttribute("loginError", "Usuari o contrasenya incorrectes");
             return "login";
         }
@@ -119,5 +133,25 @@ public class LoginController {
         }
 
         return "pending";
+    }
+
+    @RequestMapping("/mi-portal")
+    public String miPortal(HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
+        Credentials credentials = (Credentials) session.getAttribute("user");
+
+        switch (credentials.getRole()) {
+            case "admin":
+                return "redirect:/admin/portal";
+            case "user_ovi":
+                return "redirect:/oviUser/portal";
+            case "pap_pati":
+                return "redirect:/papPati/portal";
+            default:
+                return "redirect:/login";
+        }
     }
 }

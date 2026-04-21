@@ -45,8 +45,9 @@ public class PapPatiDao {
     }
 
     public int getLastInsertedId() {
-        return jdbcTemplate.queryForObject(
+        Integer id = jdbcTemplate.queryForObject(
                 "SELECT MAX(papID) FROM PAP_PATI", Integer.class);
+        return id != null ? id : 0;
     }
 
     public void updatePapPati(PapPati papPati) {
@@ -74,5 +75,17 @@ public class PapPatiDao {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    public List<PapPati> getPapPatisPendents() {
+        return jdbcTemplate.query(
+                "SELECT * FROM PAP_PATI WHERE status='approvalPending'",
+                new PapPatiRowMapper());
+    }
+
+    public void activatePapPati(String username) {
+        jdbcTemplate.update(
+                "UPDATE PAP_PATI SET status='active' WHERE username=?",
+                username);
     }
 }
