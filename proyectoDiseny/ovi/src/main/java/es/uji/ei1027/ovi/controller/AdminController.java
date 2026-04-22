@@ -39,6 +39,7 @@ public class AdminController {
     @RequestMapping("/portal")
     public String portal(HttpSession session) {
         if (session.getAttribute("user") == null) {
+            session.setAttribute("nextUrl", "/admin/portal");
             return "redirect:/login";
         }
         return "admin/portal";
@@ -50,6 +51,7 @@ public class AdminController {
     @RequestMapping("/validarPapPati")
     public String validarPapPati(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
+            session.setAttribute("nextUrl", "/admin/validarPapPati");
             return "redirect:/login";
         }
         model.addAttribute("pappatis", papPatiDao.getPapPatisPendents());
@@ -73,6 +75,7 @@ public class AdminController {
     @RequestMapping("/validarOviUsers")
     public String validarOviUsers(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
+            session.setAttribute("nextUrl", "/admin/validarOviUsers");
             return "redirect:/login";
         }
         model.addAttribute("oviusers", oviUserDao.getOviUsersPendents());

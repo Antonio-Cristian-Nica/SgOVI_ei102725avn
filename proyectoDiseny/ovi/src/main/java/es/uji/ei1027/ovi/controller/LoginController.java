@@ -7,9 +7,12 @@ import es.uji.ei1027.ovi.model.Credentials;
 import es.uji.ei1027.ovi.model.OviUser;
 import es.uji.ei1027.ovi.model.PapPati;
 import es.uji.ei1027.ovi.utils.PasswordUtils;
+import es.uji.ei1027.ovi.validator.LoginValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,31 +42,36 @@ public class LoginController {
     }
 
     @RequestMapping("/login")
-    public String showLogin() {
+    public String showLogin(Model model) {
+        model.addAttribute("user", new Credentials());
         return "login";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String processLogin(@RequestParam("username") String username,
-                               @RequestParam("password") String password,
+    public String processLogin(@ModelAttribute("user") Credentials user,
+                               BindingResult bindingResult,
                                HttpSession session,
                                Model model) {
 
-        Credentials credentials = credentialsDao.getCredentials(username);
+        LoginValidator loginValidator = new LoginValidator();
+        loginValidator.validate(user, bindingResult);
 
-        // 1. Usuario no existe o contraseña incorrecta
+        if (bindingResult.hasErrors()) {
+            return "login";
+        }
+
+        Credentials credentials = credentialsDao.getCredentials(user.getUsername());
+
         if (credentials == null) {
             model.addAttribute("loginError", "Usuari o contrasenya incorrectes");
             return "login";
         }
 
-        // Comprobamos contraseña
         boolean passwordOk;
         try {
-            passwordOk = PasswordUtils.check(password, credentials.getPassword());
+            passwordOk = PasswordUtils.check(user.getPassword(), credentials.getPassword());
         } catch (Exception e) {
-            // Si falla la desencriptación, la contraseña está en texto plano (usuario antiguo)
-            passwordOk = credentials.getPassword().equals(password);
+            passwordOk = credentials.getPassword().equals(user.getPassword());
         }
 
         if (!passwordOk) {
@@ -71,35 +79,37 @@ public class LoginController {
             return "login";
         }
 
-        // 2. Guardamos siempre las credenciales en sesión
         session.setAttribute("user", credentials);
 
-        // 3. Cuenta no activada
         if (!credentials.getActivated()) {
-            // Recuperamos el objeto completo para tener acceso al status
             switch (credentials.getRole()) {
                 case "user_ovi":
-                    OviUser oviUser = oviUserDao.getOviUserByUsername(username);
+                    OviUser oviUser = oviUserDao.getOviUserByUsername(user.getUsername());
                     session.setAttribute("sessionUser", oviUser);
                     break;
                 case "pap_pati":
-                    PapPati papPati = papPatiDao.getPapPatiByUsername(username);
+                    PapPati papPati = papPatiDao.getPapPatiByUsername(user.getUsername());
                     session.setAttribute("sessionUser", papPati);
                     break;
             }
             return "redirect:/pending";
         }
 
-        // 4. Cuenta activada, recuperamos objeto completo y redirigimos según rol
+        String nextUrl = (String) session.getAttribute("nextUrl");
+        if (nextUrl != null) {
+            session.removeAttribute("nextUrl");
+            return "redirect:" + nextUrl;
+        }
+
         switch (credentials.getRole()) {
             case "admin":
                 return "redirect:/admin/portal";
             case "user_ovi":
-                OviUser oviUser = oviUserDao.getOviUserByUsername(username);
+                OviUser oviUser = oviUserDao.getOviUserByUsername(user.getUsername());
                 session.setAttribute("sessionUser", oviUser);
                 return "redirect:/oviUser/portal";
             case "pap_pati":
-                PapPati papPati = papPatiDao.getPapPatiByUsername(username);
+                PapPati papPati = papPatiDao.getPapPatiByUsername(user.getUsername());
                 session.setAttribute("sessionUser", papPati);
                 return "redirect:/papPati/portal";
             default:
