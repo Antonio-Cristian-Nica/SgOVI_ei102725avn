@@ -7,8 +7,6 @@ public class Inscription {
     private int activityID; // FK + PK
     private LocalDateTime dateAndTime;
 
-    public Inscription() {}
-
     public int getOviID() { return oviID; }
     public void setOviID(int oviID) { this.oviID = oviID; }
 

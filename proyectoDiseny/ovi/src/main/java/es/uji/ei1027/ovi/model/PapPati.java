@@ -20,8 +20,6 @@ public class PapPati {
     private String status; // 'active', 'inactive', 'approvalPending'
     private String username;
 
-    public PapPati() {}
-
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 

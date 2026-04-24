@@ -12,8 +12,6 @@ public class Contract {
     private String documentURL;
     private int negotiationID; // FK → Negotiation
 
-    public Contract() {}
-
     public int getContractID() { return contractID; }
     public void setContractID(int contractID) { this.contractID = contractID; }
 

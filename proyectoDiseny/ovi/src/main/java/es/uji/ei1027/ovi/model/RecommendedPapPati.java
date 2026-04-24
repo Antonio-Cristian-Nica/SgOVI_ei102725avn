@@ -7,8 +7,6 @@ public class RecommendedPapPati {
     private int papID;     // FK + PK
     private LocalDateTime dateOfRecommendation;
 
-    public RecommendedPapPati() {}
-
     public int getRequestID() { return requestID; }
     public void setRequestID(int requestID) { this.requestID = requestID; }
 

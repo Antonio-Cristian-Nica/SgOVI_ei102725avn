@@ -1,7 +1,7 @@
 package es.uji.ei1027.ovi.controller;
 
-import es.uji.ei1027.ovi.dao.Credentials.CredentialsDao;
-import es.uji.ei1027.ovi.dao.OviUser.OviUserDao;
+import es.uji.ei1027.ovi.dao.credentials.CredentialsDao;
+import es.uji.ei1027.ovi.dao.oviuser.OviUserDao;
 import es.uji.ei1027.ovi.model.ChangePasswordForm;
 import es.uji.ei1027.ovi.model.Credentials;
 import es.uji.ei1027.ovi.model.OviUser;
@@ -22,7 +22,8 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/oviUser")
 public class OviUserController {
-
+    private static final String CANVI_CONTRASENYA_VIEW = "oviuser/canviarContrasenya";
+    private static final String REDIRECT_LOGIN = "redirect:/login";
     private OviUserDao oviUserDao;
     private CredentialsDao credentialsDao;
 
@@ -82,7 +83,7 @@ public class OviUserController {
     @RequestMapping("/portal")
     public String portal(HttpSession session) {
         if (session.getAttribute("user") == null) {
-            return "redirect:/login";
+            return REDIRECT_LOGIN;
         }
         return "oviuser/portal";
     }
@@ -90,7 +91,7 @@ public class OviUserController {
     @RequestMapping("/edit")
     public String editOviUser(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
-            return "redirect:/login";
+            return REDIRECT_LOGIN;
         }
         Credentials credentials = (Credentials) session.getAttribute("user");
         OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
@@ -103,7 +104,7 @@ public class OviUserController {
                                     BindingResult bindingResult,
                                     HttpSession session) {
         if (session.getAttribute("user") == null) {
-            return "redirect:/login";
+            return REDIRECT_LOGIN;
         }
 
         OviUserValidator validator = new OviUserValidator();
@@ -120,10 +121,10 @@ public class OviUserController {
     @RequestMapping("/canviarContrasenya")
     public String canviarContrasenya(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
-            return "redirect:/login";
+            return REDIRECT_LOGIN;
         }
         model.addAttribute("changePasswordForm", new ChangePasswordForm());
-        return "oviuser/canviarContrasenya";
+        return CANVI_CONTRASENYA_VIEW;
     }
 
     @RequestMapping(value = "/canviarContrasenya", method = RequestMethod.POST)
@@ -132,26 +133,26 @@ public class OviUserController {
                                             HttpSession session,
                                             Model model) {
         if (session.getAttribute("user") == null) {
-            return "redirect:/login";
+            return REDIRECT_LOGIN;
         }
 
         ChangePasswordValidator validator = new ChangePasswordValidator();
         validator.validate(form, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "oviuser/canviarContrasenya";
+            return CANVI_CONTRASENYA_VIEW;
         }
 
         Credentials credentials = (Credentials) session.getAttribute("user");
         try {
             if (!PasswordUtils.check(form.getCurrentPassword(), credentials.getPassword())) {
                 model.addAttribute("errorActual", "La contrasenya actual no és correcta");
-                return "oviuser/canviarContrasenya";
+                return CANVI_CONTRASENYA_VIEW;
             }
         } catch (Exception e) {
             if (!credentials.getPassword().equals(form.getCurrentPassword())) {
                 model.addAttribute("errorActual", "La contrasenya actual no és correcta");
-                return "oviuser/canviarContrasenya";
+                return CANVI_CONTRASENYA_VIEW;
             }
         }
 

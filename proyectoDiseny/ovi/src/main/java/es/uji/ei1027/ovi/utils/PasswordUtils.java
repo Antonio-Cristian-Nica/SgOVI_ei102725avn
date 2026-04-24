@@ -6,6 +6,10 @@ public class PasswordUtils {
 
     private static final StrongPasswordEncryptor encryptor = new StrongPasswordEncryptor();
 
+    private PasswordUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String encrypt(String password) {
         return encryptor.encryptPassword(password);
     }

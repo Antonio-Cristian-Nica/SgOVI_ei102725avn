@@ -10,8 +10,6 @@ public class AssistanceRequest {
     private String status; // 'accepted', 'rejected', 'inProgress'
     private int oviID; // FK → OviUser
 
-    public AssistanceRequest() {}
-
     public int getRequestID() { return requestID; }
     public void setRequestID(int requestID) { this.requestID = requestID; }
 

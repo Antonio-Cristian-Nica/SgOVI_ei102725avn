@@ -14,8 +14,6 @@ public class Tutor {
     private String emailAddress;
     private String relationshipWithUser;
 
-    public Tutor() {}
-
     public int getTutorID() { return tutorID; }
     public void setTutorID(int tutorID) { this.tutorID = tutorID; }
 

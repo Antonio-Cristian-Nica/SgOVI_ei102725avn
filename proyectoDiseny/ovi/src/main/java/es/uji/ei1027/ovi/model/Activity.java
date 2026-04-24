@@ -13,8 +13,6 @@ public class Activity {
     private int registeredUsers;
     private String status; // 'created', 'InProgress', 'ended'
 
-    public Activity() {}
-
     public int getActivityID() { return activityID; }
     public void setActivityID(int activityID) { this.activityID = activityID; }
 

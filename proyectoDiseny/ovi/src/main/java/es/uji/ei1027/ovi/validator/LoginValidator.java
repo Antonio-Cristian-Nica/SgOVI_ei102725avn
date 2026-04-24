@@ -1,18 +1,19 @@
 package es.uji.ei1027.ovi.validator;
 
 import es.uji.ei1027.ovi.model.Credentials;
+import org.springframework.lang.NonNull;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 public class LoginValidator implements Validator {
 
     @Override
-    public boolean supports(Class<?> clazz) {
+    public boolean supports(@NonNull Class<?> clazz) {
         return Credentials.class.isAssignableFrom(clazz);
     }
 
     @Override
-    public void validate(Object target, Errors errors) {
+    public void validate(@NonNull Object target, @NonNull Errors errors) {
         Credentials credentials = (Credentials) target;
 
         if (credentials.getUsername() == null || credentials.getUsername().trim().isEmpty()) {

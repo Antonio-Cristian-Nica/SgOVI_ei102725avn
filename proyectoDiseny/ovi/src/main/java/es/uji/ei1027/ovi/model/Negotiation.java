@@ -12,8 +12,6 @@ public class Negotiation {
     private int requestID; // FK compuesta → RecommendedPapPati
     private int papID;     // FK compuesta → RecommendedPapPati
 
-    public Negotiation() {}
-
     public int getNegotiationID() { return negotiationID; }
     public void setNegotiationID(int negotiationID) { this.negotiationID = negotiationID; }
 

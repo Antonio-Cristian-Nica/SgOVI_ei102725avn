@@ -14,8 +14,6 @@ public class RequestSchedule {
     private LocalTime endHour;
     private int requestID; // FK → AssistanceRequest
 
-    public RequestSchedule() {}
-
     public int getReqScheduleID() { return reqScheduleID; }
     public void setReqScheduleID(int reqScheduleID) { this.reqScheduleID = reqScheduleID; }
 

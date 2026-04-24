@@ -1,6 +1,6 @@
 package es.uji.ei1027.ovi.controller;
 
-import es.uji.ei1027.ovi.dao.OviUserTutor.TutorDao;
+import es.uji.ei1027.ovi.dao.oviusertutor.TutorDao;
 import es.uji.ei1027.ovi.model.Tutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/tutor")
 public class TutorController {
-
+    private static final String REDIRECT_TUTOR_LIST = "redirect:/tutor/list";
     private TutorDao tutorDao;
 
     @Autowired
@@ -36,7 +36,7 @@ public class TutorController {
     @PostMapping("/add")
     public String add(@ModelAttribute("tutor") Tutor tutor) {
         tutorDao.addTutor(tutor);
-        return "redirect:/tutor/list";
+        return REDIRECT_TUTOR_LIST;
     }
 
     // MOSTRAR FORMULARIO EDITAR
@@ -51,13 +51,13 @@ public class TutorController {
     public String edit(@PathVariable int id, @ModelAttribute("tutor") Tutor tutor) {
         tutor.setTutorID(id);
         tutorDao.updateTutor(tutor);
-        return "redirect:/tutor/list";
+        return REDIRECT_TUTOR_LIST;
     }
 
     // BORRAR
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable int id) {
         tutorDao.deleteTutor(id);
-        return "redirect:/tutor/list";
+        return REDIRECT_TUTOR_LIST;
     }
 }

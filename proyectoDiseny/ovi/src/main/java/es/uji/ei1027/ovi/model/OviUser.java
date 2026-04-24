@@ -15,8 +15,6 @@ public class OviUser {
     private Integer tutorID; // Nullable (FK)
     private String username;
 
-    public OviUser() {}
-
     public String getUsername() { return username;}
     public void setUsername(String username) {this.username = username;}
 

@@ -1,7 +1,7 @@
 package es.uji.ei1027.ovi.controller;
 
-import es.uji.ei1027.ovi.dao.Credentials.CredentialsDao;
-import es.uji.ei1027.ovi.dao.PapPati.PapPatiDao;
+import es.uji.ei1027.ovi.dao.credentials.CredentialsDao;
+import es.uji.ei1027.ovi.dao.pappati.PapPatiDao;
 import es.uji.ei1027.ovi.model.ChangePasswordForm;
 import es.uji.ei1027.ovi.model.Credentials;
 import es.uji.ei1027.ovi.model.PapPati;
@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/papPati")
 public class PapPatiController {
-
+    private static final String REDIRECT_LOGIN = "redirect:/login";
+    private static final String CANVI_CONTRASENYA_PAPPATI_VIEW = "papPati/canviarContrasenya";
     private PapPatiDao papPatiDao;
     private CredentialsDao credentialsDao;
 
@@ -88,7 +89,7 @@ public class PapPatiController {
     @RequestMapping("/portal")
     public String portal(HttpSession session) {
         if (session.getAttribute("user") == null) {
-            return "redirect:/login";
+            return REDIRECT_LOGIN;
         }
         return "papPati/portal";
     }
@@ -96,7 +97,7 @@ public class PapPatiController {
     @RequestMapping("/edit")
     public String editPapPati(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
-            return "redirect:/login";
+            return REDIRECT_LOGIN;
         }
         Credentials credentials = (Credentials) session.getAttribute("user");
         PapPati papPati = papPatiDao.getPapPatiByUsername(credentials.getUsername());
@@ -109,7 +110,7 @@ public class PapPatiController {
                                     BindingResult bindingResult,
                                     HttpSession session) {
         if (session.getAttribute("user") == null) {
-            return "redirect:/login";
+            return REDIRECT_LOGIN;
         }
 
         PapPatiValidator validator = new PapPatiValidator();
@@ -126,10 +127,10 @@ public class PapPatiController {
     @RequestMapping("/canviarContrasenya")
     public String canviarContrasenya(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
-            return "redirect:/login";
+            return REDIRECT_LOGIN;
         }
         model.addAttribute("changePasswordForm", new ChangePasswordForm());
-        return "papPati/canviarContrasenya";
+        return CANVI_CONTRASENYA_PAPPATI_VIEW;
     }
 
     @RequestMapping(value = "/canviarContrasenya", method = RequestMethod.POST)
@@ -138,14 +139,14 @@ public class PapPatiController {
                                             HttpSession session,
                                             Model model) {
         if (session.getAttribute("user") == null) {
-            return "redirect:/login";
+            return REDIRECT_LOGIN;
         }
 
         ChangePasswordValidator validator = new ChangePasswordValidator();
         validator.validate(form, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "papPati/canviarContrasenya";
+            return CANVI_CONTRASENYA_PAPPATI_VIEW;
         }
 
         // Comprobamos que la contraseña actual es correcta
@@ -153,12 +154,12 @@ public class PapPatiController {
         try {
             if (!PasswordUtils.check(form.getCurrentPassword(), credentials.getPassword())) {
                 model.addAttribute("errorActual", "La contrasenya actual no és correcta");
-                return "papPati/canviarContrasenya";
+                return CANVI_CONTRASENYA_PAPPATI_VIEW;
             }
         } catch (Exception e) {
             if (!credentials.getPassword().equals(form.getCurrentPassword())) {
                 model.addAttribute("errorActual", "La contrasenya actual no és correcta");
-                return "papPati/canviarContrasenya";
+                return CANVI_CONTRASENYA_PAPPATI_VIEW;
             }
         }
 

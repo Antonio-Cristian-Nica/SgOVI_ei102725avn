@@ -9,8 +9,6 @@ public class Schedule {
     private LocalTime endHour;
     private int papID; // FK → PapPati
 
-    public Schedule() {}
-
     public int getScheduleID() { return scheduleID; }
     public void setScheduleID(int scheduleID) { this.scheduleID = scheduleID; }
 

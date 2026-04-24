@@ -5,8 +5,6 @@ public class ChangePasswordForm {
     private String newPassword;
     private String confirmPassword;
 
-    public ChangePasswordForm() {}
-
     public String getCurrentPassword() { return currentPassword; }
     public void setCurrentPassword(String currentPassword) { this.currentPassword = currentPassword; }
 
