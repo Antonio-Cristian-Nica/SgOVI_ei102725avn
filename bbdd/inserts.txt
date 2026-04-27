@@ -58,7 +58,7 @@ INSERT INTO OVI_USER (nameAndSurname, phoneNumber, birthDate, homeAddress, email
 ('Sofía Blanco', '611001010', '1993-09-09', 'Calle Nueva 12, Zaragoza', 'sofia.b@email.com', 'Visual', TRUE, 'active', NULL, 'sofia.b'),
 ('Raúl Giménez', '611001011', '1990-12-24', 'Plaza Mayor 2, Madrid', 'raul.g@email.com', 'Física', TRUE, 'active', NULL, 'raul.g'),
 ('Julia Costa', '611001012', '2002-05-18', 'Calle Mar 30, Valencia', 'julia.c@email.com', 'Cognitiva', TRUE, 'active', NULL, 'julia.c'),
-('David Ortiz', '611001013', '1996-07-30', 'Calle Pino 1, Sevilla', 'david.o@email.com', 'Motora', TRUE, 'approvalPending', NULL, 'david.o'),
+('David Ortiz', '611001013', '1996-07-30', 'Calle Pino 1, Sevilla', 'david.o@email.com', 'Motora', TRUE, 'active', NULL, 'david.o'),
 ('Irene Mas', '611001014', '1991-02-14', 'Av. Estación 4, Alicante', 'irene.mas@email.com', 'Auditiva', TRUE, 'active', NULL, 'irene.mas'),
 ('Pablo Escribano', '611001015', '1998-10-10', 'Calle Segovia 9, Madrid', 'pablo.e@email.com', 'TEA', TRUE, 'active', NULL, 'pablo.e');
 
