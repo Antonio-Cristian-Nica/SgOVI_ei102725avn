@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Gestionar Usuaris OVI</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <h2 class="section-title">Gestió d'Usuaris OVI</h2>
+    <p class="section-subtitle">Llistat d'usuaris acceptats i rebutjats.</p>
+
+    <div th:if="${oviusers.isEmpty()}" class="alert alert-info">
+        No hi ha usuaris acceptats o rebutjats en aquest moment.
+    </div>
+
+    <div th:if="${!oviusers.isEmpty()}">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>Nom i Cognoms</th>
+                <th>Correu</th>
+                <th>Telèfon</th>
+                <th>Diversitat Funcional</th>
+                <th>Usuari</th>
+                <th>Estat</th>
+                <th>Detall</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="oviuser : ${oviusers}">
+                <td th:text="${oviuser.nameAndSurname}"></td>
+                <td th:text="${oviuser.emailAddress}"></td>
+                <td th:text="${oviuser.phoneNumber}"></td>
+                <td th:text="${oviuser.functionalDiversity}"></td>
+                <td th:text="${oviuser.username}"></td>
+                <td>
+                    <span th:if="${oviuser.status == 'active'}" class="estat-actiu">Actiu</span>
+                    <span th:if="${oviuser.status == 'inactive'}" class="estat-inactiu">Rebutjat</span>
+                </td>
+                <td>
+                    <a th:href="@{/admin/gestionarOviUsers/{username}(username=${oviuser.username})}"
+                       class="btn btn-secondary">Veure</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-actions">
+        <a th:href="@{/admin/portal}" class="btn btn-secondary">Tornar al portal</a>
+    </div>
+
+</div>
+
+</body>
+</html>

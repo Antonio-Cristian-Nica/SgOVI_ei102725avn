@@ -9,9 +9,10 @@
 <body>
 
 <div layout:fragment="content">
-    <main class="form-section">
-        <h1>Les meues dades</h1>
-        <p>Modifica les teues dades personals i de contacte.</p>
+    <div class="form-section">
+
+        <h2 class="section-title">Les meues dades</h2>
+        <p class="section-subtitle">Modifica les teues dades personals i de contacte.</p>
 
         <form th:action="@{/oviUser/edit}" th:object="${oviuser}" method="post">
 
@@ -19,6 +20,9 @@
             <input type="hidden" th:field="*{status}" />
             <input type="hidden" th:field="*{username}" />
             <input type="hidden" th:field="*{tutorID}" />
+
+            <!-- SECCIÓ 1: DADES PERSONALS -->
+            <h3 class="form-section-title">Dades personals</h3>
 
             <div class="form-group">
                 <label for="nameAndSurname">Nom i Cognoms</label>
@@ -71,6 +75,11 @@
                 <span class="error-text" th:if="${#fields.hasErrors('functionalDiversity')}" th:errors="*{functionalDiversity}"></span>
             </div>
 
+            <hr class="section-divider">
+
+            <!-- SECCIÓ 2: LOPD -->
+            <h3 class="form-section-title">Protecció de dades</h3>
+
             <div class="form-group">
                 <label class="checkbox-container" th:classappend="${#fields.hasErrors('LOPDAcceptance')} ? 'input-error' : ''">
                     <input type="checkbox" id="LOPDAcceptance" th:field="*{LOPDAcceptance}" />
@@ -80,12 +89,12 @@
             </div>
 
             <div class="form-actions">
-                <a th:href="@{/oviUser/portal}" style="color: var(--color-secundario); text-decoration: none; font-weight: bold;">Cancel·lar</a>
-                <button type="submit" class="btn">Guardar canvis</button>
+                <a th:href="@{/oviUser/portal}" class="btn btn-secondary">Cancel·lar</a>
+                <button type="submit" class="btn btn-primary">Guardar canvis</button>
             </div>
 
         </form>
-    </main>
+    </div>
 </div>
 
 </body>

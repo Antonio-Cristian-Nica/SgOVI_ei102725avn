@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -21,7 +22,6 @@ public class AdminController {
     private PapPatiDao papPatiDao;
     private OviUserDao oviUserDao;
     private CredentialsDao credentialsDao;
-
 
     @Autowired
     public void setPapPatiDao(PapPatiDao papPatiDao) {
@@ -60,15 +60,42 @@ public class AdminController {
         return "admin/validarPapPati";
     }
 
-    @RequestMapping(value = "/validarPapPati/{username}", method = RequestMethod.POST)
+    @RequestMapping(value = "/validarPapPati/{username}/activar", method = RequestMethod.POST)
     public String activarPapPati(@PathVariable("username") String username,
                                  HttpSession session) {
-        if (session.getAttribute("user") == null) {
-            return REDIRECT_LOGIN;
-        }
+        if (session.getAttribute("user") == null) return REDIRECT_LOGIN;
         credentialsDao.activateCredentials(username);
         papPatiDao.activatePapPati(username);
         return "redirect:/admin/validarPapPati";
+    }
+
+    @RequestMapping(value = "/validarPapPati/{username}/rebutjar", method = RequestMethod.POST)
+    public String rebutjarPapPati(@PathVariable("username") String username,
+                                  @RequestParam("rejectionReason") String rejectionReason,
+                                  HttpSession session) {
+        if (session.getAttribute("user") == null) return REDIRECT_LOGIN;
+        credentialsDao.rejectCredentials(username, rejectionReason);
+        papPatiDao.rejectPapPati(username);
+        return "redirect:/admin/validarPapPati";
+    }
+
+    // =====================================================================
+    // GESTIONAR PAP/PATI (aceptados y rechazados)
+    // =====================================================================
+    @RequestMapping("/gestionarPapPati")
+    public String gestionarPapPati(HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) return REDIRECT_LOGIN;
+        model.addAttribute("pappatis", papPatiDao.getPapPatisGestionats());
+        return "admin/gestionarPapPati";
+    }
+
+    @RequestMapping("/gestionarPapPati/{username}")
+    public String detallPapPati(@PathVariable("username") String username,
+                                HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) return REDIRECT_LOGIN;
+        model.addAttribute("pappati", papPatiDao.getPapPatiByUsername(username));
+        model.addAttribute("credentials", credentialsDao.getCredentials(username));
+        return "admin/detallPapPati";
     }
 
     // =====================================================================
@@ -84,14 +111,58 @@ public class AdminController {
         return "admin/validarOviUsers";
     }
 
-    @RequestMapping(value = "/validarOviUsers/{username}", method = RequestMethod.POST)
+    @RequestMapping(value = "/validarOviUsers/{username}/activar", method = RequestMethod.POST)
     public String activarOviUser(@PathVariable("username") String username,
                                  HttpSession session) {
-        if (session.getAttribute("user") == null) {
-            return REDIRECT_LOGIN;
-        }
+        if (session.getAttribute("user") == null) return REDIRECT_LOGIN;
         credentialsDao.activateCredentials(username);
         oviUserDao.activateOviUser(username);
         return "redirect:/admin/validarOviUsers";
+    }
+
+    @RequestMapping(value = "/validarOviUsers/{username}/rebutjar", method = RequestMethod.POST)
+    public String rebutjarOviUser(@PathVariable("username") String username,
+                                  @RequestParam("rejectionReason") String rejectionReason,
+                                  HttpSession session) {
+        if (session.getAttribute("user") == null) return REDIRECT_LOGIN;
+        credentialsDao.rejectCredentials(username, rejectionReason);
+        oviUserDao.rejectOviUser(username);
+        return "redirect:/admin/validarOviUsers";
+    }
+
+    // =====================================================================
+    // GESTIONAR OVI USERS (aceptados y rechazados)
+    // =====================================================================
+    @RequestMapping("/gestionarOviUsers")
+    public String gestionarOviUsers(HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) return REDIRECT_LOGIN;
+        model.addAttribute("oviusers", oviUserDao.getOviUsersGestionats());
+        return "admin/gestionarOviUsers";
+    }
+
+    @RequestMapping("/gestionarOviUsers/{username}")
+    public String detallOviUser(@PathVariable("username") String username,
+                                HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) return REDIRECT_LOGIN;
+        model.addAttribute("oviuser", oviUserDao.getOviUserByUsername(username));
+        model.addAttribute("credentials", credentialsDao.getCredentials(username));
+        return "admin/detallOviUser";
+    }
+
+    @RequestMapping("/estadistiques")
+    public String estadistiques(HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) return REDIRECT_LOGIN;
+
+        // OVI Users
+        model.addAttribute("oviActius", oviUserDao.countByStatus("active"));
+        model.addAttribute("oviPendents", oviUserDao.countByStatus("approvalPending"));
+        model.addAttribute("oviRebutjats", oviUserDao.countByStatus("inactive"));
+
+        // PAP/PATIs
+        model.addAttribute("papActius", papPatiDao.countByStatus("active"));
+        model.addAttribute("papPendents", papPatiDao.countByStatus("approvalPending"));
+        model.addAttribute("papRebutjats", papPatiDao.countByStatus("inactive"));
+
+        return "admin/estadistiques";
     }
 }

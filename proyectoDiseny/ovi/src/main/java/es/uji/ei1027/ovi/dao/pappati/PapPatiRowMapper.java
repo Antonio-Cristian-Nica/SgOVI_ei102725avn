@@ -14,6 +14,7 @@ public class PapPatiRowMapper implements RowMapper<PapPati> {
         pap.setPhoneNumber(rs.getString("phoneNumber"));
         pap.setBirthDate(rs.getDate("birthDate").toLocalDate());
         pap.setHomeAddress(rs.getString("homeAddress"));
+        pap.setLocality(rs.getString("locality"));
         pap.setEmailAddress(rs.getString("emailAddress"));
         pap.setAcademicBackground(rs.getString("academicBackground"));
         pap.setProfessionalExperience(rs.getString("professionalExperience"));

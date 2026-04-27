@@ -9,25 +9,29 @@
 <body>
 
 <div layout:fragment="content">
-    <main class="form-section">
+    <div class="login-wrapper">
+        <div class="form-section">
 
-        <h1>S'ha produït un error</h1>
+            <h2 class="section-title">S'ha produït un error</h2>
 
-        <!-- Error lanzado por SgOVIException -->
-        <div th:if="${errorName}">
-            <p><strong th:text="${errorName}"></strong></p>
-            <p th:text="${message}"></p>
+            <div th:if="${errorName}" class="alert alert-error">
+                <strong th:text="${errorName}"></strong>
+                <p th:text="${message}"></p>
+            </div>
+
+            <div th:if="${errorName == null}" class="alert alert-error">
+                <strong th:text="${status}"></strong>
+                <p th:text="${error}"></p>
+                <p th:text="${message}"></p>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/}" class="btn btn-secondary">Tornar a l'inici</a>
+                <a th:href="javascript:history.back()" class="btn btn-primary">Tornar enrere</a>
+            </div>
+
         </div>
-
-        <!-- Error lanzado por Spring (ruta no encontrada, etc.) -->
-        <div th:if="${errorName == null}">
-            <p><strong th:text="${status}"></strong></p>
-            <p th:text="${error}"></p>
-        </div>
-
-        <a th:href="@{/}" class="btn">Tornar a l'inici</a>
-
-    </main>
+    </div>
 </div>
 
 </body>

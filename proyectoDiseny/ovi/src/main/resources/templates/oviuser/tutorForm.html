@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Tutor legal</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="form-section">
+
+        <h2 class="section-title">Dades del tutor legal</h2>
+        <p class="section-subtitle">Introdueix les dades del teu tutor legal.</p>
+
+        <form th:action="${tutor.tutorID != 0} ? @{/oviUser/tutor/edit} : @{/oviUser/tutor/add}"
+              th:object="${tutor}" method="post">
+
+            <h3 class="form-section-title">Dades personals</h3>
+
+            <div class="form-group">
+                <label for="nameAndSurname">Nom i Cognoms</label>
+                <input type="text" id="nameAndSurname" th:field="*{nameAndSurname}"
+                       placeholder="Ex: Maria García López" />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="emailAddress">Correu Electrònic</label>
+                    <input type="email" id="emailAddress" th:field="*{emailAddress}"
+                           placeholder="tutor@exemple.com" />
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneNumber">Telèfon de contacte</label>
+                    <input type="text" id="phoneNumber" th:field="*{phoneNumber}"
+                           placeholder="Ex: 600123456" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="birthDate">Data de Naixement</label>
+                    <input type="date" id="birthDate" th:field="*{birthDate}" />
+                </div>
+
+                <div class="form-group">
+                    <label for="relationshipWithUser">Relació amb l'usuari</label>
+                    <input type="text" id="relationshipWithUser" th:field="*{relationshipWithUser}"
+                           placeholder="Ex: Mare, Pare, Tutor Legal..." />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="homeAddress">Adreça Habitual</label>
+                <input type="text" id="homeAddress" th:field="*{homeAddress}"
+                       placeholder="Carrer, Número, Pis, Ciutat, Codi Postal" />
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/oviUser/tutor}" class="btn btn-secondary">Cancel·lar</a>
+                <button type="submit" class="btn btn-primary">Guardar tutor</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

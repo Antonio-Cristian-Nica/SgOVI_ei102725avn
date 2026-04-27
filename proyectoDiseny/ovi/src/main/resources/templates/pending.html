@@ -9,29 +9,42 @@
 <body>
 
 <div layout:fragment="content">
-    <main class="form-section">
+    <div class="login-wrapper">
+        <div class="form-section">
 
-        <h1>Estat del teu compte</h1>
+            <h2 class="section-title">Estat del teu compte</h2>
 
-        <p>Hola, <strong th:text="${username}"></strong>.</p>
+            <p>Hola, <strong th:text="${username}"></strong>.</p>
 
-        <!-- Cuenta pendiente de aprobación -->
-        <div th:if="${status == 'approvalPending'}">
-            <p>El teu compte es troba pendent d'aprovació per part del tècnic OVI.</p>
-            <p>Una vegada activat, podràs accedir a totes les funcionalitats de l'aplicació.</p>
+            <div th:if="${status == 'approvalPending'}" class="alert alert-info">
+                El teu compte es troba pendent d'aprovació per part del tècnic OVI.
+                Una vegada activat, podràs accedir a totes les funcionalitats de l'aplicació.
+            </div>
+
+            <div th:if="${status == 'inactive' and rejectionReason != null}">
+                <div class="alert alert-error">
+                    <strong>Sol·licitud rebutjada.</strong>
+                    <p th:text="${rejectionReason}"></p>
+                </div>
+                <p>Si creus que és un error o vols més informació, posa't en contacte amb l'organització.</p>
+            </div>
+
+            <div th:if="${status == 'inactive' and rejectionReason == null}" class="alert alert-error">
+                El teu compte ha sigut desactivat pel tècnic OVI.
+                Si creus que és un error, posa't en contacte amb l'organització.
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/logout}" class="btn btn-secondary">Tancar sessió</a>
+                <a th:href="@{/contacto}" class="btn btn-primary">Contactar amb la OVI</a>
+            </div>
+
         </div>
-
-        <!-- Cuenta inactiva -->
-        <div th:if="${status == 'inactive'}">
-            <p>El teu compte ha sigut desactivat per el tècnic OVI.</p>
-            <p>Si creus que és un error o vols més informació, posa't en contacte amb
-                l'organització a través dels canals habituals.</p>
-        </div>
-
-        <a th:href="@{/logout}" class="btn">Tancar Sessió</a>
-
-    </main>
+    </div>
 </div>
+
+</body>
+</html>
 
 </body>
 </html>

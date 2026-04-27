@@ -1,48 +1,91 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<header th:fragment="header" class="container">
-    <div class="top-right-bar">
+
+<header th:fragment="header">
+    <div class="header-main">
+
+        <!-- IZQUIERDA: redes sociales -->
         <div class="social-icons">
-            <a href="#" aria-label="Visitar nuestro Facebook">
-                <span class="sr-only">Visitar nuestro Facebook</span>
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"
+               aria-label="Instagram">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
             </a>
-            <a href="#" aria-label="Visitar nuestro Instagram">
-                <span class="sr-only">Visitar nuestro Instagram</span>
+            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer"
+               aria-label="Facebook">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                </svg>
             </a>
         </div>
 
-        <div class="auth-buttons">
-            <th:block th:if="${session.user == null}">
-                <a th:href="@{/login}" class="btn">INICIAR SESIÓN</a>
-                <a th:href="@{/oviUser/register}" class="btn" style="background-color: var(--color-secundario);">REGISTRARSE</a>
-            </th:block>
-
-            <div th:if="${session.user != null}" role="status">
-                <span th:text="'Bienvenido, ' + ${session.user.username}" style="font-weight: bold; display: block; margin-bottom: 8px; text-align: right;"></span>
-                <a th:href="@{/logout}" class="btn" style="width: 100%;">CERRAR SESIÓN</a>
+        <!-- CENTRO: logo y nombre -->
+        <div class="logo-section">
+            <a th:href="@{/}" aria-label="Inici">
+                <img src="https://ovicastello.org/wp-content/uploads/2020/08/LOGO_Mesa-de-trabajo-1-90x90.png"
+                     alt="Logotipo de la Oficina Vida Independent"
+                     class="logo-img">
+            </a>
+            <div class="org-name">
+                <span class="name-top">Oficina Vida Independent</span>
+                <span class="name-bottom">Sole Arnau Ripollés</span>
             </div>
         </div>
+
+        <!-- DERECHA: botones de autenticación -->
+        <div class="auth-buttons">
+
+            <th:block th:if="${session.user == null}">
+                <a th:href="@{/login}" class="btn btn-secondary">Iniciar sessió</a>
+                <a th:href="@{/registro}" class="btn btn-primary">Registrar-se</a>
+            </th:block>
+
+            <th:block th:if="${session.user != null}">
+
+                <span class="auth-welcome">
+                    Benvingut/da, <span th:text="${session.user.username}">Usuari</span>
+                </span>
+
+                <a th:href="@{/logout}" class="btn btn-secondary">Tancar sessió</a>
+            </th:block>
+        </div>
+
     </div>
 
-    <div class="logo-section">
-        <img src="https://ovicastello.org/wp-content/uploads/2020/08/LOGO_Mesa-de-trabajo-1-90x90.png"
-             alt="Logotipo de la OVI"
-             class="logo-img">
-        <h1 class="org-name">
-            <span class="name-top">OFICINA VIDA INDEPENDIENT</span>
-            <span class="name-bottom">SOLE ARNAU RIPOLLÉS</span>
-        </h1>
-    </div>
-
-    <nav>
+    <!-- NAVEGACIÓN -->
+    <nav aria-label="Menú principal">
         <ul>
-            <li><a th:href="@{/}" th:class="${#execInfo.templateName == 'index' ? 'active' : ''}">INICIO</a></li>
-            <li><a th:href="@{/noticias}">NOTICIAS</a></li>
-            <li><a th:href="@{/ovi}">OVI</a></li>
-            <li><a th:href="@{/mi-portal}">MI PORTAL</a></li>
+            <li>
+                <a th:href="@{/}"
+                   th:classappend="${currentUri == '/' ? 'active' : ''}">
+                    Inici
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/noticias}"
+                   th:classappend="${currentUri != null and currentUri.startsWith('/noticias') ? 'active' : ''}">
+                    Notícies
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/ovi}"
+                   th:classappend="${currentUri != null and currentUri == '/ovi' ? 'active' : ''}">
+                    OVI
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/mi-portal}"
+                   th:classappend="${currentUri != null and (currentUri.startsWith('/mi-portal') or currentUri.startsWith('/papPati') or currentUri.startsWith('/oviUser') or currentUri.startsWith('/admin')) ? 'active' : ''}">
+                    El meu portal
+                </a>
+            </li>
         </ul>
     </nav>
 </header>
+
 </body>
 </html>

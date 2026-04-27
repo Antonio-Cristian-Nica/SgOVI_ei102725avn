@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Detall Usuari OVI</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <h2 class="section-title" th:text="${oviuser.nameAndSurname}"></h2>
+    <p class="section-subtitle" th:text="'Usuari: ' + ${oviuser.username}"></p>
+
+    <div class="filosofia-grid">
+
+        <div>
+            <h3 class="section-title">Dades personals</h3>
+
+            <table class="data-table">
+                <tr>
+                    <th>Correu</th>
+                    <td th:text="${oviuser.emailAddress}"></td>
+                </tr>
+                <tr>
+                    <th>Telèfon</th>
+                    <td th:text="${oviuser.phoneNumber}"></td>
+                </tr>
+                <tr>
+                    <th>Data de naixement</th>
+                    <td th:text="${oviuser.birthDate}"></td>
+                </tr>
+                <tr>
+                    <th>Adreça</th>
+                    <td th:text="${oviuser.homeAddress}"></td>
+                </tr>
+                <tr>
+                    <th>Diversitat funcional</th>
+                    <td th:text="${oviuser.functionalDiversity}"></td>
+                </tr>
+                <tr>
+                    <th>Estat</th>
+                    <td>
+                        <span th:if="${oviuser.status == 'active'}" class="estat-actiu">Actiu</span>
+                        <span th:if="${oviuser.status == 'inactive'}" class="estat-inactiu">Rebutjat</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div>
+            <!-- MOTIU DE REBUIG -->
+            <div th:if="${credentials.rejected}">
+                <h3 class="section-title">Motiu del rebuig</h3>
+                <div class="alert alert-error" th:text="${credentials.rejectionReason}"></div>
+            </div>
+
+            <!-- CONTRACTES -->
+            <div th:if="${!credentials.rejected}">
+                <h3 class="section-title">Contractes</h3>
+                <div class="alert alert-info">
+                    La gestió de contractes s'implementarà próximament.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-actions">
+        <a th:href="@{/admin/gestionarOviUsers}" class="btn btn-secondary">Tornar al llistat</a>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -38,6 +38,10 @@ public class PapPatiValidator implements Validator {
             errors.rejectValue("homeAddress", ERROR_OBLIGATORI, "La dirección es obligatoria");
         }
 
+        if (papPati.getLocality() == null || papPati.getLocality().trim().isEmpty()) {
+            errors.rejectValue("locality", "obligatori", "La localitat és obligatòria");
+        }
+
         if (papPati.getAcademicBackground() == null || papPati.getAcademicBackground().trim().isEmpty()) {
             errors.rejectValue("academicBackground", ERROR_OBLIGATORI, "Los antecedentes académicos son obligatorios");
         }

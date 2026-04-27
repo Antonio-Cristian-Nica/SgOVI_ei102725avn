@@ -11,6 +11,7 @@ public class PapPati {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate birthDate;
     private String homeAddress;
+    private String locality;
     private String emailAddress;
     private String academicBackground;
     private String professionalExperience;
@@ -37,6 +38,9 @@ public class PapPati {
 
     public String getHomeAddress() { return homeAddress; }
     public void setHomeAddress(String homeAddress) { this.homeAddress = homeAddress; }
+
+    public String getLocality() { return locality; }
+    public void setLocality(String locality) { this.locality = locality; }
 
     public String getEmailAddress() { return emailAddress; }
     public void setEmailAddress(String emailAddress) { this.emailAddress = emailAddress; }

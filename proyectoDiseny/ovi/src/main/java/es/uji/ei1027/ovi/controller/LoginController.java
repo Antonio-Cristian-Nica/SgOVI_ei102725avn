@@ -23,6 +23,7 @@ public class LoginController {
     private static final String LOGIN_VIEW = "login";
     private static final String ROL_USER_OVI = "user_ovi";
     private static final String ROL_PAPPATI = "pap_pati";
+    private static final String ROL_INSTRUCTOR = "instructor";
     private static final String REDIRECT_LOGIN = "redirect:/login";
     private static final String ERROR_LOGIN = "loginError";
     private static final String USER_SESSION = "sessionUser";
@@ -85,23 +86,22 @@ public class LoginController {
 
         session.setAttribute("user", credentials);
 
+        // Cuenta no activada → pending
         if (!credentials.getActivated()) {
             switch (credentials.getRole()) {
                 case ROL_USER_OVI:
-                    OviUser oviUser = oviUserDao.getOviUserByUsername(user.getUsername());
-                    session.setAttribute(USER_SESSION, oviUser);
+                    OviUser oviUserPending = oviUserDao.getOviUserByUsername(user.getUsername());
+                    session.setAttribute(USER_SESSION, oviUserPending);
                     break;
                 case ROL_PAPPATI:
-                    PapPati papPati = papPatiDao.getPapPatiByUsername(user.getUsername());
-                    session.setAttribute(USER_SESSION, papPati);
+                    PapPati papPatiPending = papPatiDao.getPapPatiByUsername(user.getUsername());
+                    session.setAttribute(USER_SESSION, papPatiPending);
                     break;
-                default:
-                    // Caso para roles desconocidos o no gestionados
-                    return REDIRECT_LOGIN;
             }
             return "redirect:/pending";
         }
 
+        // Cuenta activada → redirigir según rol
         String nextUrl = (String) session.getAttribute("nextUrl");
         if (nextUrl != null) {
             session.removeAttribute("nextUrl");
@@ -119,6 +119,8 @@ public class LoginController {
                 PapPati papPati = papPatiDao.getPapPatiByUsername(user.getUsername());
                 session.setAttribute(USER_SESSION, papPati);
                 return "redirect:/papPati/portal";
+            case ROL_INSTRUCTOR:
+                return "redirect:/instructor/portal";
             default:
                 model.addAttribute(ERROR_LOGIN, "Rol d'usuari no reconegut");
                 return LOGIN_VIEW;
@@ -134,15 +136,15 @@ public class LoginController {
     @RequestMapping("/pending")
     public String pending(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
-            return REDIRECT_LOGIN;
+            return "redirect:/login";
         }
 
         Credentials credentials = (Credentials) session.getAttribute("user");
         model.addAttribute("username", credentials.getUsername());
         model.addAttribute("role", credentials.getRole());
+        model.addAttribute("rejectionReason", credentials.getRejectionReason());
 
-        // Pasamos el status del usuario a la vista
-        Object sessionUser = session.getAttribute(USER_SESSION);
+        Object sessionUser = session.getAttribute("sessionUser");
         if (sessionUser instanceof OviUser) {
             model.addAttribute("status", ((OviUser) sessionUser).getStatus());
         } else if (sessionUser instanceof PapPati) {

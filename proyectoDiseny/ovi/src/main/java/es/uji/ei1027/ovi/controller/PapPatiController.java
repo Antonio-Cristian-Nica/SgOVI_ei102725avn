@@ -89,7 +89,10 @@ public class PapPatiController {
     @RequestMapping("/portal")
     public String portal(HttpSession session) {
         if (session.getAttribute("user") == null) {
-            return REDIRECT_LOGIN;
+            return "redirect:/login";
+        }
+        if (isRejectedOrPending(session)) {
+            return "redirect:/pending";
         }
         return "papPati/portal";
     }
@@ -172,5 +175,11 @@ public class PapPatiController {
         session.setAttribute("user", credentials);
 
         return "redirect:portal";
+    }
+
+    private boolean isRejectedOrPending(HttpSession session) {
+        Credentials credentials = (Credentials) session.getAttribute("user");
+        if (credentials == null) return true;
+        return !credentials.getActivated() || credentials.isRejected();
     }
 }

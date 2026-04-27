@@ -9,15 +9,19 @@
 <body>
 
 <div layout:fragment="content">
-    <main class="form-section">
-        <h1>Les meues dades</h1>
-        <p>Modifica les teues dades personals i de contacte.</p>
+    <div class="form-section">
+
+        <h2 class="section-title">Les meues dades</h2>
+        <p class="section-subtitle">Modifica les teues dades personals i de contacte.</p>
 
         <form th:action="@{/papPati/edit}" th:object="${pappati}" method="post">
 
             <input type="hidden" th:field="*{papID}" />
             <input type="hidden" th:field="*{status}" />
             <input type="hidden" th:field="*{username}" />
+
+            <!-- SECCIÓ 1: DADES PERSONALS -->
+            <h3 class="form-section-title">Dades personals</h3>
 
             <div class="form-group">
                 <label for="nameAndSurname">Nom i Cognoms</label>
@@ -45,20 +49,35 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="birthDate">Data de Naixement</label>
-                <input type="date" id="birthDate" th:field="*{birthDate}"
-                       th:class="${#fields.hasErrors('birthDate')} ? 'input-error' : ''" />
-                <span class="error-text" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></span>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="birthDate">Data de Naixement</label>
+                    <input type="date" id="birthDate" th:field="*{birthDate}"
+                           th:class="${#fields.hasErrors('birthDate')} ? 'input-error' : ''" />
+                    <span class="error-text" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="homeAddress">Adreça Habitual</label>
+                    <input type="text" id="homeAddress" th:field="*{homeAddress}"
+                           th:class="${#fields.hasErrors('homeAddress')} ? 'input-error' : ''"
+                           placeholder="Carrer, Número, Pis, Codi Postal" />
+                    <span class="error-text" th:if="${#fields.hasErrors('homeAddress')}" th:errors="*{homeAddress}"></span>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="homeAddress">Adreça Habitual</label>
-                <input type="text" id="homeAddress" th:field="*{homeAddress}"
-                       th:class="${#fields.hasErrors('homeAddress')} ? 'input-error' : ''"
-                       placeholder="Carrer, Número, Pis, Ciutat, Codi Postal" />
-                <span class="error-text" th:if="${#fields.hasErrors('homeAddress')}" th:errors="*{homeAddress}"></span>
+                <label for="locality">Localitat</label>
+                <input type="text" id="locality" th:field="*{locality}"
+                       th:class="${#fields.hasErrors('locality')} ? 'input-error' : ''"
+                       placeholder="Ex: Castelló de la Plana" />
+                <span class="error-text" th:if="${#fields.hasErrors('locality')}" th:errors="*{locality}"></span>
             </div>
+
+            <hr class="section-divider">
+
+            <!-- SECCIÓ 2: PERFIL PROFESSIONAL -->
+            <h3 class="form-section-title">Perfil professional</h3>
 
             <div class="form-group">
                 <label for="specializationAreas">Àrees d'Especialització</label>
@@ -92,6 +111,11 @@
                 <span class="error-text" th:if="${#fields.hasErrors('documents')}" th:errors="*{documents}"></span>
             </div>
 
+            <hr class="section-divider">
+
+            <!-- SECCIÓ 3: LOPD -->
+            <h3 class="form-section-title">Protecció de dades</h3>
+
             <div class="form-group">
                 <label class="checkbox-container" th:classappend="${#fields.hasErrors('LOPDAcceptance')} ? 'input-error' : ''">
                     <input type="checkbox" id="LOPDAcceptance" th:field="*{LOPDAcceptance}" />
@@ -101,12 +125,12 @@
             </div>
 
             <div class="form-actions">
-                <a th:href="@{/papPati/portal}" style="margin-right: 25px; color: var(--color-secundario); text-decoration: none; font-weight: bold;">Cancel·lar</a>
-                <button type="submit" class="btn">Guardar canvis</button>
+                <a th:href="@{/papPati/portal}" class="btn btn-secondary">Cancel·lar</a>
+                <button type="submit" class="btn btn-primary">Guardar canvis</button>
             </div>
 
         </form>
-    </main>
+    </div>
 </div>
 
 </body>

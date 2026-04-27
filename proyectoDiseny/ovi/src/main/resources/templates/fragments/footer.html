@@ -1,9 +1,67 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<footer th:fragment="footer" class="container"
-        style="border-top: 2px solid var(--color-primario); padding-top: 20px; margin-top: 40px; margin-bottom: 40px;">
-    <p>Información legal y de contacto de la organización.</p>
+
+<footer th:fragment="footer">
+    <div class="footer-inner">
+
+        <!-- IZQUIERDA: logo + info -->
+        <div class="footer-left">
+            <img src="https://ovicastello.org/wp-content/uploads/2020/08/LOGO_Mesa-de-trabajo-1-90x90.png"
+                 alt="Logotip de l'Oficina Vida Independent"
+                 class="footer-logo">
+            <div class="footer-info">
+                <p>
+                    <strong>Oficina Vida Independent</strong><br>
+                    Sole Arnau Ripollés<br>
+                    Castelló de la Plana
+                </p>
+                <p>
+                    <a href="mailto:ovicastello@gmail.com" class="footer-email">
+                        ovicastello@gmail.com
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <!-- CENTRO: patrocinadors -->
+        <div class="footer-sponsors">
+            <p class="footer-sponsors-title">Un projecte de:</p>
+            <img src="https://ovicastello.org/wp-content/uploads/2023/07/Logo-bolangera-blanc.png"
+                 alt="Bolangera Associació per la Promoció Social"
+                 class="footer-sponsor-logo-main">
+            <p class="footer-sponsors-title">Amb el suport de:</p>
+            <div class="footer-sponsors-row">
+                <img src="https://ovicastello.org/wp-content/uploads/2023/07/logo-conselleria.png"
+                     alt="Conselleria de Serveis Socials"
+                     class="footer-sponsor-logo">
+                <img src="https://ovicastello.org/wp-content/uploads/2025/01/Recurso-5300.png"
+                     alt="Oxfam Intermón"
+                     class="footer-sponsor-logo">
+            </div>
+        </div>
+
+        <!-- DERECHA: enlaces -->
+        <div class="footer-links">
+            <a th:href="@{/contacto}">Contacte</a>
+            <a th:href="@{/privacidad}">Política de privacitat</a>
+            <a th:href="@{/aviso-legal}">Avís legal</a>
+            <a href="https://ovicastello.org" target="_blank" rel="noopener noreferrer">
+                ovicastello.org
+            </a>
+        </div>
+
+    </div>
+
+    <!-- SUBFOOTER -->
+    <div class="footer-subfooter">
+        <p>
+            © 2025 Oficina Vida Independent Sole Arnau Ripollés · Castelló de la Plana ·
+            Aquesta activitat està finançada pel projecte Tejiendo Derechos (WakeUpRights)
+            finançat per la Unió Europea i Oxfam Intermón.
+        </p>
+    </div>
 </footer>
+
 </body>
 </html>

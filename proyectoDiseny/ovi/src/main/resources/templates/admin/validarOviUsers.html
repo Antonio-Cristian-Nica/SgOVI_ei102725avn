@@ -10,10 +10,10 @@
 
 <div layout:fragment="content">
 
-    <h1>Usuaris OVI pendents de validació</h1>
+    <h2 class="section-title">Usuaris OVI pendents de validació</h2>
 
-    <div th:if="${oviusers.isEmpty()}">
-        <p>No hi ha usuaris pendents de validació en aquest moment.</p>
+    <div th:if="${oviusers.isEmpty()}" class="alert alert-info">
+        No hi ha usuaris pendents de validació en aquest moment.
     </div>
 
     <div th:if="${!oviusers.isEmpty()}">
@@ -26,7 +26,7 @@
                 <th>Data Naixement</th>
                 <th>Diversitat Funcional</th>
                 <th>Usuari</th>
-                <th>Acció</th>
+                <th>Accions</th>
             </tr>
             </thead>
             <tbody>
@@ -37,9 +37,18 @@
                 <td th:text="${oviuser.birthDate}"></td>
                 <td th:text="${oviuser.functionalDiversity}"></td>
                 <td th:text="${oviuser.username}"></td>
-                <td>
-                    <form th:action="@{/admin/validarOviUsers/{username}(username=${oviuser.username})}" method="post">
-                        <button type="submit" class="btn">Activar</button>
+                <td class="table-actions">
+                    <form th:action="@{/admin/validarOviUsers/{username}/activar(username=${oviuser.username})}"
+                          method="post">
+                        <button type="submit" class="btn btn-primary">Activar</button>
+                    </form>
+                    <form th:action="@{/admin/validarOviUsers/{username}/rebutjar(username=${oviuser.username})}"
+                          method="post" class="rebutjar-form">
+                            <textarea name="rejectionReason"
+                                      class="rebutjar-textarea"
+                                      placeholder="Motiu del rebuig..."
+                                      required></textarea>
+                        <button type="submit" class="btn btn-rebutjar">Rebutjar</button>
                     </form>
                 </td>
             </tr>
@@ -48,7 +57,7 @@
     </div>
 
     <div class="form-actions">
-        <a th:href="@{/admin/portal}" style="color: var(--color-secundario); text-decoration: none; font-weight: bold;">Tornar al portal</a>
+        <a th:href="@{/admin/portal}" class="btn btn-secondary">Tornar al portal</a>
     </div>
 
 </div>

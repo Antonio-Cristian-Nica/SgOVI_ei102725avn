@@ -85,4 +85,35 @@ public class OviUserDao {
                 "UPDATE OVI_USER SET status='active' WHERE username=?",
                 username);
     }
+
+    public void rejectOviUser(String username) {
+        jdbcTemplate.update(
+                "UPDATE OVI_USER SET status='inactive' WHERE username=?",
+                username);
+    }
+
+    public List<OviUser> getOviUsersGestionats() {
+        return jdbcTemplate.query(
+                "SELECT * FROM OVI_USER WHERE status='active' OR status='inactive'",
+                new OviUserRowMapper());
+    }
+
+    public int countByStatus(String status) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM OVI_USER WHERE status=?",
+                Integer.class, status);
+        return count != null ? count : 0;
+    }
+
+    public void updateTutorID(String username, int tutorID) {
+        jdbcTemplate.update(
+                "UPDATE OVI_USER SET tutorID=? WHERE username=?",
+                tutorID, username);
+    }
+
+    public void removeTutorID(String username) {
+        jdbcTemplate.update(
+                "UPDATE OVI_USER SET tutorID=NULL WHERE username=?",
+                username);
+    }
 }

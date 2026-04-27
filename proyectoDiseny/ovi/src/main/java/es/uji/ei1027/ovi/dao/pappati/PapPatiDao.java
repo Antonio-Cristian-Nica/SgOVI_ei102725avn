@@ -33,15 +33,16 @@ public class PapPatiDao {
     public void addPapPati(PapPatiRegistration papPati) {
         jdbcTemplate.update(
                 "INSERT INTO PAP_PATI (nameAndSurname, phoneNumber, birthDate, " +
-                        "homeAddress, emailAddress, academicBackground, professionalExperience, " +
+                        "homeAddress, locality, emailAddress, academicBackground, professionalExperience, " +
                         "specializationAreas, documents, LOPDAcceptance, status, username) " +
-                        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 papPati.getNameAndSurname(), papPati.getPhoneNumber(),
                 papPati.getBirthDate(), papPati.getHomeAddress(),
-                papPati.getEmailAddress(), papPati.getAcademicBackground(),
-                papPati.getProfessionalExperience(), papPati.getSpecializationAreas(),
-                papPati.getDocuments(), papPati.isLOPDAcceptance(),
-                papPati.getStatus(), papPati.getUsername());
+                papPati.getLocality(), papPati.getEmailAddress(),
+                papPati.getAcademicBackground(), papPati.getProfessionalExperience(),
+                papPati.getSpecializationAreas(), papPati.getDocuments(),
+                papPati.isLOPDAcceptance(), papPati.getStatus(),
+                papPati.getUsername());
     }
 
     public int getLastInsertedId() {
@@ -53,14 +54,16 @@ public class PapPatiDao {
     public void updatePapPati(PapPati papPati) {
         jdbcTemplate.update(
                 "UPDATE PAP_PATI SET nameAndSurname=?, phoneNumber=?, birthDate=?, " +
-                        "homeAddress=?, emailAddress=?, academicBackground=?, professionalExperience=?, " +
-                        "specializationAreas=?, documents=?, LOPDAcceptance=?, status=? WHERE papID=?",
+                        "homeAddress=?, locality=?, emailAddress=?, academicBackground=?, " +
+                        "professionalExperience=?, specializationAreas=?, documents=?, " +
+                        "LOPDAcceptance=?, status=? WHERE papID=?",
                 papPati.getNameAndSurname(), papPati.getPhoneNumber(),
                 papPati.getBirthDate(), papPati.getHomeAddress(),
-                papPati.getEmailAddress(), papPati.getAcademicBackground(),
-                papPati.getProfessionalExperience(), papPati.getSpecializationAreas(),
-                papPati.getDocuments(), papPati.isLOPDAcceptance(),
-                papPati.getStatus(), papPati.getPapID());
+                papPati.getLocality(), papPati.getEmailAddress(),
+                papPati.getAcademicBackground(), papPati.getProfessionalExperience(),
+                papPati.getSpecializationAreas(), papPati.getDocuments(),
+                papPati.isLOPDAcceptance(), papPati.getStatus(),
+                papPati.getPapID());
     }
 
     public void deletePapPati(int papID) {
@@ -87,5 +90,24 @@ public class PapPatiDao {
         jdbcTemplate.update(
                 "UPDATE PAP_PATI SET status='active' WHERE username=?",
                 username);
+    }
+
+    public void rejectPapPati(String username) {
+        jdbcTemplate.update(
+                "UPDATE PAP_PATI SET status='inactive' WHERE username=?",
+                username);
+    }
+
+    public List<PapPati> getPapPatisGestionats() {
+        return jdbcTemplate.query(
+                "SELECT * FROM PAP_PATI WHERE status='active' OR status='inactive'",
+                new PapPatiRowMapper());
+    }
+
+    public int countByStatus(String status) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM PAP_PATI WHERE status=?",
+                Integer.class, status);
+        return count != null ? count : 0;
     }
 }

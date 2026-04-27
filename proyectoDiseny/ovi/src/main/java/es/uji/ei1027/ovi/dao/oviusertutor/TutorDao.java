@@ -48,4 +48,10 @@ public class TutorDao {
     public void deleteTutor(int tutorID) {
         jdbcTemplate.update("DELETE FROM TUTOR WHERE tutorID=?", tutorID);
     }
+
+    public int getLastInsertedId() {
+        Integer id = jdbcTemplate.queryForObject(
+                "SELECT MAX(tutorID) FROM TUTOR", Integer.class);
+        return id != null ? id : 0;
+    }
 }

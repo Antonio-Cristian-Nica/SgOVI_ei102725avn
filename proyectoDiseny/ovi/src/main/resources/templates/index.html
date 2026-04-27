@@ -1,26 +1,176 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{fragments/base}"> <head>
+      layout:decorate="~{fragments/base}">
+<head>
     <title>Inicio</title>
 </head>
 <body>
 
 <div layout:fragment="content">
 
-    <h2 style="color: var(--color-primario); margin-bottom: 30px;">
-        Bienvenidos al Portal SgOVI
-    </h2>
+    <!-- HERO -->
+    <section aria-label="Imagen de bienvenida">
+        <img th:src="@{https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=1400&h=500}"
+             alt="Grup de persones diverses somrient i col·laborant juntes"
+             class="hero-image">
 
-    <p>
-        Este es el texto del cuerpo. Tiene un tamaño mínimo de 18px y un interlineado de 1.5
-        para evitar la fatiga visual de los usuarios y asegurar la correcta lectura,
-        cumpliendo con la guía de accesibilidad.
-    </p>
+        <blockquote class="hero-quote">
+            <p>«Els que ens desplacem de manera diferent, els que reben les sensacions d'una altra manera
+                o els que interpreten el món de forma molt diferent, no tenim per què estar malalts,
+                podem ser feliços, podem estimar i ser estimats, podem aportar coses.»</p>
+            <footer>— Manuel Lobato Galindo, Activista en Vida Independent</footer>
+        </blockquote>
+    </section>
 
-    <img th:src="@{https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=1200&h=900}"
-         alt="Personas colaborando amigablemente en una oficina"
-         class="hero-image">
+    <!-- FILOSOFIA -->
+    <section class="index-section" aria-labelledby="titulo-filosofia">
+        <h2 class="section-title" id="titulo-filosofia">Què és la Filosofia de Vida Independent?</h2>
+        <p class="section-subtitle">Un nou pensament teòric-pràctic sobre la diversitat funcional</p>
+
+        <div class="filosofia-grid">
+            <div class="filosofia-texto">
+                <p>
+                    La Filosofia mundial de Vida Independent es constitueix en un nou pensament
+                    teòric-pràctic al voltant de la realitat humana denominada «diversitat funcional».
+                </p>
+                <p>
+                    Les dones i homes amb diversitat funcional reclamen el seu dret individual i
+                    col·lectiu a viure de manera activa i independent, estant inclosos en la
+                    comunitat, amb els suports humans necessaris (Assistència Personal).
+                </p>
+                <p>
+                    No volem acceptar la institucionalització com a forma de vida, ja que entenem
+                    que «som riquesa» i, per tant, hem de disposar dels suports humans i
+                    tecnològics que ens resulten necessaris per poder exercir la nostra ciutadania
+                    en igualtat de condicions.
+                </p>
+            </div>
+
+            <div class="pilares-grid" aria-label="Pilars de la Vida Independent">
+                <div class="pilar-card">
+                    <span class="pilar-icono" aria-hidden="true">◆</span>
+                    <h3>Apoderament</h3>
+                    <p>Possibilitat d'exercir poder sobre la pròpia vida.</p>
+                </div>
+                <div class="pilar-card">
+                    <span class="pilar-icono" aria-hidden="true">◆</span>
+                    <h3>Responsabilitat</h3>
+                    <p>Responsabilitat sobre la pròpia vida i accions.</p>
+                </div>
+                <div class="pilar-card">
+                    <span class="pilar-icono" aria-hidden="true">◆</span>
+                    <h3>Autodeterminació</h3>
+                    <p>Control i determinació sobre les nostres pròpies vides.</p>
+                </div>
+                <div class="pilar-card">
+                    <span class="pilar-icono" aria-hidden="true">◆</span>
+                    <h3>Dret al risc</h3>
+                    <p>Dret a assumir riscos com qualsevol ciutadà.</p>
+                </div>
+                <div class="pilar-card">
+                    <span class="pilar-icono" aria-hidden="true">◆</span>
+                    <h3>Inclusió</h3>
+                    <p>Viure i participar plenament en la comunitat.</p>
+                </div>
+                <div class="pilar-card">
+                    <span class="pilar-icono" aria-hidden="true">◆</span>
+                    <h3>Autoajuda</h3>
+                    <p>Suport entre iguals com a eina de canvi.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ÚLTIMES NOTÍCIES -->
+    <section class="index-section" aria-labelledby="titulo-noticias">
+        <h2 class="section-title" id="titulo-noticias">Últimes notícies</h2>
+        <p class="section-subtitle">El més recent de l'Oficina Vida Independent</p>
+
+        <div class="noticias-grid">
+
+            <article class="noticia-card">
+                <div class="noticia-fecha">12 des. 2025</div>
+                <h3 class="noticia-titulo">
+                    <a href="https://ovicastello.org/presentacio-curt-agressio-capacitista-2025-al-capacitisme-identifical-no-sigues-complice/"
+                       target="_blank" rel="noopener noreferrer">
+                        Presentació curt agressió capacitista 2025
+                    </a>
+                </h3>
+                <p class="noticia-resumen">
+                    Nova entrega de la Campanya "Al capacitisme, identifica'l, no sigues còmplice"
+                    amb motiu del Dia Internacional dels Drets Humans.
+                </p>
+                <a href="https://ovicastello.org/presentacio-curt-agressio-capacitista-2025-al-capacitisme-identifical-no-sigues-complice/"
+                   target="_blank" rel="noopener noreferrer" class="noticia-leer">
+                    Llegir més →
+                </a>
+            </article>
+
+            <article class="noticia-card">
+                <div class="noticia-fecha">24 nov. 2025</div>
+                <h3 class="noticia-titulo">
+                    <a href="https://ovicastello.org/signatura-conveni-mancomunitat-castello-nord-oficina-vida-independent-sole-arnau-ripolles/"
+                       target="_blank" rel="noopener noreferrer">
+                        Signatura Conveni Mancomunitat Castelló Nord
+                    </a>
+                </h3>
+                <p class="noticia-resumen">
+                    Signatura del Conveni de col·laboració entre la Mancomunitat de Serveis Socials
+                    Castelló Nord i l'Oficina per la Vida Independent.
+                </p>
+                <a href="https://ovicastello.org/signatura-conveni-mancomunitat-castello-nord-oficina-vida-independent-sole-arnau-ripolles/"
+                   target="_blank" rel="noopener noreferrer" class="noticia-leer">
+                    Llegir més →
+                </a>
+            </article>
+
+            <article class="noticia-card">
+                <div class="noticia-fecha">24 oct. 2025</div>
+                <h3 class="noticia-titulo">
+                    <a href="https://ovicastello.org/l-oficina-vida-independent-presenta-l-estudi-analisi-de-la-implementacio-de-la-figura-de-lassistent-personal-a-espanya/"
+                       target="_blank" rel="noopener noreferrer">
+                        Estudi sobre l'Assistent Personal a Espanya
+                    </a>
+                </h3>
+                <p class="noticia-resumen">
+                    L'OVI presenta l'estudi "Anàlisi de la implementació de la figura de
+                    l'Assistent Personal a Espanya" amb comparativa europea.
+                </p>
+                <a href="https://ovicastello.org/l-oficina-vida-independent-presenta-l-estudi-analisi-de-la-implementacio-de-la-figura-de-lassistent-personal-a-espanya/"
+                   target="_blank" rel="noopener noreferrer" class="noticia-leer">
+                    Llegir més →
+                </a>
+            </article>
+
+        </div>
+
+        <div class="index-section-footer">
+            <a th:href="@{/noticias}" class="btn btn-secondary">Veure totes les notícies</a>
+        </div>
+    </section>
+
+    <!-- CTA REGISTRE -->
+    <section class="cta-registro" aria-labelledby="titulo-cta">
+        <div class="cta-registro-inner">
+            <div class="cta-texto">
+                <h2 id="titulo-cta">Vols formar part de la OVI?</h2>
+                <p>
+                    Registra't al portal per accedir a recursos, gestionar la teua assistència
+                    personal i estar al dia de totes les activitats de l'Oficina.
+                </p>
+            </div>
+            <div class="cta-accion">
+                <a th:href="@{/registro}" class="btn btn-primary btn-full">
+                    Registrar-se
+                </a>
+                <p class="cta-login-texto">
+                    Ja tens compte?
+                    <a th:href="@{/login}">Inicia sessió</a>
+                </p>
+            </div>
+        </div>
+    </section>
 
 </div>
 

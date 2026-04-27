@@ -9,16 +9,39 @@
 <body>
 
 <div layout:fragment="content">
-    <main class="form-section">
-        <h1>Registre de nou Usuari OVI</h1>
-        <p>Emplene tots els camps a continuació. Els camps marcats amb error s'han de corregir per a poder avançar.</p>
+    <div class="form-section">
 
-        <div class="form-row" style="margin-bottom: 30px;">
-            <a th:href="@{/oviUser/register}" class="btn btn-secondary">Soc Usuari OVI</a>
-            <a th:href="@{/papPati/register}" class="btn">Soc PAP/PATI</a>
-        </div>
+        <h2 class="section-title">Registre de nou Usuari OVI</h2>
+        <p class="section-subtitle">Emplene tots els camps a continuació. Els camps marcats amb error s'han de corregir per a poder avançar.</p>
 
         <form th:action="@{/oviUser/register}" th:object="${oviuser}" method="post">
+
+            <!-- SECCIÓ 1: CREDENCIALS -->
+            <h3 class="form-section-title">Accés a l'aplicació</h3>
+            <p class="form-section-subtitle">Tria les teues credencials. El compte estarà inactiu fins que el tècnic OVI el valide.</p>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="username">Nom d'usuari</label>
+                    <input type="text" id="username" th:field="*{username}"
+                           th:class="${#fields.hasErrors('username')} ? 'input-error' : ''"
+                           placeholder="Ex: joan.garcia" />
+                    <span class="error-text" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contrasenya</label>
+                    <input type="password" id="password" th:field="*{password}"
+                           th:class="${#fields.hasErrors('password')} ? 'input-error' : ''"
+                           placeholder="Mínim 6 caràcters" />
+                    <span class="error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                </div>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- SECCIÓ 2: DADES PERSONALS -->
+            <h3 class="form-section-title">Dades personals</h3>
 
             <div class="form-group">
                 <label for="nameAndSurname">Nom i Cognoms</label>
@@ -71,6 +94,11 @@
                 <span class="error-text" th:if="${#fields.hasErrors('functionalDiversity')}" th:errors="*{functionalDiversity}"></span>
             </div>
 
+            <hr class="section-divider">
+
+            <!-- SECCIÓ 3: LOPD -->
+            <h3 class="form-section-title">Protecció de dades</h3>
+
             <div class="form-group">
                 <label class="checkbox-container" th:classappend="${#fields.hasErrors('LOPDAcceptance')} ? 'input-error' : ''">
                     <input type="checkbox" id="LOPDAcceptance" th:field="*{LOPDAcceptance}" />
@@ -79,35 +107,13 @@
                 <span class="error-text" th:if="${#fields.hasErrors('LOPDAcceptance')}" th:errors="*{LOPDAcceptance}"></span>
             </div>
 
-            <hr />
-            <h3>Accés a l'aplicació</h3>
-            <p>Tria les teues credencials. El compte estarà inactiu fins que el tècnic OVI el valide.</p>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="username">Nom d'usuari</label>
-                    <input type="text" id="username" th:field="*{username}"
-                           th:class="${#fields.hasErrors('username')} ? 'input-error' : ''"
-                           placeholder="Ex: joan.garcia" />
-                    <span class="error-text" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Contrasenya</label>
-                    <input type="password" id="password" th:field="*{password}"
-                           th:class="${#fields.hasErrors('password')} ? 'input-error' : ''"
-                           placeholder="Mínim 6 caràcters" />
-                    <span class="error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-                </div>
-            </div>
-
             <div class="form-actions">
-                <a th:href="@{/}" style="margin-right: 25px; color: var(--color-secundario); text-decoration: none; font-weight: bold;">Cancel·lar</a>
-                <button type="submit" class="btn">Registrar Usuari OVI</button>
+                <a th:href="@{/registro}" class="btn btn-secondary">Cancel·lar</a>
+                <button type="submit" class="btn btn-primary">Registrar-me com a Usuari OVI</button>
             </div>
 
         </form>
-    </main>
+    </div>
 </div>
 
 </body>

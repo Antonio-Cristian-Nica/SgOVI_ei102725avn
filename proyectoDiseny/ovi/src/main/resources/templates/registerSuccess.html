@@ -9,22 +9,27 @@
 <body>
 
 <div layout:fragment="content">
-    <main class="form-section">
+    <div class="login-wrapper">
+        <div class="form-section">
 
-        <h1>Registre completat correctament</h1>
+            <h2 class="section-title">Registre completat correctament</h2>
 
-        <p>La teua sol·licitud ha sigut rebuda i es troba actualment en estat:</p>
+            <div class="alert alert-success">
+                <span>La teua sol·licitud ha sigut rebuda i es troba actualment pendent d'aprovació.</span>
+            </div>
 
-        <p><strong>Pendent d'aprovació</strong></p>
+            <p class="section-subtitle">
+                El tècnic OVI revisarà la teua sol·licitud i activarà el teu compte quan siga validada.
+                Una vegada activat, podràs accedir a totes les funcionalitats de l'aplicació.
+            </p>
 
-        <p>
-            El tècnic OVI revisarà la teua sol·licitud i activarà el teu compte quan siga validada.
-            Una vegada activat, podràs accedir a totes les funcionalitats de l'aplicació.
-        </p>
+            <div class="form-actions">
+                <a th:href="@{/login}" class="btn btn-secondary">Iniciar sessió</a>
+                <a th:href="@{/}" class="btn btn-primary">Tornar a l'inici</a>
+            </div>
 
-        <a th:href="@{/}" class="btn">Tornar a l'inici</a>
-
-    </main>
+        </div>
+    </div>
 </div>
 
 </body>

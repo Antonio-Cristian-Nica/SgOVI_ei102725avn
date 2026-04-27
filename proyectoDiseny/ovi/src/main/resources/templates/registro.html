@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>Registre</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <h2 class="section-title">Vols formar part de la OVI?</h2>
+    <p class="section-subtitle">
+        Selecciona el perfil que millor s'adapte a tu per començar el procés de registre.
+        Una vegada registrat/da, el tècnic OVI revisarà la teua sol·licitud i activarà el teu compte.
+    </p>
+
+    <!-- USUARI/A OVI -->
+    <section class="index-section">
+        <div class="filosofia-grid">
+            <div class="filosofia-texto">
+                <h3 class="section-title">👤 Soc Usuari/a OVI</h3>
+                <p>
+                    Els usuaris i usuàries OVI són persones amb diversitat funcional que
+                    necessiten assistència personal per dur a terme les activitats de la
+                    vida diària i exercir el seu dret a la vida independent.
+                </p>
+                <p>
+                    Registrant-te com a Usuari/a OVI podràs:
+                </p>
+                <div class="pilares-grid">
+                    <div class="pilar-card">
+                        <span class="pilar-icono" aria-hidden="true">◆</span>
+                        <h3>Sol·licituds</h3>
+                        <p>Registrar i fer seguiment de les teues sol·licituds d'assistència personal.</p>
+                    </div>
+                    <div class="pilar-card">
+                        <span class="pilar-icono" aria-hidden="true">◆</span>
+                        <h3>Activitats</h3>
+                        <p>Inscriure't a les activitats de formació i divulgació de la OVI.</p>
+                    </div>
+                    <div class="pilar-card">
+                        <span class="pilar-icono" aria-hidden="true">◆</span>
+                        <h3>Tutor legal</h3>
+                        <p>Gestionar les dades del teu tutor legal si en tens un assignat.</p>
+                    </div>
+                    <div class="pilar-card">
+                        <span class="pilar-icono" aria-hidden="true">◆</span>
+                        <h3>Contractes</h3>
+                        <p>Consultar el teu historial de contractes actius i finalitzats.</p>
+                    </div>
+                </div>
+                <div class="registro-actions">
+                    <a th:href="@{/oviUser/register}" class="btn btn-primary">
+                        Registrar-me com a Usuari/a OVI
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <img th:src="@{/images/1.jpg}" alt="Home en cadira de rodes" class="registro-img">
+            </div>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- PAP/PATI -->
+    <section class="index-section">
+        <div class="filosofia-grid">
+
+            <div>
+                <img th:src="@{/images/2.jpg}" alt="Acompanyant" class="registro-img">
+            </div>
+
+            <div class="filosofia-texto">
+                <h3 class="section-title">🤝 Soc PAP/PATI</h3>
+                <p>
+                    Els PAP (Personal d'Assistència Personal) i PATI (Personal d'Assistència
+                    Terapèutica Individual) són professionals que ofereixen suport directe
+                    a les persones usuàries de la OVI per facilitar la seua vida independent.
+                </p>
+                <p>
+                    Registrant-te com a PAP/PATI podràs:
+                </p>
+                <div class="pilares-grid">
+                    <div class="pilar-card">
+                        <span class="pilar-icono" aria-hidden="true">◆</span>
+                        <h3>Sol·licituds</h3>
+                        <p>Consultar i gestionar les sol·licituds d'assistència que tens assignades.</p>
+                    </div>
+                    <div class="pilar-card">
+                        <span class="pilar-icono" aria-hidden="true">◆</span>
+                        <h3>Horaris</h3>
+                        <p>Administrar la teua disponibilitat horària per ser assignat a sol·licituds.</p>
+                    </div>
+                    <div class="pilar-card">
+                        <span class="pilar-icono" aria-hidden="true">◆</span>
+                        <h3>Activitats</h3>
+                        <p>Participar com a instructor en les activitats de formació de la OVI.</p>
+                    </div>
+                    <div class="pilar-card">
+                        <span class="pilar-icono" aria-hidden="true">◆</span>
+                        <h3>Historial</h3>
+                        <p>Consultar el teu historial de contractes i certificats d'assistència.</p>
+                    </div>
+                </div>
+                <div class="registro-actions">
+                    <a th:href="@{/papPati/register}" class="btn btn-primary">
+                        Registrar-me com a PAP/PATI
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA LOGIN -->
+    <section class="cta-registro">
+        <div class="cta-registro-inner">
+            <div class="cta-texto">
+                <h2>Ja tens compte?</h2>
+                <p>
+                    Si ja estàs registrat/da, inicia sessió per accedir al teu portal
+                    i gestionar les teues dades i sol·licituds.
+                </p>
+            </div>
+            <div class="cta-accion">
+                <a th:href="@{/login}" class="btn btn-primary btn-full">
+                    Iniciar sessió
+                </a>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+</body>
+</html>

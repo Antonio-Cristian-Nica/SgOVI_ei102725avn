@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>Contacte</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <section class="index-section">
+        <h2 class="section-title">Contacte</h2>
+        <p class="section-subtitle">Estem ací per ajudar-te. Posa't en contacte amb nosaltres.</p>
+
+        <div class="filosofia-grid">
+
+            <!-- COLUMNA IZQUIERDA -->
+            <div class="filosofia-texto">
+                <p>
+                    Si tens qualsevol dubte sobre els nostres serveis, vols més informació
+                    sobre l'Assistència Personal o necessites orientació sobre com formar
+                    part de la OVI, no dubtis en contactar amb nosaltres.
+                </p>
+                <p>
+                    El nostre equip t'atenderà i et guiarà en el procés que millor
+                    s'adapte a les teues necessitats.
+                </p>
+
+                <div class="contacte-cards">
+                    <div class="pilar-card contacte-card">
+                        <span class="pilar-icono" aria-hidden="true">◆</span>
+                        <h3>Correu electrònic</h3>
+                        <p><a href="mailto:ovicastello@gmail.com">ovicastello@gmail.com</a></p>
+                    </div>
+
+                    <div class="pilar-card contacte-card">
+                        <span class="pilar-icono" aria-hidden="true">◆</span>
+                        <h3>Ubicació</h3>
+                        <p>Castelló de la Plana, Comunitat Valenciana</p>
+                    </div>
+
+                    <div class="pilar-card contacte-card">
+                        <span class="pilar-icono" aria-hidden="true">◆</span>
+                        <h3>Xarxes socials</h3>
+                        <p>
+                            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a>
+                            ·
+                            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA -->
+            <div>
+                <h3 class="contacte-registre-title">Vols formar part de la OVI?</h3>
+                <p class="contacte-registre-subtitle">Selecciona el perfil que millor s'adapte a tu:</p>
+
+                <div class="portal-grid portal-grid-single">
+
+                    <a th:href="@{/oviUser/register}" class="portal-card">
+                        <h3>👤 Soc Usuari/a OVI</h3>
+                        <p>
+                            Soc una persona amb diversitat funcional i necessito assistència personal.
+                            Vull registrar-me per gestionar les meues sol·licituds, inscriure'm
+                            a activitats i accedir als recursos de la OVI.
+                        </p>
+                    </a>
+
+                    <a th:href="@{/papPati/register}" class="portal-card">
+                        <h3>🤝 Soc PAP/PATI</h3>
+                        <p>
+                            Estic interessat/da en treballar com a assistent personal.
+                            Vull registrar-me per oferir els meus serveis, gestionar
+                            els meus horaris i accedir a les activitats de formació.
+                        </p>
+                    </a>
+
+                    <a th:href="@{/login}" class="portal-card">
+                        <h3>🔑 Ja tinc compte</h3>
+                        <p>
+                            Ja estic registrat/da i vull accedir al meu portal
+                            per gestionar les meues dades i sol·licituds.
+                        </p>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+
+</body>
+</html>

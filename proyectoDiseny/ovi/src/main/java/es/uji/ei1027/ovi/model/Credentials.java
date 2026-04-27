@@ -6,6 +6,14 @@ public class Credentials {
     private String role;
     private int id;
     private boolean activated;
+    private String rejectionReason;
+    private boolean rejected;
+
+    public String getRejectionReason() { return rejectionReason; }
+    public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
+
+    public boolean isRejected() { return rejected; }
+    public void setRejected(boolean rejected) { this.rejected = rejected; }
 
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }

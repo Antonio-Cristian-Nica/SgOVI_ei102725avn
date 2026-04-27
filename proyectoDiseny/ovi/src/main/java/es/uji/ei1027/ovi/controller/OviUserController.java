@@ -2,10 +2,8 @@ package es.uji.ei1027.ovi.controller;
 
 import es.uji.ei1027.ovi.dao.credentials.CredentialsDao;
 import es.uji.ei1027.ovi.dao.oviuser.OviUserDao;
-import es.uji.ei1027.ovi.model.ChangePasswordForm;
-import es.uji.ei1027.ovi.model.Credentials;
-import es.uji.ei1027.ovi.model.OviUser;
-import es.uji.ei1027.ovi.model.OviUserRegistration;
+import es.uji.ei1027.ovi.dao.oviusertutor.TutorDao;
+import es.uji.ei1027.ovi.model.*;
 import es.uji.ei1027.ovi.utils.PasswordUtils;
 import es.uji.ei1027.ovi.validator.ChangePasswordValidator;
 import es.uji.ei1027.ovi.validator.OviUserValidator;
@@ -26,6 +24,7 @@ public class OviUserController {
     private static final String REDIRECT_LOGIN = "redirect:/login";
     private OviUserDao oviUserDao;
     private CredentialsDao credentialsDao;
+    private TutorDao tutorDao;
 
     @Autowired
     public void setOviUserDao(OviUserDao oviUserDao) {
@@ -35,6 +34,11 @@ public class OviUserController {
     @Autowired
     public void setCredentialsDao(CredentialsDao credentialsDao) {
         this.credentialsDao = credentialsDao;
+    }
+
+    @Autowired
+    public void setTutorDao(TutorDao tutorDao) {
+        this.tutorDao = tutorDao;
     }
 
     @RequestMapping("/register")
@@ -80,10 +84,19 @@ public class OviUserController {
         return "registerSuccess";
     }
 
+    private boolean isRejectedOrPending(HttpSession session) {
+        Credentials credentials = (Credentials) session.getAttribute("user");
+        if (credentials == null) return true;
+        return !credentials.getActivated() || credentials.isRejected();
+    }
+
     @RequestMapping("/portal")
     public String portal(HttpSession session) {
         if (session.getAttribute("user") == null) {
-            return REDIRECT_LOGIN;
+            return "redirect:/login";
+        }
+        if (isRejectedOrPending(session)) {
+            return "redirect:/pending";
         }
         return "oviuser/portal";
     }
@@ -163,5 +176,71 @@ public class OviUserController {
         session.setAttribute("user", credentials);
 
         return "redirect:portal";
+    }
+
+    @RequestMapping("/tutor")
+    public String tutor(HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+        Credentials credentials = (Credentials) session.getAttribute("user");
+        OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
+
+        if (oviUser.getTutorID() != null) {
+            model.addAttribute("tutor", tutorDao.getTutor(oviUser.getTutorID()));
+        }
+        model.addAttribute("teTutor", oviUser.getTutorID() != null);
+        return "oviuser/tutor";
+    }
+
+    @RequestMapping("/tutor/add")
+    public String addTutor(Model model) {
+        model.addAttribute("tutor", new Tutor());
+        return "oviuser/tutorForm";
+    }
+
+    @RequestMapping(value = "/tutor/add", method = RequestMethod.POST)
+    public String processAddTutor(@ModelAttribute("tutor") Tutor tutor,
+                                  BindingResult bindingResult,
+                                  HttpSession session) {
+        if (bindingResult.hasErrors()) {
+            return "oviuser/tutorForm";
+        }
+        tutorDao.addTutor(tutor);
+        int tutorID = tutorDao.getLastInsertedId();
+        Credentials credentials = (Credentials) session.getAttribute("user");
+        oviUserDao.updateTutorID(credentials.getUsername(), tutorID);
+        return "redirect:/oviUser/tutor";
+    }
+
+    @RequestMapping("/tutor/edit")
+    public String editTutor(HttpSession session, Model model) {
+        Credentials credentials = (Credentials) session.getAttribute("user");
+        OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
+        model.addAttribute("tutor", tutorDao.getTutor(oviUser.getTutorID()));
+        return "oviuser/tutorForm";
+    }
+
+    @RequestMapping(value = "/tutor/edit", method = RequestMethod.POST)
+    public String processEditTutor(@ModelAttribute("tutor") Tutor tutor,
+                                   BindingResult bindingResult,
+                                   HttpSession session) {
+        if (bindingResult.hasErrors()) {
+            return "oviuser/tutorForm";
+        }
+        Credentials credentials = (Credentials) session.getAttribute("user");
+        OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
+        tutor.setTutorID(oviUser.getTutorID());
+        tutorDao.updateTutor(tutor);
+        return "redirect:/oviUser/tutor";
+    }
+
+    @RequestMapping(value = "/tutor/delete", method = RequestMethod.POST)
+    public String deleteTutor(HttpSession session) {
+        Credentials credentials = (Credentials) session.getAttribute("user");
+        OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
+        tutorDao.deleteTutor(oviUser.getTutorID());
+        oviUserDao.removeTutorID(credentials.getUsername());
+        return "redirect:/oviUser/tutor";
     }
 }

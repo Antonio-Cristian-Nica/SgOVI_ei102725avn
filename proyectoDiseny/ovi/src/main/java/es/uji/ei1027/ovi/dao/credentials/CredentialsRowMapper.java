@@ -14,6 +14,8 @@ public class CredentialsRowMapper implements RowMapper<Credentials> {
         credentials.setRole(rs.getString("role"));
         credentials.setId(rs.getInt("id"));
         credentials.setActivated(rs.getBoolean("activated"));
+        credentials.setRejectionReason(rs.getString("rejectionReason"));
+        credentials.setRejected(rs.getBoolean("rejected"));
         return credentials;
     }
 }

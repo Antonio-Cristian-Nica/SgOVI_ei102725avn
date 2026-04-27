@@ -9,16 +9,39 @@
 <body>
 
 <div layout:fragment="content">
-    <main class="form-section">
-        <h1>Registre de nou PAP/PATI</h1>
-        <p >Emplene tots els camps a continuació. Els camps marcats amb error s'han de corregir per a poder avançar.</p>
+    <div class="form-section">
 
-        <div class="form-row" style="margin-bottom: 30px;">
-            <a th:href="@{/oviUser/register}" class="btn">Soc Usuari OVI</a>
-            <a th:href="@{/papPati/register}" class="btn btn-secondary">Soc PAP/PATI</a>
-        </div>
+        <h2 class="section-title">Registre de nou PAP/PATI</h2>
+        <p class="section-subtitle">Emplene tots els camps a continuació. Els camps marcats amb error s'han de corregir per a poder avançar.</p>
 
         <form th:action="@{/papPati/register}" th:object="${pappati}" method="post">
+
+            <!-- SECCIÓ 1: CREDENCIALS -->
+            <h3 class="form-section-title">Accés a l'aplicació</h3>
+            <p class="form-section-subtitle">Tria les teues credencials. El compte estarà inactiu fins que el tècnic OVI el valide.</p>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="username">Nom d'usuari</label>
+                    <input type="text" id="username" th:field="*{username}"
+                           th:class="${#fields.hasErrors('username')} ? 'input-error' : ''"
+                           placeholder="Ex: joan.garcia" />
+                    <span class="error-text" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contrasenya</label>
+                    <input type="password" id="password" th:field="*{password}"
+                           th:class="${#fields.hasErrors('password')} ? 'input-error' : ''"
+                           placeholder="Mínim 6 caràcters" />
+                    <span class="error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                </div>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- SECCIÓ 2: DADES PERSONALS -->
+            <h3 class="form-section-title">Dades personals</h3>
 
             <div class="form-group">
                 <label for="nameAndSurname">Nom i Cognoms</label>
@@ -46,20 +69,35 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="birthDate">Data de Naixement</label>
-                <input type="date" id="birthDate" th:field="*{birthDate}"
-                       th:class="${#fields.hasErrors('birthDate')} ? 'input-error' : ''" />
-                <span class="error-text" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></span>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="birthDate">Data de Naixement</label>
+                    <input type="date" id="birthDate" th:field="*{birthDate}"
+                           th:class="${#fields.hasErrors('birthDate')} ? 'input-error' : ''" />
+                    <span class="error-text" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="homeAddress">Adreça Habitual</label>
+                    <input type="text" id="homeAddress" th:field="*{homeAddress}"
+                           th:class="${#fields.hasErrors('homeAddress')} ? 'input-error' : ''"
+                           placeholder="Carrer, Número, Pis, Codi Postal" />
+                    <span class="error-text" th:if="${#fields.hasErrors('homeAddress')}" th:errors="*{homeAddress}"></span>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="homeAddress">Adreça Habitual</label>
-                <input type="text" id="homeAddress" th:field="*{homeAddress}"
-                       th:class="${#fields.hasErrors('homeAddress')} ? 'input-error' : ''"
-                       placeholder="Carrer, Número, Pis, Ciutat, Codi Postal" />
-                <span class="error-text" th:if="${#fields.hasErrors('homeAddress')}" th:errors="*{homeAddress}"></span>
+                <label for="locality">Localitat</label>
+                <input type="text" id="locality" th:field="*{locality}"
+                       th:class="${#fields.hasErrors('locality')} ? 'input-error' : ''"
+                       placeholder="Ex: Castelló de la Plana" />
+                <span class="error-text" th:if="${#fields.hasErrors('locality')}" th:errors="*{locality}"></span>
             </div>
+
+            <hr class="section-divider">
+
+            <!-- SECCIÓ 3: PERFIL PROFESSIONAL -->
+            <h3 class="form-section-title">Perfil professional</h3>
 
             <div class="form-group">
                 <label for="specializationAreas">Àrees d'Especialització</label>
@@ -93,6 +131,11 @@
                 <span class="error-text" th:if="${#fields.hasErrors('documents')}" th:errors="*{documents}"></span>
             </div>
 
+            <hr class="section-divider">
+
+            <!-- SECCIÓ 4: LOPD -->
+            <h3 class="form-section-title">Protecció de dades</h3>
+
             <div class="form-group">
                 <label class="checkbox-container" th:classappend="${#fields.hasErrors('LOPDAcceptance')} ? 'input-error' : ''">
                     <input type="checkbox" id="LOPDAcceptance" th:field="*{LOPDAcceptance}" />
@@ -101,38 +144,13 @@
                 <span class="error-text" th:if="${#fields.hasErrors('LOPDAcceptance')}" th:errors="*{LOPDAcceptance}"></span>
             </div>
 
-            <!-- SECCIÓN DE CREDENCIALES -->
-            <hr style="margin: 30px 0; border-color: #ddd;" />
-            <h3 style="margin-bottom: 20px; color: var(--color-primario);">Accés a l'aplicació</h3>
-            <p style="margin-bottom: 20px; color: #666;">Tria les teues credencials. El compte estarà inactiu fins que el tècnic OVI el valide.</p>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="username">Nom d'usuari</label>
-                    <input type="text" id="username" th:field="*{username}"
-                           th:class="${#fields.hasErrors('username')} ? 'input-error' : ''"
-                           placeholder="Ex: joan.garcia" />
-                    <span class="error-text" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Contrasenya</label>
-                    <input type="password" id="password" th:field="*{password}"
-                           th:class="${#fields.hasErrors('password')} ? 'input-error' : ''"
-                           placeholder="Mínim 6 caràcters" />
-                    <span class="error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-                </div>
-            </div>
-
             <div class="form-actions">
-                <a th:href="@{/}" style="margin-right: 25px; color: var(--color-secundario); text-decoration: none; font-weight: bold;">Cancel·lar</a>
-                <button type="submit" class="btn">Registrar PAP/PATI</button>
+                <a th:href="@{/registro}" class="btn btn-secondary">Cancel·lar</a>
+                <button type="submit" class="btn btn-primary">Registrar-me com a PAP/PATI</button>
             </div>
 
         </form>
-
-        </form>
-    </main>
+    </div>
 </div>
 
 </body>
