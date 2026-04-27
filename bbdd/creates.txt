@@ -141,7 +141,7 @@ CREATE TABLE NEGOTIATION (
     requestID INTEGER NOT NULL,
     papID INTEGER NOT NULL,
     CONSTRAINT cp_negotiation PRIMARY KEY (negotiationID),
-    CONSTRAINT ri_negotiation_status CHECK (status IN ('inProgress', 'finished')),
+    CONSTRAINT ri_negotiation_status CHECK (status IN ('inProgress', 'finished', 'noAgreement')),
     CONSTRAINT ca_neg_recommended FOREIGN KEY (requestID, papID) REFERENCES RECOMMENDED_PAP_PATI(requestID, papID) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
