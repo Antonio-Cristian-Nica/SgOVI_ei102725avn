@@ -16,7 +16,7 @@ INSERT INTO CREDENTIALS (username, password, role, id, activated) VALUES
 ('sofia.b', '1234', 'user_ovi', 10, true),
 ('raul.g', '1234', 'user_ovi', 11, true), 
 ('julia.c', '1234', 'user_ovi', 12, true),
-('david.o', '1234', 'user_ovi', 13, true), 
+('david.o', '1234', 'user_ovi', 13, false), 
 ('irene.mas', '1234', 'user_ovi', 14, true),
 ('pablo.e', '1234', 'user_ovi', 15, true),
 -- Credenciales para todos los PAP_PATI
@@ -46,39 +46,39 @@ INSERT INTO TUTOR (nameAndSurname, phoneNumber, birthDate, homeAddress, emailAdd
 
 -- 2. OVI_USER
 INSERT INTO OVI_USER (nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, functionalDiversity, LOPDAcceptance, status, tutorID, username) VALUES 
-('Juan Pérez García', '611001001', '1995-04-10', 'Calle Sol 4, Madrid', 'juan.perez@email.com', 'Movilidad reducida', TRUE, 'active', 1, 'juan.perez'),
-('María Rodríguez', '611001002', '2000-08-15', 'Av. Norte 20, Valencia', 'maria.rod@email.com', 'Auditiva', TRUE, 'active', 2, 'maria.rod'),
-('Luis Gómez Sanz', '611001003', '1998-12-01', 'Plaza Oeste 5, Sevilla', 'luis.gomez@email.com', 'Cognitiva', TRUE, 'active', 3, 'luis.gomez'),
-('Sara León Tormo', '611001004', '1992-02-20', 'Calle Río 8, Bilbao', 'sara.leon@email.com', 'Visual', TRUE, 'active', 4, 'sara.leon'),
-('Pedro Martín Vives', '611001005', '2001-07-07', 'Camino Viejo 3, Barcelona', 'pedro.martin@email.com', 'TEA', TRUE, 'active', 5, 'pedro.martin'),
-('Ana Belén Rius', '611001006', '1994-11-12', 'Calle Real 10, Madrid', 'ana.rius@email.com', 'Física', TRUE, 'active', NULL, 'ana.rius'),
-('Carlos Valls', '611001007', '1988-06-05', 'Calle Paz 22, Valencia', 'carlos.valls@email.com', 'Auditiva', TRUE, 'active', NULL, 'carlos.valls'),
-('Lucía Ferrando', '611001008', '1997-01-25', 'Calle Alta 5, Castellón', 'lucia.fer@email.com', 'Motora', TRUE, 'active', NULL, 'lucia.fer'),
-('Marcos Peña', '611001009', '1999-03-14', 'Av. Sur 100, Málaga', 'marcos.p@email.com', 'TEA', TRUE, 'active', NULL, 'marcos.p'),
-('Sofía Blanco', '611001010', '1993-09-09', 'Calle Nueva 12, Zaragoza', 'sofia.b@email.com', 'Visual', TRUE, 'active', NULL, 'sofia.b'),
-('Raúl Giménez', '611001011', '1990-12-24', 'Plaza Mayor 2, Madrid', 'raul.g@email.com', 'Física', TRUE, 'active', NULL, 'raul.g'),
-('Julia Costa', '611001012', '2002-05-18', 'Calle Mar 30, Valencia', 'julia.c@email.com', 'Cognitiva', TRUE, 'active', NULL, 'julia.c'),
-('David Ortiz', '611001013', '1996-07-30', 'Calle Pino 1, Sevilla', 'david.o@email.com', 'Motora', TRUE, 'active', NULL, 'david.o'),
-('Irene Mas', '611001014', '1991-02-14', 'Av. Estación 4, Alicante', 'irene.mas@email.com', 'Auditiva', TRUE, 'active', NULL, 'irene.mas'),
-('Pablo Escribano', '611001015', '1998-10-10', 'Calle Segovia 9, Madrid', 'pablo.e@email.com', 'TEA', TRUE, 'active', NULL, 'pablo.e');
+('Juan Pérez García', '611001001', '1995-04-10', 'Calle Sol 4, Castelló', 'juan.perez@email.com', 'Movilidad reducida', TRUE, 'active', 1, 'juan.perez'),
+('María Rodríguez', '611001002', '2000-08-15', 'Av. Norte 20, Castelló', 'maria.rod@email.com', 'Auditiva', TRUE, 'active', 2, 'maria.rod'),
+('Luis Gómez Sanz', '611001003', '1998-12-01', 'Plaza Oeste 5, Castelló', 'luis.gomez@email.com', 'Cognitiva', TRUE, 'active', 3, 'luis.gomez'),
+('Sara León Tormo', '611001004', '1992-02-20', 'Calle Río 8, Castelló', 'sara.leon@email.com', 'Visual', TRUE, 'active', 4, 'sara.leon'),
+('Pedro Martín Vives', '611001005', '2001-07-07', 'Camino Viejo 3, Castelló', 'pedro.martin@email.com', 'TEA', TRUE, 'active', 5, 'pedro.martin'),
+('Ana Belén Rius', '611001006', '1994-11-12', 'Calle Real 10, Castelló', 'ana.rius@email.com', 'Física', TRUE, 'active', NULL, 'ana.rius'),
+('Carlos Valls', '611001007', '1988-06-05', 'Calle Paz 22, Castelló', 'carlos.valls@email.com', 'Auditiva', TRUE, 'active', NULL, 'carlos.valls'),
+('Lucía Ferrando', '611001008', '1997-01-25', 'Calle Alta 5, Castelló', 'lucia.fer@email.com', 'Motora', TRUE, 'active', NULL, 'lucia.fer'),
+('Marcos Peña', '611001009', '1999-03-14', 'Av. Sur 100, Castelló', 'marcos.p@email.com', 'TEA', TRUE, 'active', NULL, 'marcos.p'),
+('Sofía Blanco', '611001010', '1993-09-09', 'Calle Nueva 12, Castelló', 'sofia.b@email.com', 'Visual', TRUE, 'active', NULL, 'sofia.b'),
+('Raúl Giménez', '611001011', '1990-12-24', 'Plaza Mayor 2, Castelló', 'raul.g@email.com', 'Física', TRUE, 'active', NULL, 'raul.g'),
+('Julia Costa', '611001012', '2002-05-18', 'Calle Mar 30, Castelló', 'julia.c@email.com', 'Cognitiva', TRUE, 'active', NULL, 'julia.c'),
+('David Ortiz', '611001013', '1996-07-30', 'Calle Pino 1, Castelló', 'david.o@email.com', 'Motora', TRUE, 'approvalPending', NULL, 'david.o'),
+('Irene Mas', '611001014', '1991-02-14', 'Av. Estació 4, Castelló', 'irene.mas@email.com', 'Auditiva', TRUE, 'active', NULL, 'irene.mas'),
+('Pablo Escribano', '611001015', '1998-10-10', 'Calle Segovia 9, Castelló', 'pablo.e@email.com', 'TEA', TRUE, 'active', NULL, 'pablo.e');
 
 -- 3. PAP_PATI
-INSERT INTO PAP_PATI (nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, academicBackground, professionalExperience, specializationAreas, documents, LOPDAcceptance, status, username) VALUES 
-('Ana García López', '622001001', '1990-05-15', 'Calle Mayor 1', 'ana.garcia@email.com', 'Grado Psicología', '5 años exp', 'Tercera edad', 'ana.pdf', TRUE, 'active', 'ana.garcia'),
-('Carlos Ruiz Marín', '622001002', '1985-10-20', 'Av. Centro 45', 'carlos.ruiz@email.com', 'Técnico Int. Social', '10 años exp', 'Juventud', 'carlos.pdf', TRUE, 'active', 'carlos.ruiz'),
-('Elena Beltrán', '622001003', '1993-02-02', 'Plaza España 12', 'elena.b@email.com', 'Grado Enfermería', 'Hospital General', 'Salud mental', 'elena.pdf', TRUE, 'active', 'elena.b'),
-('Marcos Sanz', '622001004', '1988-12-30', 'Calle Luna 7', 'marcos.sanz@email.com', 'Magisterio Especial', 'Apoyo escolar', 'Discapacidad', 'marcos.pdf', TRUE, 'active', 'marcos.sanz'),
-('Lucía Méndez', '622001005', '1982-03-12', 'Calle Mayor 55', 'lucia.mendez@email.com', 'Trabajo Social', 'Gestión ONG', 'Coordinación', 'lucia.pdf', TRUE, 'active', 'lucia.mendez'),
-('Roberto Flos', '622001006', '1987-04-22', 'Calle Sol 12', 'roberto.f@email.com', 'Técnico Sociosanitario', 'Ayuda domicilio', 'Movilidad', 'rob.pdf', TRUE, 'active', 'roberto.f'),
-('Marta Ibáñez', '622001007', '1991-08-11', 'Av. Puerto 5', 'marta.i@email.com', 'Fisioterapia', 'Clínica privada', 'Rehabilitación', 'marta.pdf', TRUE, 'active', 'marta.i'),
-('Víctor Jara', '622001008', '1994-01-05', 'Calle Norte 3', 'victor.j@email.com', 'Logopedia', 'Colegios', 'Comunicación', 'victor.pdf', TRUE, 'active', 'victor.j'),
-('Sonia Terol', '622001009', '1980-06-25', 'Calle Jara 9', 'sonia.t@email.com', 'Terapia Ocupacional', 'Centros día', 'Autonomía', 'sonia.pdf', TRUE, 'active', 'sonia.t'),
-('Daniel Giner', '622001010', '1992-11-30', 'Calle Almas 2', 'daniel.g@email.com', 'Intérprete LSE', 'Eventos', 'Lengua Signos', 'dan.pdf', TRUE, 'active', 'daniel.g'),
-('Patricia Vila', '622001011', '1989-07-14', 'Av. Baleares 1', 'patricia.v@email.com', 'Educación Social', 'Menores', 'Conducta', 'pat.pdf', TRUE, 'active', 'patricia.v'),
-('Andrés Soler', '622001012', '1983-09-03', 'Calle Olivo 6', 'andres.s@email.com', 'Auxiliar Enfermería', 'Residencias', 'Cuidados básicos', 'andres.pdf', TRUE, 'active', 'andres.s'),
-('Teresa Pons', '622001013', '1995-05-20', 'Plaza Real 8', 'teresa.p@email.com', 'Psicopedagogía', 'Gabinete', 'Aprendizaje', 'teresa.pdf', TRUE, 'active', 'teresa.p'),
-('Igor Doménech', '622001014', '1986-10-10', 'Calle Baja 4', 'igor.d@email.com', 'Integración Social', 'Inserción laboral', 'Empleo', 'igor.pdf', TRUE, 'active', 'igor.d'),
-('Clara Vidal', '622001015', '1990-03-30', 'Av. Francia 15', 'clara.v@email.com', 'Grado Psicología', 'Atención temprana', 'Infantil', 'clara.pdf', TRUE, 'active', 'clara.v');
+INSERT INTO PAP_PATI (nameAndSurname, phoneNumber, birthDate, homeAddress, locality, emailAddress, academicBackground, professionalExperience, specializationAreas, documents, LOPDAcceptance, status, username) VALUES 
+('Ana García López', '622001001', '1990-05-15', 'Calle Mayor 1', 'Castelló de la Plana', 'ana.garcia@email.com', 'Grado Psicología', '5 años exp', 'Tercera edad', 'ana.pdf', TRUE, 'active', 'ana.garcia'),
+('Carlos Ruiz Marín', '622001002', '1985-10-20', 'Av. Centro 45', 'Castelló de la Plana', 'carlos.ruiz@email.com', 'Técnico Int. Social', '10 años exp', 'Juventud', 'carlos.pdf', TRUE, 'active', 'carlos.ruiz'),
+('Elena Beltrán', '622001003', '1993-02-02', 'Plaza España 12', 'Benicàssim', 'elena.b@email.com', 'Grado Enfermería', 'Hospital General', 'Salud mental', 'elena.pdf', TRUE, 'active', 'elena.b'),
+('Marcos Sanz', '622001004', '1988-12-30', 'Calle Luna 7', 'Vila-real', 'marcos.sanz@email.com', 'Magisterio Especial', 'Apoyo escolar', 'Discapacidad', 'marcos.pdf', TRUE, 'active', 'marcos.sanz'),
+('Lucía Méndez', '622001005', '1982-03-12', 'Calle Mayor 55', 'Castelló de la Plana', 'lucia.mendez@email.com', 'Trabajo Social', 'Gestión ONG', 'Coordinación', 'lucia.pdf', TRUE, 'active', 'lucia.mendez'),
+('Roberto Flos', '622001006', '1987-04-22', 'Calle Sol 12', 'Borriana', 'roberto.f@email.com', 'Técnico Sociosanitario', 'Ayuda domicilio', 'Movilidad', 'rob.pdf', TRUE, 'active', 'roberto.f'),
+('Marta Ibáñez', '622001007', '1991-08-11', 'Av. Puerto 5', 'Castelló de la Plana', 'marta.i@email.com', 'Fisioterapia', 'Clínica privada', 'Rehabilitación', 'marta.pdf', TRUE, 'active', 'marta.i'),
+('Víctor Jara', '622001008', '1994-01-05', 'Calle Norte 3', 'Almassora', 'victor.j@email.com', 'Logopedia', 'Colegios', 'Comunicación', 'victor.pdf', TRUE, 'active', 'victor.j'),
+('Sonia Terol', '622001009', '1980-06-25', 'Calle Jara 9', 'Castelló de la Plana', 'sonia.t@email.com', 'Terapia Ocupacional', 'Centros día', 'Autonomía', 'sonia.pdf', TRUE, 'active', 'sonia.t'),
+('Daniel Giner', '622001010', '1992-11-30', 'Calle Almas 2', 'Nules', 'daniel.g@email.com', 'Intérprete LSE', 'Eventos', 'Lengua Signos', 'dan.pdf', TRUE, 'active', 'daniel.g'),
+('Patricia Vila', '622001011', '1989-07-14', 'Av. Baleares 1', 'Castelló de la Plana', 'patricia.v@email.com', 'Educación Social', 'Menores', 'Conducta', 'pat.pdf', TRUE, 'active', 'patricia.v'),
+('Andrés Soler', '622001012', '1983-09-03', 'Calle Olivo 6', 'La Vall d''Uixó', 'andres.s@email.com', 'Auxiliar Enfermería', 'Residencias', 'Cuidados básicos', 'andres.pdf', TRUE, 'active', 'andres.s'),
+('Teresa Pons', '622001013', '1995-05-20', 'Plaza Real 8', 'Castelló de la Plana', 'teresa.p@email.com', 'Psicopedagogía', 'Gabinete', 'Aprendizaje', 'teresa.pdf', TRUE, 'active', 'teresa.p'),
+('Igor Doménech', '622001014', '1986-10-10', 'Calle Baja 4', 'Vinaròs', 'igor.d@email.com', 'Integración Social', 'Inserción laboral', 'Empleo', 'igor.pdf', TRUE, 'active', 'igor.d'),
+('Clara Vidal', '622001015', '1990-03-30', 'Av. Francia 15', 'Castelló de la Plana', 'clara.v@email.com', 'Grado Psicología', 'Atención temprana', 'Infantil', 'clara.pdf', TRUE, 'active', 'clara.v');
 
 -- 4. SCHEDULE 
 INSERT INTO SCHEDULE (dayOfWeek, startHour, endHour, papID) VALUES 
@@ -100,14 +100,14 @@ INSERT INTO SCHEDULE (dayOfWeek, startHour, endHour, papID) VALUES
 
 -- 5. ASSISTANCE_REQUEST
 INSERT INTO ASSISTANCE_REQUEST (serviceLocation, requiredAssistance, status, oviID) VALUES 
-('Madrid Centro', 'Apoyo en vida diaria y gestiones bancarias', 'inProgress', 1),
-('Valencia', 'Acompañamiento a clases universitarias', 'inProgress', 2),
-('Sevilla Este', 'Apoyo en higiene personal y desayuno', 'inProgress', 3),
-('Madrid', 'Asistencia en actividades de ocio', 'inProgress', 6),
-('Barcelona', 'Apoyo en movilidad para ir al trabajo', 'inProgress', 5),
-('Alicante', 'Intérprete para trámites administrativos', 'inProgress', 14),
-('Valencia', 'Refuerzo en organización del hogar', 'inProgress', 12),
-('Madrid', 'Acompañamiento a rehabilitación', 'inProgress', 15);
+('Castelló de la Plana', 'Apoyo en vida diaria y gestiones bancarias', 'inProgress', 1),
+('Castelló de la Plana', 'Acompañamiento a clases universitarias', 'inProgress', 2),
+('Castelló de la Plana', 'Apoyo en higiene personal y desayuno', 'inProgress', 3),
+('Castelló de la Plana', 'Asistencia en actividades de ocio', 'inProgress', 6),
+('Benicàssim', 'Apoyo en movilidad para ir al trabajo', 'inProgress', 5),
+('Castelló de la Plana', 'Intérprete para trámites administrativos', 'inProgress', 14),
+('Vila-real', 'Refuerzo en organización del hogar', 'inProgress', 12),
+('Castelló de la Plana', 'Acompañamiento a rehabilitación', 'inProgress', 15);
 
 -- 6. REQUEST_SCHEDULE
 INSERT INTO REQUEST_SCHEDULE (date, dayOfWeek, startHour, endHour, requestID) VALUES 
@@ -126,9 +126,9 @@ INSERT INTO RECOMMENDED_PAP_PATI (requestID, papID) VALUES
 
 -- 8. NEGOTIATION
 INSERT INTO NEGOTIATION (duration, location, status, dateAndTime, conversation, requestID, papID) VALUES 
-('1 hora', 'Sede OVI Madrid', 'finished', '2026-03-25 10:00:00', 'Acuerdo total en tareas y horarios', 1, 1),
-('45 min', 'Videollamada', 'inProgress', '2026-03-26 18:00:00', 'Pendiente confirmar km transporte', 2, 2),
-('1 hora', 'Cafetería BCN', 'finished', '2026-03-25 09:30:00', 'Contrato listo para firma', 5, 5);
+('1 hora', 'Seu OVI Castelló', 'finished', '2026-03-25 10:00:00', 'Acord total en tasques i horaris', 1, 1),
+('45 min', 'Videotrucada', 'inProgress', '2026-03-26 18:00:00', 'Pendent confirmar km transport', 2, 2),
+('1 hora', 'Cafeteria Castelló', 'finished', '2026-03-25 09:30:00', 'Contracte llest per a signatura', 5, 5);
 
 -- 9. CONTRACT
 INSERT INTO CONTRACT (version, creationDate, startServiceDate, endServiceDate, status, documentURL, negotiationID) VALUES 
@@ -136,17 +136,17 @@ INSERT INTO CONTRACT (version, creationDate, startServiceDate, endServiceDate, s
 (1, '2026-04-01', '2026-04-15', '2026-10-15', 'active', 'http://ovi.es/docs/cont_005.pdf', 3);
 
 -- 10. ACTIVITY
-INSERT INTO ACTIVITY (title, description, dateAndTime, location, maxParticipants, availableSpots, status) VALUES
-('Taller Autonomía', 'Cocina accesible', '2026-05-10 10:00:00', 'Madrid', 10, 8, 'created'),
-('Curso LSE', 'Nivel básico', '2026-05-12 17:00:00', 'Valencia', 15, 12, 'created'),
-('Deporte Adaptado', 'Baloncesto silla', '2026-06-01 11:00:00', 'Sevilla', 20, 15, 'created'),
-('Salida Cultural', 'Museo del Prado', '2026-05-20 10:00:00', 'Madrid', 12, 5, 'created'),
-('Tecnología', 'Uso de JAWS', '2026-05-25 16:00:00', 'Bilbao', 8, 4, 'created'),
-('Derechos Sociales', 'Charla LOPD', '2026-04-15 18:00:00', 'Online', 50, 45, 'created'),
-('Teatro Inclusivo', 'Ensayo abierto', '2026-05-05 19:00:00', 'Barcelona', 15, 10, 'created'),
-('Senderismo', 'Ruta accesible', '2026-06-15 09:00:00', 'Sierra Madrid', 25, 20, 'created'),
-('Inglés Adaptado', 'Speaking inicial', '2026-05-02 17:30:00', 'Valencia', 10, 7, 'created'),
-('Cineforum', 'Proyección debate', '2026-04-30 18:00:00', 'Madrid', 30, 25, 'created');
+INSERT INTO ACTIVITY (title, description, dateAndTime, location, activityType, maxParticipants, availableSpots, status, instructorID) VALUES
+('Taller Autonomia', 'Cuina accessible', '2026-05-10 10:00:00', 'Castelló de la Plana', 'formacio', 10, 8, 'created', NULL),
+('Curs LSE', 'Nivell bàsic', '2026-05-12 17:00:00', 'Castelló de la Plana', 'formacio', 15, 12, 'created', NULL),
+('Esport Adaptat', 'Bàsquet cadira', '2026-06-01 11:00:00', 'Castelló de la Plana', 'formacio', 20, 15, 'created', NULL),
+('Eixida Cultural', 'Museu de Castelló', '2026-05-20 10:00:00', 'Castelló de la Plana', 'divulgacio', 12, 5, 'created', NULL),
+('Tecnologia', 'Ús de JAWS', '2026-05-25 16:00:00', 'Castelló de la Plana', 'formacio', 8, 4, 'created', NULL),
+('Drets Socials', 'Xerrada LOPD', '2026-04-15 18:00:00', 'Online', 'divulgacio', 50, 45, 'created', NULL),
+('Teatre Inclusiu', 'Assaig obert', '2026-05-05 19:00:00', 'Castelló de la Plana', 'divulgacio', 15, 10, 'created', NULL),
+('Senderisme', 'Ruta accessible', '2026-06-15 09:00:00', 'Serra d''Espadà', 'divulgacio', 25, 20, 'created', NULL),
+('Anglès Adaptat', 'Speaking inicial', '2026-05-02 17:30:00', 'Castelló de la Plana', 'formacio', 10, 7, 'created', NULL),
+('Cinefòrum', 'Projecció debat', '2026-04-30 18:00:00', 'Castelló de la Plana', 'divulgacio', 30, 25, 'created', NULL);
 
 -- 11. INSCRIPTION
 INSERT INTO INSCRIPTION (oviID, activityID) VALUES 
