@@ -1,9 +1,7 @@
 -- 0. CREDENCIALES COMPLETAS
 INSERT INTO CREDENTIALS (username, password, role, id, activated) VALUES 
--- Administradores
 ('admin0', '1234', 'admin', 990, true),
 ('admin1', '1234', 'admin', 991, true),
--- Credenciales para todos los OVI_USER
 ('juan.perez', '1234', 'user_ovi', 1, true), 
 ('maria.rod', '1234', 'user_ovi', 2, true),
 ('luis.gomez', '1234', 'user_ovi', 3, true), 
@@ -19,7 +17,6 @@ INSERT INTO CREDENTIALS (username, password, role, id, activated) VALUES
 ('david.o', '1234', 'user_ovi', 13, false), 
 ('irene.mas', '1234', 'user_ovi', 14, true),
 ('pablo.e', '1234', 'user_ovi', 15, true),
--- Credenciales para todos los PAP_PATI
 ('ana.garcia', '1234', 'pap_pati', 1, true), 
 ('carlos.ruiz', '1234', 'pap_pati', 2, true),
 ('elena.b', '1234', 'pap_pati', 3, true), 
@@ -38,11 +35,11 @@ INSERT INTO CREDENTIALS (username, password, role, id, activated) VALUES
 
 -- 1. TUTORES
 INSERT INTO TUTOR (nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, relationshipWithUser) VALUES 
-('Rosa María García', '600111001', '1970-05-20', 'Calle Mayor 5, Madrid', 'rosa.garcia@email.com', 'Madre'),
-('Alberto Sanz', '600111002', '1965-10-12', 'Av. Constitución 12, Valencia', 'alberto.sanz@email.com', 'Padre'),
-('Elena Martínez', '600111003', '1980-02-25', 'Plaza España 1, Sevilla', 'elena.mtnez@email.com', 'Hermana'),
-('Jorge López', '600111004', '1975-11-30', 'Calle Río 45, Bilbao', 'jorge.lopez@email.com', 'Tutor Legal'),
-('Carmen Ruiz', '600111005', '1982-03-15', 'Calle Luna 3, Barcelona', 'carmen.ruiz@email.com', 'Madre');
+('Rosa María García', '600111001', '1970-05-20', 'Calle Mayor 5, Castelló', 'rosa.garcia@email.com', 'Madre'),
+('Alberto Sanz', '600111002', '1965-10-12', 'Av. Constitución 12, Castelló', 'alberto.sanz@email.com', 'Padre'),
+('Elena Martínez', '600111003', '1980-02-25', 'Plaza España 1, Castelló', 'elena.mtnez@email.com', 'Hermana'),
+('Jorge López', '600111004', '1975-11-30', 'Calle Río 45, Castelló', 'jorge.lopez@email.com', 'Tutor Legal'),
+('Carmen Ruiz', '600111005', '1982-03-15', 'Calle Luna 3, Castelló', 'carmen.ruiz@email.com', 'Madre');
 
 -- 2. OVI_USER
 INSERT INTO OVI_USER (nameAndSurname, phoneNumber, birthDate, homeAddress, emailAddress, functionalDiversity, LOPDAcceptance, status, tutorID, username) VALUES 
@@ -99,26 +96,29 @@ INSERT INTO SCHEDULE (dayOfWeek, startHour, endHour, papID) VALUES
 (1, '09:00:00', '18:00:00', 15);
 
 -- 5. ASSISTANCE_REQUEST
+-- Solicituds 1, 2 i 5 tenen recomanats i negociacions → accepted
+-- Solicituds 1 i 5 tenen contracte → closedWithContract
+-- Resta → inProgress
 INSERT INTO ASSISTANCE_REQUEST (serviceLocation, requiredAssistance, status, oviID) VALUES 
-('Castelló de la Plana', 'Apoyo en vida diaria y gestiones bancarias', 'inProgress', 1),
-('Castelló de la Plana', 'Acompañamiento a clases universitarias', 'inProgress', 2),
+('Castelló de la Plana', 'Apoyo en vida diaria y gestiones bancarias', 'closedWithContract', 1),
+('Castelló de la Plana', 'Acompañamiento a clases universitarias', 'accepted', 2),
 ('Castelló de la Plana', 'Apoyo en higiene personal y desayuno', 'inProgress', 3),
 ('Castelló de la Plana', 'Asistencia en actividades de ocio', 'inProgress', 6),
-('Benicàssim', 'Apoyo en movilidad para ir al trabajo', 'inProgress', 5),
+('Benicàssim', 'Apoyo en movilidad para ir al trabajo', 'closedWithContract', 5),
 ('Castelló de la Plana', 'Intérprete para trámites administrativos', 'inProgress', 14),
 ('Vila-real', 'Refuerzo en organización del hogar', 'inProgress', 12),
 ('Castelló de la Plana', 'Acompañamiento a rehabilitación', 'inProgress', 15);
 
 -- 6. REQUEST_SCHEDULE
 INSERT INTO REQUEST_SCHEDULE (date, dayOfWeek, startHour, endHour, requestID) VALUES 
-('2026-04-06', 1, '09:00:00', '12:00:00', 1),
-('2026-04-07', 2, '17:00:00', '20:00:00', 2),
-('2026-04-08', 3, '08:30:00', '10:30:00', 3),
-('2026-04-06', 1, '16:00:00', '19:00:00', 4),
-('2026-04-06', 1, '09:00:00', '14:00:00', 5),
-('2026-04-10', 5, '10:00:00', '13:00:00', 6),
-('2026-04-07', 2, '11:00:00', '13:00:00', 7),
-('2026-04-06', 1, '10:00:00', '13:00:00', 8);
+('2026-05-05', 1, '09:00:00', '12:00:00', 1),
+('2026-05-06', 2, '17:00:00', '20:00:00', 2),
+('2026-05-07', 3, '08:30:00', '10:30:00', 3),
+('2026-05-05', 1, '16:00:00', '19:00:00', 4),
+('2026-05-05', 1, '09:00:00', '14:00:00', 5),
+('2026-05-09', 5, '10:00:00', '13:00:00', 6),
+('2026-05-06', 2, '11:00:00', '13:00:00', 7),
+('2026-05-05', 1, '10:00:00', '13:00:00', 8);
 
 -- 7. RECOMMENDED_PAP_PATI
 INSERT INTO RECOMMENDED_PAP_PATI (requestID, papID) VALUES 
