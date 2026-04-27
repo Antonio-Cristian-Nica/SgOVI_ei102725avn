@@ -18,11 +18,6 @@ Cuentas para probar las diferentes funcionalidades implementadas:
       - Administrador --> admin0 (1234)
       - Usuario OVI de diseño físico--> juan.perez (patata)
       - PAP/PATI de diseño físico--> ana.garcia (patata)
-      - Usuario OVI post-activación --> LeoMessi (patata)
-      - Pap/Pati post-activación --> edgar.adell (patata)
-      - Usuario OVI pre-activación --> cancelado0 (patata)
-      - Pap/Pati pre-activación --> cancelado1 (patata)
-
 
 ## Lo que debe hacer la aplicación
 1. Gestión de Ovi Users --> El sistema posibilita el alta y la modificación de datos personales y de contacto de cada OVI User, incluyendo el registro explícito del consentimiento informado según la normativa LOPD/RGPD. Implementado:
