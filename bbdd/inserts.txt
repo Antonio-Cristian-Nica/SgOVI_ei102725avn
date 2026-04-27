@@ -105,9 +105,9 @@ INSERT INTO ASSISTANCE_REQUEST (serviceLocation, requiredAssistance, status, ovi
 ('Castelló de la Plana', 'Apoyo en higiene personal y desayuno', 'inProgress', 3),
 ('Castelló de la Plana', 'Asistencia en actividades de ocio', 'inProgress', 6),
 ('Benicàssim', 'Apoyo en movilidad para ir al trabajo', 'closedWithContract', 5),
-('Castelló de la Plana', 'Intérprete para trámites administrativos', 'inProgress', 14),
+('Castelló de la Plana', 'Intérprete para trámites administrativos', 'accepted', 14),
 ('Vila-real', 'Refuerzo en organización del hogar', 'inProgress', 12),
-('Castelló de la Plana', 'Acompañamiento a rehabilitación', 'inProgress', 15);
+('Castelló de la Plana', 'Acompañamiento a rehabilitación', 'accepted', 15);
 
 -- 6. REQUEST_SCHEDULE
 INSERT INTO REQUEST_SCHEDULE (date, dayOfWeek, startHour, endHour, requestID) VALUES 
