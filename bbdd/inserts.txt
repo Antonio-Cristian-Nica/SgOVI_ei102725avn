@@ -16,7 +16,7 @@ INSERT INTO CREDENTIALS (username, password, role, id, activated) VALUES
 ('sofia.b', '1234', 'user_ovi', 10, true),
 ('raul.g', '1234', 'user_ovi', 11, true), 
 ('julia.c', '1234', 'user_ovi', 12, true),
-('david.o', '1234', 'user_ovi', 13, true), 
+('david.o', '1234', 'user_ovi', 13, false), 
 ('irene.mas', '1234', 'user_ovi', 14, true),
 ('pablo.e', '1234', 'user_ovi', 15, true),
 -- Credenciales para todos los PAP_PATI
