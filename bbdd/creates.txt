@@ -49,6 +49,7 @@ CREATE TABLE PAP_PATI (
     phoneNumber VARCHAR(20) NOT NULL,
     birthDate DATE NOT NULL,
     homeAddress VARCHAR(200) NOT NULL,
+    locality VARCHAR(100) NOT NULL,
     emailAddress VARCHAR(100) NOT NULL,
     academicBackground TEXT NOT NULL,
     professionalExperience TEXT NOT NULL,
