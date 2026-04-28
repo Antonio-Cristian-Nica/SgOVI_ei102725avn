@@ -103,7 +103,7 @@ Aplicació web desenvolupada amb Spring Boot MVC + Thymeleaf + PostgreSQL per a 
 - **Xerrada Drets Socials** (divulgació): àmplia capacitat, 2 inscrits
 - **Curs Llengua de Signes** (formació): buida, per probar el procés d'inscripció complet
 
-## Estructura del projecte
+## ------------------------
 
 4. Actividades de formación y divulgación --> El técnico OVI será el encargado de gestionar la creación de las distintas actividades. Esta gestión incluirá la creación de las actividades, la asignación de los instructores que impartan la actividad. Habrán dos tipos de actividades: actividades de formación con un número limitado de participantes, y luego actividades de divulgación en las que no se requerirá inscripción, pero también estará disponible. En el caso de las actividades de formación, la aplicación deberá proporcionar un proceso de inscripción a esa actividades con los datos personales de la persona que participe. Y una vez acabe la formación, el instructor definido deberá poder registrar la asistencia de cada participante a la actividad, para que luego la aplicación pueda emitir a esos asistentes un certificado de asistencia en formato PDF. En las actividades de divulgación, el aforo se controlará in situ, será el instructor el que compruebe la asistencia de los participantes inscritos y también el que registrará el nombre de las personas participantes, la aplicación debe permitir esto.
 
