@@ -138,6 +138,8 @@ CREATE TABLE NEGOTIATION (
     status VARCHAR(20) NOT NULL,
     dateAndTime TIMESTAMP NOT NULL,
     conversation TEXT,
+    oviUserConfirmed BOOLEAN DEFAULT FALSE,
+    papPatiConfirmed BOOLEAN DEFAULT FALSE,
     requestID INTEGER NOT NULL,
     papID INTEGER NOT NULL,
     CONSTRAINT cp_negotiation PRIMARY KEY (negotiationID),
