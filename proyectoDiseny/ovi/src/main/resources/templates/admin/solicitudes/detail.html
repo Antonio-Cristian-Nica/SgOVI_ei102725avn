@@ -118,7 +118,7 @@
 
             <div th:if="${!recomanats.isEmpty()}">
                 <div th:each="rec : ${recomanats}" class="pilar-card solicitud-rec-card">
-                    <div th:each="pap : ${totsPapPatis}" th:if="${pap.papID == rec.papID}">
+                    <div th:with="pap=${infoPapPatiRecomanats[rec.papID]}">
                         <h3 th:text="${pap.nameAndSurname}"></h3>
                         <p th:text="'Localitat: ' + ${pap.locality}"></p>
                         <p th:text="'Especialització: ' + ${pap.specializationAreas}"></p>
@@ -136,13 +136,17 @@
                         <span th:if="${teNegociacio[rec.papID]}" class="estat-pending">Té negociació activa</span>
                     </div>
 
-                    <div th:if="${solicitud.status == 'accepted'}" class="alert alert-info">
-                        Les parts estan discutint les bases del contracte. Quan el contracte estiga finalitzat apareixerà un enllaç al mateix.
-                    </div>
-
+                    <!-- Status closedWithContract o closedContractEnded: enllaç al contracte -->
                     <div th:if="${solicitud.status == 'closedWithContract' or solicitud.status == 'closedContractEnded'}">
-                        <span class="estat-actiu">Contracte signat</span>
+                        <a th:if="${contractesPerPap[rec.papID] != null}"
+                           th:href="@{/admin/contractes/{id}(id=${contractesPerPap[rec.papID].contractID})}"
+                           class="btn btn-secondary btn-small">Veure contracte</a>
                     </div>
+                </div>
+
+                <!-- Missatge global per a status accepted, fora del bucle -->
+                <div th:if="${solicitud.status == 'accepted'}" class="alert alert-info solicitud-negociacio-msg">
+                    L'usuari està negociant amb els PAP/PATIs recomanats. Quan el contracte estiga finalitzat apareixerà un enllaç al mateix.
                 </div>
             </div>
 

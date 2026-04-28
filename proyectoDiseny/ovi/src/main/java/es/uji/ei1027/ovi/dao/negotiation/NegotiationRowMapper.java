@@ -17,6 +17,8 @@ public class NegotiationRowMapper implements RowMapper<Negotiation> {
         negotiation.setConversation(rs.getString("conversation"));
         negotiation.setRequestID(rs.getInt("requestID"));
         negotiation.setPapID(rs.getInt("papID"));
+        negotiation.setOviUserConfirmed(rs.getBoolean("oviUserConfirmed"));
+        negotiation.setPapPatiConfirmed(rs.getBoolean("papPatiConfirmed"));
         return negotiation;
     }
 }

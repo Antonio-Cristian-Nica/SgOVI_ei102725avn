@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - El meu historial de contractes</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <h2 class="section-title">El meu historial de contractes</h2>
+    <p class="section-subtitle">Consulta els teus contractes d'assistència personal actius i finalitzats.</p>
+
+    <div th:if="${contractes.isEmpty()}" class="alert alert-info">
+        Encara no tens cap contracte registrat.
+    </div>
+
+    <div th:if="${!contractes.isEmpty()}">
+        <div th:each="c : ${contractes}" class="pilar-card solicitud-rec-card">
+            <div th:with="neg=${negotiations[c.contractID]}, ovi=${oviUsers[c.contractID]}">
+
+                <h3 th:text="'Contracte #' + ${c.contractID}"></h3>
+
+                <div class="filosofia-grid">
+                    <div>
+                        <table class="data-table">
+                            <tr>
+                                <th>Usuari OVI</th>
+                                <td th:text="${ovi.nameAndSurname}"></td>
+                            </tr>
+                            <tr>
+                                <th>Correu</th>
+                                <td th:text="${ovi.emailAddress}"></td>
+                            </tr>
+                            <tr>
+                                <th>Telèfon</th>
+                                <td th:text="${ovi.phoneNumber}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <table class="data-table">
+                            <tr>
+                                <th>Data inici</th>
+                                <td th:text="${c.startServiceDate}"></td>
+                            </tr>
+                            <tr>
+                                <th>Data fi</th>
+                                <td th:text="${c.endServiceDate}"></td>
+                            </tr>
+                            <tr>
+                                <th>Estat</th>
+                                <td>
+                                    <span th:if="${c.status == 'active'}" class="estat-actiu">Actiu</span>
+                                    <span th:if="${c.status == 'ended'}" class="estat-inactiu">Finalitzat</span>
+                                    <span th:if="${c.status == 'cancelled'}" class="estat-inactiu">Cancel·lat</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Document</th>
+                                <td>
+                                    <a th:href="${c.documentURL}" target="_blank"
+                                       class="btn btn-secondary btn-small">Veure PDF</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <a th:href="@{/papPati/portal}" class="btn btn-secondary">Tornar al portal</a>
+    </div>
+
+</div>
+
+</body>
+</html>

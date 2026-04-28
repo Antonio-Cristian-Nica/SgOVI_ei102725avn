@@ -21,16 +21,18 @@ public class ChangePasswordValidator implements Validator {
             errors.rejectValue("currentPassword", ERROR_OBLIGATORI, "La contrasenya actual és obligatòria");
         }
 
-        if (form.getNewPassword() == null || form.getNewPassword().trim().isEmpty()) {
-            errors.rejectValue("newPassword", ERROR_OBLIGATORI, "La nova contrasenya és obligatòria");
-        } else if (form.getNewPassword().length() < 6) {
-            errors.rejectValue("newPassword", "format", "La nova contrasenya ha de tindre almenys 6 caràcters");
-        }
-
         if (form.getConfirmPassword() == null || form.getConfirmPassword().trim().isEmpty()) {
             errors.rejectValue("confirmPassword", ERROR_OBLIGATORI, "Has de confirmar la nova contrasenya");
         } else if (form.getNewPassword() != null && !form.getNewPassword().equals(form.getConfirmPassword())) {
             errors.rejectValue("confirmPassword", "noCoincideix", "Les contrasenyes no coincideixen");
+        }
+
+        if (form.getNewPassword() == null || form.getNewPassword().trim().isEmpty()) {
+            errors.rejectValue("newPassword", ERROR_OBLIGATORI, "La nova contrasenya és obligatòria");
+        } else if (form.getNewPassword().length() < 6) {
+            errors.rejectValue("newPassword", "format", "La nova contrasenya ha de tindre almenys 6 caràcters");
+        } else if (form.getNewPassword().length() > 100) {
+            errors.rejectValue("newPassword", "longitud", "La contrasenya no pot superar els 100 caràcters");
         }
     }
 }

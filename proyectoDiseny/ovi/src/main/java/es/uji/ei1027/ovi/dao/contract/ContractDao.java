@@ -49,4 +49,31 @@ public class ContractDao {
     public void deleteContract(int contractID) {
         jdbcTemplate.update("DELETE FROM CONTRACT WHERE contractID=?", contractID);
     }
+
+    public Contract getContractByNegotiation(int negotiationID) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM CONTRACT WHERE negotiationID=?",
+                    new ContractRowMapper(), negotiationID);
+        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public List<Contract> getContractsByOviUser(int oviID) {
+        return jdbcTemplate.query(
+                "SELECT c.* FROM CONTRACT c " +
+                        "INNER JOIN NEGOTIATION n ON c.negotiationID = n.negotiationID " +
+                        "INNER JOIN ASSISTANCE_REQUEST ar ON n.requestID = ar.requestID " +
+                        "WHERE ar.oviID = ?",
+                new ContractRowMapper(), oviID);
+    }
+
+    public List<Contract> getContractsByPapPati(int papID) {
+        return jdbcTemplate.query(
+                "SELECT c.* FROM CONTRACT c " +
+                        "INNER JOIN NEGOTIATION n ON c.negotiationID = n.negotiationID " +
+                        "WHERE n.papID = ?",
+                new ContractRowMapper(), papID);
+    }
 }

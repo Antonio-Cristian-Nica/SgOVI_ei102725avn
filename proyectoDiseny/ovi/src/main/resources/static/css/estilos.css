@@ -2,7 +2,7 @@
    VARIABLES Y CONFIGURACIÓN BASE
    ========================================= */
 :root {
-    --bg-crema: #FDF5E6;
+    --bg-crema: #F7EBD0;
     --color-primario: #004AAD;
     --color-secundario: #008080;
     --color-contraste: #CC6600;
@@ -609,10 +609,14 @@ textarea {
 .data-table td {
     padding: 13px 16px;
     border-bottom: 1px solid #e0e0e0;
+    background-color: #ffffff;
 }
 
-.data-table tr:nth-child(even) td {
-    background-color: rgba(253, 245, 230, 0.6);
+.data-table td .estat-actiu,
+.data-table td .estat-inactiu,
+.data-table td .estat-pending {
+    display: inline-block;
+    white-space: nowrap;
 }
 
 .data-table tr:hover td {
@@ -701,6 +705,28 @@ textarea {
 .rebutjar-textarea:focus {
     outline: none;
     border-color: #c0392b;
+}
+
+/* =========================================
+   NEGOCIACIÓ
+   ========================================= */
+.negociacio-conversa {
+    background-color: #ffffff;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    min-height: 200px;
+    margin-bottom: 16px;
+}
+
+.negociacio-text {
+    font-family: inherit;
+    font-size: 15px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+    color: var(--texto-oscuro);
+    line-height: 1.7;
 }
 
 /* =========================================

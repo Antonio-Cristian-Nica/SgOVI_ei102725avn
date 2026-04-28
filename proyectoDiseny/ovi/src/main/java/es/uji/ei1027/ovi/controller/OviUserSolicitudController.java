@@ -1,12 +1,13 @@
 package es.uji.ei1027.ovi.controller;
 
 import es.uji.ei1027.ovi.dao.assistancerequest.AssistanceRequestDao;
+import es.uji.ei1027.ovi.dao.contract.ContractDao;
+import es.uji.ei1027.ovi.dao.negotiation.NegotiationDao;
 import es.uji.ei1027.ovi.dao.oviuser.OviUserDao;
+import es.uji.ei1027.ovi.dao.pappati.PapPatiDao;
+import es.uji.ei1027.ovi.dao.recommendedpappati.RecommendedPapPatiDao;
 import es.uji.ei1027.ovi.dao.requestschedule.RequestScheduleDao;
-import es.uji.ei1027.ovi.model.AssistanceRequest;
-import es.uji.ei1027.ovi.model.Credentials;
-import es.uji.ei1027.ovi.model.OviUser;
-import es.uji.ei1027.ovi.model.RequestSchedule;
+import es.uji.ei1027.ovi.model.*;
 import es.uji.ei1027.ovi.validator.RequestScheduleValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/oviUser/solicitudes")
@@ -24,6 +28,11 @@ public class OviUserSolicitudController {
     private AssistanceRequestDao assistanceRequestDao;
     private RequestScheduleDao requestScheduleDao;
     private OviUserDao oviUserDao;
+    private RecommendedPapPatiDao recommendedPapPatiDao;
+    private PapPatiDao papPatiDao;
+    private NegotiationDao negotiationDao;
+    private ContractDao contractDao;
+
 
     @Autowired
     public void setAssistanceRequestDao(AssistanceRequestDao assistanceRequestDao) {
@@ -38,6 +47,26 @@ public class OviUserSolicitudController {
     @Autowired
     public void setOviUserDao(OviUserDao oviUserDao) {
         this.oviUserDao = oviUserDao;
+    }
+
+    @Autowired
+    public void setRecommendedPapPatiDao(RecommendedPapPatiDao recommendedPapPatiDao) {
+        this.recommendedPapPatiDao = recommendedPapPatiDao;
+    }
+
+    @Autowired
+    public void setPapPatiDao(PapPatiDao papPatiDao) {
+        this.papPatiDao = papPatiDao;
+    }
+
+    @Autowired
+    public void setNegotiationDao(NegotiationDao negotiationDao) {
+        this.negotiationDao = negotiationDao;
+    }
+
+    @Autowired
+    public void setContractDao(ContractDao contractDao) {
+        this.contractDao = contractDao;
     }
 
     // LLISTAT DE SOL·LICITUDS
@@ -134,6 +163,32 @@ public class OviUserSolicitudController {
         List<RequestSchedule> horaris = requestScheduleDao.getRequestSchedulesByRequest(requestID);
         model.addAttribute("solicitud", solicitud);
         model.addAttribute("horaris", horaris);
+
+        if (solicitud.getStatus().equals("accepted") ||
+                solicitud.getStatus().equals("closedWithContract") ||
+                solicitud.getStatus().equals("closedContractEnded")) {
+            List<RecommendedPapPati> recomanats = recommendedPapPatiDao.getRecommendedByRequest(requestID);
+            Map<Integer, PapPati> infoPapPatis = new HashMap<>();
+            Map<Integer, Negotiation> negotiations = new HashMap<>();
+            Map<Integer, Contract> contractesPerPap = new HashMap<>();
+
+            for (RecommendedPapPati rec : recomanats) {
+                infoPapPatis.put(rec.getPapID(), papPatiDao.getPapPati(rec.getPapID()));
+                Negotiation neg = negotiationDao.getNegotiationByRequestAndPap(requestID, rec.getPapID());
+                if (neg != null) {
+                    negotiations.put(rec.getPapID(), neg);
+                    Contract contract = contractDao.getContractByNegotiation(neg.getNegotiationID());
+                    if (contract != null) {
+                        contractesPerPap.put(rec.getPapID(), contract);
+                    }
+                }
+            }
+            model.addAttribute("recomanats", recomanats);
+            model.addAttribute("infoPapPatis", infoPapPatis);
+            model.addAttribute("negotiations", negotiations);
+            model.addAttribute("contractesPerPap", contractesPerPap);
+        }
+
         return "oviuser/solicitudes/detail";
     }
 
@@ -171,5 +226,24 @@ public class OviUserSolicitudController {
         solicitud.setRequestID(requestID);
         assistanceRequestDao.updateAssistanceRequest(solicitud);
         return "redirect:/oviUser/solicitudes/" + requestID;
+    }
+
+    @RequestMapping(value = "/{requestID}/negociar/{papID}", method = RequestMethod.POST)
+    public String iniciarNegociacio(@PathVariable int requestID,
+                                    @PathVariable int papID) {
+        Negotiation neg = negotiationDao.getNegotiationByRequestAndPap(requestID, papID);
+        if (neg == null) {
+            Negotiation nova = new Negotiation();
+            nova.setRequestID(requestID);
+            nova.setPapID(papID);
+            nova.setStatus("inProgress");
+            nova.setDateAndTime(java.time.LocalDateTime.now());
+            nova.setConversation("");
+            nova.setOviUserConfirmed(false);
+            nova.setPapPatiConfirmed(false);
+            negotiationDao.addNegotiation(nova);
+        }
+        int negID = negotiationDao.getNegotiationByRequestAndPap(requestID, papID).getNegotiationID();
+        return "redirect:/oviUser/negociacio/" + negID;
     }
 }

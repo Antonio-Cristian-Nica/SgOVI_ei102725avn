@@ -1,6 +1,8 @@
 package es.uji.ei1027.ovi.controller;
 
 import es.uji.ei1027.ovi.dao.assistancerequest.AssistanceRequestDao;
+import es.uji.ei1027.ovi.dao.contract.ContractDao;
+import es.uji.ei1027.ovi.dao.negotiation.NegotiationDao;
 import es.uji.ei1027.ovi.dao.oviuser.OviUserDao;
 import es.uji.ei1027.ovi.dao.pappati.PapPatiDao;
 import es.uji.ei1027.ovi.dao.pappatischedule.ScheduleDao;
@@ -29,6 +31,8 @@ public class AdminSolicitudController {
     private PapPatiDao papPatiDao;
     private OviUserDao oviUserDao;
     private ScheduleDao scheduleDao;
+    private ContractDao contractDao;
+    private NegotiationDao negotiationDao;
 
     @Autowired
     public void setAssistanceRequestDao(AssistanceRequestDao assistanceRequestDao) {
@@ -58,6 +62,16 @@ public class AdminSolicitudController {
     @Autowired
     public void setScheduleDao(ScheduleDao scheduleDao) {
         this.scheduleDao = scheduleDao;
+    }
+
+    @Autowired
+    public void setContractDao(ContractDao contractDao) {
+        this.contractDao = contractDao;
+    }
+
+    @Autowired
+    public void setNegotiationDao(NegotiationDao negotiationDao) {
+        this.negotiationDao = negotiationDao;
     }
 
     // LLISTAT DE TOTES LES SOL·LICITUDS
@@ -123,8 +137,20 @@ public class AdminSolicitudController {
             PapPati pap = papPatiDao.getPapPati(rec.getPapID());
             infoPapPatiRecomanats.put(rec.getPapID(), pap);
         }
-        model.addAttribute("infoPapPatiRecomanats", infoPapPatiRecomanats);
 
+        Map<Integer, Contract> contractesPerPap = new HashMap<>();
+        for (RecommendedPapPati rec : recomanats) {
+            Negotiation neg = negotiationDao.getNegotiationByRequestAndPap(requestID, rec.getPapID());
+            if (neg != null) {
+                Contract contract = contractDao.getContractByNegotiation(neg.getNegotiationID());
+                if (contract != null) {
+                    contractesPerPap.put(rec.getPapID(), contract);
+                }
+            }
+        }
+
+        model.addAttribute("contractesPerPap", contractesPerPap);
+        model.addAttribute("infoPapPatiRecomanats", infoPapPatiRecomanats);
         model.addAttribute("solicitud", solicitud);
         model.addAttribute("horaris", horaris);
         model.addAttribute("recomanats", recomanats);

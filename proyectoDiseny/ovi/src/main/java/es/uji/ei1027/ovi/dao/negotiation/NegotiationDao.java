@@ -31,23 +31,60 @@ public class NegotiationDao {
     public void addNegotiation(Negotiation negotiation) {
         jdbcTemplate.update(
                 "INSERT INTO NEGOTIATION (duration, location, status, dateAndTime, " +
-                        "conversation, requestID, papID) VALUES (?,?,?,?,?,?,?)",
+                        "conversation, oviUserConfirmed, papPatiConfirmed, requestID, papID) " +
+                        "VALUES (?,?,?,?,?,?,?,?,?)",
                 negotiation.getDuration(), negotiation.getLocation(),
                 negotiation.getStatus(), negotiation.getDateAndTime(),
-                negotiation.getConversation(), negotiation.getRequestID(),
+                negotiation.getConversation(), negotiation.isOviUserConfirmed(),
+                negotiation.isPapPatiConfirmed(), negotiation.getRequestID(),
                 negotiation.getPapID());
     }
 
     public void updateNegotiation(Negotiation negotiation) {
         jdbcTemplate.update(
                 "UPDATE NEGOTIATION SET duration=?, location=?, status=?, dateAndTime=?, " +
-                        "conversation=? WHERE negotiationID=?",
+                        "conversation=?, oviUserConfirmed=?, papPatiConfirmed=? WHERE negotiationID=?",
                 negotiation.getDuration(), negotiation.getLocation(),
                 negotiation.getStatus(), negotiation.getDateAndTime(),
-                negotiation.getConversation(), negotiation.getNegotiationID());
+                negotiation.getConversation(), negotiation.isOviUserConfirmed(),
+                negotiation.isPapPatiConfirmed(), negotiation.getNegotiationID());
     }
 
     public void deleteNegotiation(int negotiationID) {
         jdbcTemplate.update("DELETE FROM NEGOTIATION WHERE negotiationID=?", negotiationID);
+    }
+
+    public List<Negotiation> getNegotiationsByRequest(int requestID) {
+        return jdbcTemplate.query(
+                "SELECT * FROM NEGOTIATION WHERE requestID=?",
+                new NegotiationRowMapper(), requestID);
+    }
+
+    public Negotiation getNegotiationByRequestAndPap(int requestID, int papID) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM NEGOTIATION WHERE requestID=? AND papID=?",
+                    new NegotiationRowMapper(), requestID, papID);
+        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public List<Negotiation> getNegotiationsFinished() {
+        return jdbcTemplate.query(
+                "SELECT * FROM NEGOTIATION WHERE status='finished'",
+                new NegotiationRowMapper());
+    }
+
+    public int getLastInsertedId() {
+        Integer id = jdbcTemplate.queryForObject(
+                "SELECT MAX(negotiationID) FROM NEGOTIATION", Integer.class);
+        return id != null ? id : 0;
+    }
+
+    public List<Negotiation> getNegotiationsByPap(int papID) {
+        return jdbcTemplate.query(
+                "SELECT * FROM NEGOTIATION WHERE papID=?",
+                new NegotiationRowMapper(), papID);
     }
 }

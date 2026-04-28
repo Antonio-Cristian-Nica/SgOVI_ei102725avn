@@ -112,5 +112,8 @@ public class PapPatiDao {
     }
 
     public PapPati getPapPati(int papID) {
+        return jdbcTemplate.queryForObject(
+                "SELECT * FROM PAP_PATI WHERE papID=?",
+                new PapPatiRowMapper(), papID);
     }
 }

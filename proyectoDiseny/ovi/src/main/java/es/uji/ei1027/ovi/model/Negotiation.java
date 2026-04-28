@@ -6,11 +6,13 @@ public class Negotiation {
     private int negotiationID;
     private String duration;
     private String location;
-    private String status; // 'inCourse', 'inProgress', 'finished'
+    private String status; // // 'inProgress', 'finished', 'noAgreement'
     private LocalDateTime dateAndTime;
     private String conversation;
     private int requestID; // FK compuesta → RecommendedPapPati
     private int papID;     // FK compuesta → RecommendedPapPati
+    private boolean oviUserConfirmed;
+    private boolean papPatiConfirmed;
 
     public int getNegotiationID() { return negotiationID; }
     public void setNegotiationID(int negotiationID) { this.negotiationID = negotiationID; }
@@ -35,4 +37,10 @@ public class Negotiation {
 
     public int getPapID() { return papID; }
     public void setPapID(int papID) { this.papID = papID; }
+
+    public boolean isOviUserConfirmed() { return oviUserConfirmed; }
+    public void setOviUserConfirmed(boolean oviUserConfirmed) { this.oviUserConfirmed = oviUserConfirmed; }
+
+    public boolean isPapPatiConfirmed() { return papPatiConfirmed; }
+    public void setPapPatiConfirmed(boolean papPatiConfirmed) { this.papPatiConfirmed = papPatiConfirmed; }
 }

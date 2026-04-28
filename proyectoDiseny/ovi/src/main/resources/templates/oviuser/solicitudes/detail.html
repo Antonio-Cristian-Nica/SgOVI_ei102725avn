@@ -89,6 +89,59 @@
 
     </div>
 
+    <!-- PAP/PATIs RECOMANATS -->
+    <div th:if="${recomanats != null and !recomanats.isEmpty()}" class="index-section">
+        <h3 class="section-title">PAP/PATIs recomanats pel tècnic</h3>
+        <p class="section-subtitle">Aquests són els PAP/PATIs que el tècnic ha considerat adequats per a la teua sol·licitud. Pots iniciar una negociació amb aquells que t'interessen.</p>
+
+        <div class="pilares-grid">
+            <div th:each="rec : ${recomanats}" class="pilar-card">
+                <div th:with="pap=${infoPapPatis[rec.papID]}">
+                    <h3 th:text="${pap.nameAndSurname}"></h3>
+                    <p th:text="'Localitat: ' + ${pap.locality}"></p>
+                    <p th:text="'Especialització: ' + ${pap.specializationAreas}"></p>
+                    <p th:text="'Formació: ' + ${pap.academicBackground}"></p>
+                    <p th:text="'Experiència: ' + ${pap.professionalExperience}"></p>
+                </div>
+
+                <!-- Si no hi ha negociació iniciada -->
+                <div th:if="${negotiations[rec.papID] == null}"
+                     class="solicitud-rec-actions">
+                    <form th:action="@{/oviUser/solicitudes/{rid}/negociar/{pid}(rid=${solicitud.requestID},pid=${rec.papID})}"
+                          method="post">
+                        <button type="submit" class="btn btn-primary btn-small">Iniciar negociació</button>
+                    </form>
+                </div>
+
+                <!-- Si hi ha negociació en curs -->
+                <div th:if="${negotiations[rec.papID] != null and negotiations[rec.papID].status == 'inProgress'}"
+                     class="solicitud-rec-actions">
+                    <span class="estat-pending">Negociació en curs</span>
+                    <a th:href="@{/oviUser/negociacio/{id}(id=${negotiations[rec.papID].negotiationID})}"
+                       class="btn btn-secondary btn-small">Entrar a la negociació</a>
+                </div>
+
+                <!-- Si la negociació ha finalitzat amb acord -->
+                <div th:if="${negotiations[rec.papID] != null and negotiations[rec.papID].status == 'finished'}"
+                     class="solicitud-rec-actions">
+                    <span class="estat-actiu">Acord assolit</span>
+                    <a th:if="${contractesPerPap != null and contractesPerPap[rec.papID] != null}"
+                       th:href="@{/oviUser/contractes}"
+                       class="btn btn-secondary btn-small">Veure contracte</a>
+                    <span th:if="${contractesPerPap == null or contractesPerPap[rec.papID] == null}"
+                          class="estat-pending">El contracte s'implementarà próximament</span>
+                </div>
+
+                <!-- Si la negociació ha finalitzat sense acord -->
+                <div th:if="${negotiations[rec.papID] != null and negotiations[rec.papID].status == 'noAgreement'}"
+                     class="solicitud-rec-actions">
+                    <span class="estat-inactiu">Sense acord</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <div class="form-actions">
         <a th:href="@{/oviUser/solicitudes}" class="btn btn-secondary">Tornar al llistat</a>
     </div>

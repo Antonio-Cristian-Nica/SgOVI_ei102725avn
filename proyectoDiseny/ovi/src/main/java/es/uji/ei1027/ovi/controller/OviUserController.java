@@ -1,8 +1,11 @@
 package es.uji.ei1027.ovi.controller;
 
+import es.uji.ei1027.ovi.dao.contract.ContractDao;
 import es.uji.ei1027.ovi.dao.credentials.CredentialsDao;
+import es.uji.ei1027.ovi.dao.negotiation.NegotiationDao;
 import es.uji.ei1027.ovi.dao.oviuser.OviUserDao;
 import es.uji.ei1027.ovi.dao.oviusertutor.TutorDao;
+import es.uji.ei1027.ovi.dao.pappati.PapPatiDao;
 import es.uji.ei1027.ovi.model.*;
 import es.uji.ei1027.ovi.utils.PasswordUtils;
 import es.uji.ei1027.ovi.validator.ChangePasswordValidator;
@@ -17,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import jakarta.servlet.http.HttpSession;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/oviUser")
 public class OviUserController {
@@ -25,6 +32,9 @@ public class OviUserController {
     private OviUserDao oviUserDao;
     private CredentialsDao credentialsDao;
     private TutorDao tutorDao;
+    private ContractDao contractDao;
+    private NegotiationDao negotiationDao;
+    private PapPatiDao papPatiDao;
 
     @Autowired
     public void setOviUserDao(OviUserDao oviUserDao) {
@@ -39,6 +49,21 @@ public class OviUserController {
     @Autowired
     public void setTutorDao(TutorDao tutorDao) {
         this.tutorDao = tutorDao;
+    }
+
+    @Autowired
+    public void setContractDao(ContractDao contractDao) {
+        this.contractDao = contractDao;
+    }
+
+    @Autowired
+    public void setNegotiationDao(NegotiationDao negotiationDao) {
+        this.negotiationDao = negotiationDao;
+    }
+
+    @Autowired
+    public void setPapPatiDao(PapPatiDao papPatiDao) {
+        this.papPatiDao = papPatiDao;
     }
 
     @RequestMapping("/register")
@@ -242,5 +267,25 @@ public class OviUserController {
         tutorDao.deleteTutor(oviUser.getTutorID());
         oviUserDao.removeTutorID(credentials.getUsername());
         return "redirect:/oviUser/tutor";
+    }
+
+    @RequestMapping("/contractes")
+    public String contractes(HttpSession session, Model model) {
+        Credentials credentials = (Credentials) session.getAttribute("user");
+        OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
+        List<Contract> contractes = contractDao.getContractsByOviUser(oviUser.getOviID());
+
+        Map<Integer, Negotiation> negotiations = new HashMap<>();
+        Map<Integer, PapPati> papPatis = new HashMap<>();
+        for (Contract c : contractes) {
+            Negotiation neg = negotiationDao.getNegotiation(c.getNegotiationID());
+            negotiations.put(c.getContractID(), neg);
+            papPatis.put(c.getContractID(), papPatiDao.getPapPati(neg.getPapID()));
+        }
+
+        model.addAttribute("contractes", contractes);
+        model.addAttribute("negotiations", negotiations);
+        model.addAttribute("papPatis", papPatis);
+        return "oviuser/contractes";
     }
 }

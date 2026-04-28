@@ -1,6 +1,8 @@
 package es.uji.ei1027.ovi.controller;
 
+import es.uji.ei1027.ovi.dao.contract.ContractDao;
 import es.uji.ei1027.ovi.dao.credentials.CredentialsDao;
+import es.uji.ei1027.ovi.dao.oviuser.OviUserDao;
 import es.uji.ei1027.ovi.dao.pappati.PapPatiDao;
 import es.uji.ei1027.ovi.dao.pappatischedule.ScheduleDao;
 import es.uji.ei1027.ovi.model.*;
@@ -16,6 +18,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import es.uji.ei1027.ovi.dao.assistancerequest.AssistanceRequestDao;
+import es.uji.ei1027.ovi.dao.negotiation.NegotiationDao;
+import es.uji.ei1027.ovi.dao.recommendedpappati.RecommendedPapPatiDao;
+import es.uji.ei1027.ovi.model.AssistanceRequest;
+import es.uji.ei1027.ovi.model.Negotiation;
+import es.uji.ei1027.ovi.model.RecommendedPapPati;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.util.List;
 
@@ -27,6 +37,11 @@ public class PapPatiController {
     private PapPatiDao papPatiDao;
     private CredentialsDao credentialsDao;
     private ScheduleDao scheduleDao;
+    private AssistanceRequestDao assistanceRequestDao;
+    private NegotiationDao negotiationDao;
+    private RecommendedPapPatiDao recommendedPapPatiDao;
+    private OviUserDao oviUserDao;
+    private ContractDao contractDao;
 
     @Autowired
     public void setPapPatiDao(PapPatiDao papPatiDao) {
@@ -40,6 +55,31 @@ public class PapPatiController {
 
     @Autowired
     public void setScheduleDao(ScheduleDao scheduleDao) { this.scheduleDao = scheduleDao; }
+
+    @Autowired
+    public void setAssistanceRequestDao(AssistanceRequestDao assistanceRequestDao) {
+        this.assistanceRequestDao = assistanceRequestDao;
+    }
+
+    @Autowired
+    public void setNegotiationDao(NegotiationDao negotiationDao) {
+        this.negotiationDao = negotiationDao;
+    }
+
+    @Autowired
+    public void setRecommendedPapPatiDao(RecommendedPapPatiDao recommendedPapPatiDao) {
+        this.recommendedPapPatiDao = recommendedPapPatiDao;
+    }
+
+    @Autowired
+    public void setOviUserDao(OviUserDao oviUserDao) {
+        this.oviUserDao = oviUserDao;
+    }
+
+    @Autowired
+    public void setContractDao(ContractDao contractDao) {
+        this.contractDao = contractDao;
+    }
 
     @RequestMapping("/register")
     public String addPapPati(Model model) {
@@ -240,5 +280,66 @@ public class PapPatiController {
     public String deleteHorari(@PathVariable("scheduleID") int scheduleID) {
         scheduleDao.deleteSchedule(scheduleID);
         return "redirect:/papPati/horaris";
+    }
+
+    @RequestMapping("/solicitudes")
+    public String solicitudes(HttpSession session, Model model) {
+        Credentials credentials = (Credentials) session.getAttribute("user");
+        PapPati papPati = papPatiDao.getPapPatiByUsername(credentials.getUsername());
+
+        List<RecommendedPapPati> recomanacions = recommendedPapPatiDao.getRecommendedByPap(papPati.getPapID());
+        Map<Integer, AssistanceRequest> solicituds = new HashMap<>();
+        Map<Integer, Negotiation> negotiations = new HashMap<>();
+        Map<Integer, OviUser> oviUsers = new HashMap<>();
+
+        for (RecommendedPapPati rec : recomanacions) {
+            AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(rec.getRequestID());
+            solicituds.put(rec.getRequestID(), sol);
+            OviUser oviUser = oviUserDao.getOviUser(sol.getOviID());
+            oviUsers.put(rec.getRequestID(), oviUser);
+            Negotiation neg = negotiationDao.getNegotiationByRequestAndPap(rec.getRequestID(), papPati.getPapID());
+            if (neg != null) {
+                negotiations.put(rec.getRequestID(), neg);
+            }
+        }
+
+        Map<Integer, Contract> contractesPerSolicitud = new HashMap<>();
+        for (RecommendedPapPati rec : recomanacions) {
+            Negotiation neg = negotiationDao.getNegotiationByRequestAndPap(rec.getRequestID(), papPati.getPapID());
+            if (neg != null) {
+                Contract contract = contractDao.getContractByNegotiation(neg.getNegotiationID());
+                if (contract != null) {
+                    contractesPerSolicitud.put(rec.getRequestID(), contract);
+                }
+            }
+        }
+
+        model.addAttribute("contractesPerSolicitud", contractesPerSolicitud);
+        model.addAttribute("recomanacions", recomanacions);
+        model.addAttribute("solicituds", solicituds);
+        model.addAttribute("negotiations", negotiations);
+        model.addAttribute("oviUsers", oviUsers);
+        return "papPati/solicitudes";
+    }
+
+    @RequestMapping("/contractes")
+    public String contractes(HttpSession session, Model model) {
+        Credentials credentials = (Credentials) session.getAttribute("user");
+        PapPati papPati = papPatiDao.getPapPatiByUsername(credentials.getUsername());
+        List<Contract> contractes = contractDao.getContractsByPapPati(papPati.getPapID());
+
+        Map<Integer, Negotiation> negotiations = new HashMap<>();
+        Map<Integer, OviUser> oviUsers = new HashMap<>();
+        for (Contract c : contractes) {
+            Negotiation neg = negotiationDao.getNegotiation(c.getNegotiationID());
+            negotiations.put(c.getContractID(), neg);
+            AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
+            oviUsers.put(c.getContractID(), oviUserDao.getOviUser(sol.getOviID()));
+        }
+
+        model.addAttribute("contractes", contractes);
+        model.addAttribute("negotiations", negotiations);
+        model.addAttribute("oviUsers", oviUsers);
+        return "papPati/contractes";
     }
 }

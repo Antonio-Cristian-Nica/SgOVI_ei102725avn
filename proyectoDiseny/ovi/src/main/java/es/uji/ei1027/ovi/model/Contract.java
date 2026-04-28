@@ -8,7 +8,7 @@ public class Contract {
     private LocalDate creationDate;
     private LocalDate startServiceDate;
     private LocalDate endServiceDate;
-    private String status; // 'active', 'inactive', 'ended', 'cancelled'
+    private String status; // 'active', 'ended', 'cancelled'
     private String documentURL;
     private int negotiationID; // FK → Negotiation
 

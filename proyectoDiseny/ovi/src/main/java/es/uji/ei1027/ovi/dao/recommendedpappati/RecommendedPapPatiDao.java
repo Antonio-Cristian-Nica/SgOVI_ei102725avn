@@ -52,4 +52,10 @@ public class RecommendedPapPatiDao {
                 Integer.class, requestID, papID);
         return count != null && count > 0;
     }
+
+    public List<RecommendedPapPati> getRecommendedByPap(int papID) {
+        return jdbcTemplate.query(
+                "SELECT * FROM RECOMMENDED_PAP_PATI WHERE papID=?",
+                new RecommendedPapPatiRowMapper(), papID);
+    }
 }

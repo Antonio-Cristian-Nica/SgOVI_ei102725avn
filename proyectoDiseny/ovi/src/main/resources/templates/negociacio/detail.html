@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Negociació</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <h2 class="section-title">Negociació</h2>
+
+    <div class="filosofia-grid">
+
+        <!-- COLUMNA ESQUERRA: Info -->
+        <div>
+            <h3 class="form-section-title">Informació de la negociació</h3>
+            <table class="data-table">
+                <tr>
+                    <th>Estat</th>
+                    <td>
+                        <span th:if="${neg.status == 'inProgress'}" class="estat-pending">En curs</span>
+                        <span th:if="${neg.status == 'finished'}" class="estat-actiu">Acord assolit</span>
+                        <span th:if="${neg.status == 'noAgreement'}" class="estat-inactiu">Sense acord</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Data inici</th>
+                    <td th:text="${#temporals.format(neg.dateAndTime, 'dd/MM/yyyy HH:mm')}"></td>
+                </tr>
+            </table>
+
+            <h3 class="form-section-title">Sol·licitud d'assistència</h3>
+            <table class="data-table">
+                <tr>
+                    <th>Localització</th>
+                    <td th:text="${solicitud.serviceLocation}"></td>
+                </tr>
+                <tr>
+                    <th>Assistència requerida</th>
+                    <td th:text="${solicitud.requiredAssistance}"></td>
+                </tr>
+            </table>
+
+            <h3 class="form-section-title">Horaris sol·licitats</h3>
+            <div th:if="${horaris.isEmpty()}" class="alert alert-info">
+                No hi ha horaris registrats.
+            </div>
+            <table th:if="${!horaris.isEmpty()}" class="data-table">
+                <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Dia</th>
+                    <th>Inici</th>
+                    <th>Fi</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="horari : ${horaris}">
+                    <td th:text="${#temporals.format(horari.date, 'dd/MM/yyyy')}"></td>
+                    <td>
+                            <span th:switch="${horari.dayOfWeek}">
+                                <span th:case="1">Dilluns</span>
+                                <span th:case="2">Dimarts</span>
+                                <span th:case="3">Dimecres</span>
+                                <span th:case="4">Dijous</span>
+                                <span th:case="5">Divendres</span>
+                                <span th:case="6">Dissabte</span>
+                                <span th:case="7">Diumenge</span>
+                            </span>
+                    </td>
+                    <td th:text="${horari.startHour}"></td>
+                    <td th:text="${horari.endHour}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h3 class="form-section-title">Usuari OVI</h3>
+            <table class="data-table">
+                <tr>
+                    <th>Nom</th>
+                    <td th:text="${oviUser.nameAndSurname}"></td>
+                </tr>
+                <tr>
+                    <th>Correu</th>
+                    <td th:text="${oviUser.emailAddress}"></td>
+                </tr>
+                <tr>
+                    <th>Telèfon</th>
+                    <td th:text="${oviUser.phoneNumber}"></td>
+                </tr>
+            </table>
+
+            <h3 class="form-section-title">PAP/PATI</h3>
+            <table class="data-table">
+                <tr>
+                    <th>Nom</th>
+                    <td th:text="${papPati.nameAndSurname}"></td>
+                </tr>
+                <tr>
+                    <th>Especialització</th>
+                    <td th:text="${papPati.specializationAreas}"></td>
+                </tr>
+                <tr>
+                    <th>Localitat</th>
+                    <td th:text="${papPati.locality}"></td>
+                </tr>
+            </table>
+
+            <!-- CONFIRMACIÓ -->
+            <div th:if="${neg.status == 'inProgress'}" class="form-section">
+                <h3 class="form-section-title">Estat de confirmació</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Usuari OVI confirmat</th>
+                        <td>
+                            <span th:if="${neg.oviUserConfirmed}" class="estat-actiu">Sí</span>
+                            <span th:if="${!neg.oviUserConfirmed}" class="estat-pending">Pendent</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>PAP/PATI confirmat</th>
+                        <td>
+                            <span th:if="${neg.papPatiConfirmed}" class="estat-actiu">Sí</span>
+                            <span th:if="${!neg.papPatiConfirmed}" class="estat-pending">Pendent</span>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Botons OVI User -->
+                <div th:if="${rol == 'oviUser'}" class="form-actions">
+                    <form th:if="${!neg.oviUserConfirmed}"
+                          th:action="@{/oviUser/negociacio/{id}/confirmar(id=${neg.negotiationID})}"
+                          method="post">
+                        <button type="submit" class="btn btn-primary">Confirmar acord</button>
+                    </form>
+                    <form th:action="@{/oviUser/negociacio/{id}/noAcord(id=${neg.negotiationID})}"
+                          method="post">
+                        <button type="submit" class="btn btn-rebutjar">No hi ha acord</button>
+                    </form>
+                </div>
+
+                <!-- Botons PAP/PATI -->
+                <div th:if="${rol == 'papPati'}" class="form-actions">
+                    <form th:if="${!neg.papPatiConfirmed}"
+                          th:action="@{/papPati/negociacio/{id}/confirmar(id=${neg.negotiationID})}"
+                          method="post">
+                        <button type="submit" class="btn btn-primary">Confirmar acord</button>
+                    </form>
+                    <form th:action="@{/papPati/negociacio/{id}/noAcord(id=${neg.negotiationID})}"
+                          method="post">
+                        <button type="submit" class="btn btn-rebutjar">No hi ha acord</button>
+                    </form>
+                </div>
+            </div>
+
+            <div th:if="${neg.status == 'finished'}" class="alert alert-success">
+                Les dues parts han confirmat l'acord. El tècnic OVI procedirà a formalitzar el contracte.
+            </div>
+            <div th:if="${neg.status == 'noAgreement'}" class="alert alert-error">
+                La negociació ha finalitzat sense acord.
+            </div>
+        </div>
+
+        <!-- COLUMNA DRETA: Conversa -->
+        <div>
+            <h3 class="form-section-title">Conversa</h3>
+
+            <div class="negociacio-conversa">
+                <div th:if="${neg.conversation == null or neg.conversation.isEmpty()}"
+                     class="alert alert-info">
+                    Encara no hi ha missatges. Comença la conversa!
+                </div>
+                <div th:if="${neg.conversation != null and !neg.conversation.isEmpty()}"
+                     class="negociacio-missatges">
+                    <pre th:text="${neg.conversation}" class="negociacio-text"></pre>
+                </div>
+            </div>
+
+            <div th:if="${neg.status == 'inProgress'}" class="form-section">
+                <h3 class="form-section-title">Afegir missatge</h3>
+                <form th:action="@{/negociacio/{id}/missatge(id=${neg.negotiationID})}"
+                      method="post">
+                    <input type="hidden" name="rol" th:value="${rol}" />
+                    <div class="form-group">
+                        <textarea name="missatge" rows="4"
+                                  placeholder="Escriu el teu missatge..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Enviar missatge</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-actions">
+        <a th:if="${rol == 'oviUser'}"
+           th:href="@{/oviUser/solicitudes/{id}(id=${neg.requestID})}"
+           class="btn btn-secondary">Tornar a la sol·licitud</a>
+        <a th:if="${rol == 'papPati'}"
+           th:href="@{/papPati/solicitudes}"
+           class="btn btn-secondary">Tornar a les sol·licituds</a>
+    </div>
+
+</div>
+
+</body>
+</html>

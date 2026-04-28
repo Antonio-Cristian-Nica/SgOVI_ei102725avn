@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Les meues sol·licituds</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <h2 class="section-title">Les meues sol·licituds assignades</h2>
+    <p class="section-subtitle">Aquestes són les sol·licituds d'assistència en les quals has estat recomanat pel tècnic OVI.</p>
+
+    <div th:if="${recomanacions.isEmpty()}" class="alert alert-info">
+        Encara no has estat recomanat per a cap sol·licitud d'assistència.
+    </div>
+
+    <div th:if="${!recomanacions.isEmpty()}">
+        <div th:each="rec : ${recomanacions}" class="pilar-card solicitud-rec-card">
+            <div th:with="sol=${solicituds[rec.requestID]}, ovi=${oviUsers[rec.requestID]}">
+
+                <h3 th:text="'Sol·licitud #' + ${sol.requestID}"></h3>
+
+                <div class="filosofia-grid">
+                    <div>
+                        <p><strong>Localització:</strong> <span th:text="${sol.serviceLocation}"></span></p>
+                        <p><strong>Assistència:</strong> <span th:text="${sol.requiredAssistance}"></span></p>
+                        <p>
+                            <strong>Estat:</strong>
+                            <span th:if="${sol.status == 'inProgress'}" class="estat-pending">En revisió</span>
+                            <span th:if="${sol.status == 'accepted'}" class="estat-actiu">Acceptada</span>
+                            <span th:if="${sol.status == 'rejected'}" class="estat-inactiu">Rebutjada</span>
+                            <span th:if="${sol.status == 'closedWithContract'}" class="estat-actiu">Contracte actiu</span>
+                            <span th:if="${sol.status == 'closedContractEnded'}" class="estat-inactiu">Contracte finalitzat</span>
+                        </p>
+                    </div>
+                    <div>
+                        <p><strong>Usuari OVI:</strong> <span th:text="${ovi.nameAndSurname}"></span></p>
+                        <p><strong>Correu:</strong> <span th:text="${ovi.emailAddress}"></span></p>
+                        <p><strong>Telèfon:</strong> <span th:text="${ovi.phoneNumber}"></span></p>
+                        <p><strong>Diversitat funcional:</strong> <span th:text="${ovi.functionalDiversity}"></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="solicitud-rec-actions">
+                <div th:if="${negotiations[rec.requestID] == null}">
+                    <span class="estat-pending">Pendent que l'usuari inicie la negociació</span>
+                </div>
+                <div th:if="${negotiations[rec.requestID] != null and negotiations[rec.requestID].status == 'inProgress'}">
+                    <span class="estat-pending">Negociació en curs</span>
+                    <a th:href="@{/papPati/negociacio/{id}(id=${negotiations[rec.requestID].negotiationID})}"
+                       class="btn btn-primary btn-small">Entrar a la negociació</a>
+                </div>
+                <div th:if="${negotiations[rec.requestID] != null and negotiations[rec.requestID].status == 'finished'}">
+                    <span class="estat-actiu">Acord assolit</span>
+                    <a th:if="${contractesPerSolicitud[rec.requestID] != null}"
+                       th:href="@{/papPati/contractes}"
+                       class="btn btn-secondary btn-small">Veure contracte</a>
+                    <span th:if="${contractesPerSolicitud[rec.requestID] == null}"
+                          class="estat-pending">El contracte s'implementarà próximament</span>
+                </div>
+                <div th:if="${negotiations[rec.requestID] != null and negotiations[rec.requestID].status == 'noAgreement'}">
+                    <span class="estat-inactiu">Sense acord</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <a th:href="@{/papPati/portal}" class="btn btn-secondary">Tornar al portal</a>
+    </div>
+
+</div>
+
+</body>
+</html>
