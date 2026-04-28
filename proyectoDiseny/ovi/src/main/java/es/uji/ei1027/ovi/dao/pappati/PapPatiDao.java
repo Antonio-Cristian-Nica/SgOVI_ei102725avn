@@ -24,12 +24,6 @@ public class PapPatiDao {
         return jdbcTemplate.query("SELECT * FROM PAP_PATI", new PapPatiRowMapper());
     }
 
-    public PapPati getPapPati(int papID) {
-        return jdbcTemplate.queryForObject(
-                "SELECT * FROM PAP_PATI WHERE papID=?",
-                new PapPatiRowMapper(), papID);
-    }
-
     public void addPapPati(PapPatiRegistration papPati) {
         jdbcTemplate.update(
                 "INSERT INTO PAP_PATI (nameAndSurname, phoneNumber, birthDate, " +
@@ -64,10 +58,6 @@ public class PapPatiDao {
                 papPati.getSpecializationAreas(), papPati.getDocuments(),
                 papPati.isLOPDAcceptance(), papPati.getStatus(),
                 papPati.getPapID());
-    }
-
-    public void deletePapPati(int papID) {
-        jdbcTemplate.update("DELETE FROM PAP_PATI WHERE papID=?", papID);
     }
 
     public PapPati getPapPatiByUsername(String username) {
@@ -109,5 +99,18 @@ public class PapPatiDao {
                 "SELECT COUNT(*) FROM PAP_PATI WHERE status=?",
                 Integer.class, status);
         return count != null ? count : 0;
+    }
+
+    public List<PapPati> getPapPatisByIDs(List<Integer> ids) {
+        String placeholders = ids.stream()
+                .map(id -> "?")
+                .collect(java.util.stream.Collectors.joining(", "));
+        return jdbcTemplate.query(
+                "SELECT * FROM PAP_PATI WHERE papID IN (" + placeholders + ") AND status='active'",
+                new PapPatiRowMapper(),
+                ids.toArray());
+    }
+
+    public PapPati getPapPati(int papID) {
     }
 }

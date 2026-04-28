@@ -55,4 +55,8 @@ public class RequestScheduleDao {
     public void deleteRequestSchedule(int reqScheduleID) {
         jdbcTemplate.update("DELETE FROM REQUEST_SCHEDULE WHERE reqScheduleID=?", reqScheduleID);
     }
+
+    public void deleteSchedulesByRequest(int requestID) {
+        jdbcTemplate.update("DELETE FROM REQUEST_SCHEDULE WHERE requestID=?", requestID);
+    }
 }

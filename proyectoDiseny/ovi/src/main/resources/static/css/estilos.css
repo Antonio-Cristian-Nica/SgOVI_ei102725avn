@@ -313,6 +313,77 @@ main {
 }
 
 /* =========================================
+   SOLICITUDS ADMIN
+   ========================================= */
+.solicitud-horaris-title {
+    margin-top: 32px;
+}
+
+.solicitud-rec-card {
+    margin-bottom: 16px;
+}
+
+.solicitud-rec-actions {
+    margin-top: 12px;
+    text-align: center;
+}
+
+.btn-small {
+    min-width: auto;
+    width: auto;
+    padding: 6px 14px;
+    font-size: 14px;
+    min-height: 36px;
+}
+
+.solicitud-add-rec {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 2px solid var(--borde-suave);
+}
+
+/* =========================================
+   PAPPATI COMPATIBLE CARD
+   ========================================= */
+.pappati-compatible-card {
+    background-color: #ffffff;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pappati-compatible-card:hover {
+    border-color: var(--color-contraste);
+}
+
+.pappati-compatible-info h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--footer-bg);
+    margin: 0 0 6px 0;
+}
+
+.pappati-compatible-info p {
+    font-size: 14px;
+    color: var(--texto-medio);
+    margin: 0;
+}
+
+.pappati-compatible-horaris {
+    font-size: 14px;
+}
+
+.pappati-compatible-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+/* =========================================
    FORMULARIOS
    ========================================= */
 .form-section {
@@ -328,7 +399,7 @@ main {
     font-weight: 900;
     color: var(--footer-bg);
     margin-bottom: 6px;
-    margin-top: 0;
+    margin-top: 28px;
 }
 
 .form-section-subtitle {
@@ -364,6 +435,7 @@ label {
 input[type="text"],
 input[type="email"],
 input[type="date"],
+input[type="time"],
 input[type="password"],
 input[type="tel"],
 select,

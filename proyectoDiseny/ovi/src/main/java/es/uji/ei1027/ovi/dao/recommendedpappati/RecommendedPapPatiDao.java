@@ -45,4 +45,11 @@ public class RecommendedPapPatiDao {
                 "DELETE FROM RECOMMENDED_PAP_PATI WHERE requestID=? AND papID=?",
                 requestID, papID);
     }
+
+    public boolean hasNegotiation(int requestID, int papID) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM NEGOTIATION WHERE requestID=? AND papID=?",
+                Integer.class, requestID, papID);
+        return count != null && count > 0;
+    }
 }

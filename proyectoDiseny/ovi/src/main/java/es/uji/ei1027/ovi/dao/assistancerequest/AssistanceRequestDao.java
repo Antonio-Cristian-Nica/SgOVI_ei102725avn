@@ -53,4 +53,10 @@ public class AssistanceRequestDao {
     public void deleteAssistanceRequest(int requestID) {
         jdbcTemplate.update("DELETE FROM ASSISTANCE_REQUEST WHERE requestID=?", requestID);
     }
+
+    public int getLastInsertedId() {
+        Integer id = jdbcTemplate.queryForObject(
+                "SELECT MAX(requestID) FROM ASSISTANCE_REQUEST", Integer.class);
+        return id != null ? id : 0;
+    }
 }

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Nova sol·licitud</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="form-section">
+
+        <h2 class="section-title">Nova sol·licitud d'assistència</h2>
+        <p class="section-subtitle">Indica on necessites el servei i quin tipus d'assistència requeixes.</p>
+
+        <form th:action="@{/oviUser/solicitudes/add}" th:object="${solicitud}" method="post">
+
+            <div class="form-group">
+                <label for="serviceLocation">Localització del servei</label>
+                <input type="text" id="serviceLocation" th:field="*{serviceLocation}"
+                       th:class="${errorLocation != null} ? 'input-error' : ''"
+                       placeholder="Ex: Castelló de la Plana, Carrer Major 5" />
+                <span class="error-text" th:if="${errorLocation}" th:text="${errorLocation}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="requiredAssistance">Assistència requerida</label>
+                <textarea id="requiredAssistance" th:field="*{requiredAssistance}" rows="4"
+                          th:class="${errorAssistance != null} ? 'input-error' : ''"
+                          placeholder="Descriu detalladament el tipus d'assistència que necessites..."></textarea>
+                <span class="error-text" th:if="${errorAssistance}" th:text="${errorAssistance}"></span>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/oviUser/solicitudes}" class="btn btn-secondary">Cancel·lar</a>
+                <button type="submit" class="btn btn-primary">Continuar amb els horaris</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

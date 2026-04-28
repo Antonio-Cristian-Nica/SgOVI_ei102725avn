@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Afegir horari</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="form-section">
+
+        <h2 class="section-title">Afegir horari</h2>
+        <p class="section-subtitle">Indica el dia i les hores en què estàs disponible.</p>
+
+        <form th:action="@{/papPati/horaris/add}" th:object="${schedule}" method="post">
+
+            <div class="form-group">
+                <label for="dayOfWeek">Dia de la setmana</label>
+                <select id="dayOfWeek" name="dayOfWeek">
+                    <option value="">Selecciona un dia...</option>
+                    <option value="1">Dilluns</option>
+                    <option value="2">Dimarts</option>
+                    <option value="3">Dimecres</option>
+                    <option value="4">Dijous</option>
+                    <option value="5">Divendres</option>
+                    <option value="6">Dissabte</option>
+                    <option value="7">Diumenge</option>
+                </select>
+                <span class="error-text" th:if="${errorDia}" th:text="${errorDia}"></span>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="startHour">Hora d'inici</label>
+                    <input type="time" id="startHour" name="startHour" />
+                    <span class="error-text" th:if="${errorInici}" th:text="${errorInici}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="endHour">Hora de fi</label>
+                    <input type="time" id="endHour" name="endHour" />
+                    <span class="error-text" th:if="${errorFi}" th:text="${errorFi}"></span>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/papPati/horaris}" class="btn btn-secondary">Cancel·lar</a>
+                <button type="submit" class="btn btn-primary">Afegir horari</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Editar sol·licitud</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="form-section">
+
+        <h2 class="section-title">Editar sol·licitud</h2>
+        <p class="section-subtitle">Modifica les dades de la teua sol·licitud d'assistència.</p>
+
+        <form th:action="@{/oviUser/solicitudes/edit/{id}(id=${solicitud.requestID})}"
+              th:object="${solicitud}" method="post">
+
+            <input type="hidden" th:field="*{status}" />
+            <input type="hidden" th:field="*{oviID}" />
+
+            <div class="form-group">
+                <label for="serviceLocation">Localització del servei</label>
+                <input type="text" id="serviceLocation" th:field="*{serviceLocation}"
+                       th:class="${errorLocation != null} ? 'input-error' : ''"
+                       placeholder="Ex: Castelló de la Plana, Carrer Major 5" />
+                <span class="error-text" th:if="${errorLocation}" th:text="${errorLocation}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="requiredAssistance">Assistència requerida</label>
+                <textarea id="requiredAssistance" th:field="*{requiredAssistance}" rows="4"
+                          th:class="${errorAssistance != null} ? 'input-error' : ''"
+                          placeholder="Descriu detalladament el tipus d'assistència que necessites..."></textarea>
+                <span class="error-text" th:if="${errorAssistance}" th:text="${errorAssistance}"></span>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/oviUser/solicitudes/{id}(id=${solicitud.requestID})}"
+                   class="btn btn-secondary">Cancel·lar</a>
+                <button type="submit" class="btn btn-primary">Guardar canvis</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

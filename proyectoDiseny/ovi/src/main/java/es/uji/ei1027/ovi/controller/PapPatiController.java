@@ -2,10 +2,8 @@ package es.uji.ei1027.ovi.controller;
 
 import es.uji.ei1027.ovi.dao.credentials.CredentialsDao;
 import es.uji.ei1027.ovi.dao.pappati.PapPatiDao;
-import es.uji.ei1027.ovi.model.ChangePasswordForm;
-import es.uji.ei1027.ovi.model.Credentials;
-import es.uji.ei1027.ovi.model.PapPati;
-import es.uji.ei1027.ovi.model.PapPatiRegistration;
+import es.uji.ei1027.ovi.dao.pappatischedule.ScheduleDao;
+import es.uji.ei1027.ovi.model.*;
 import es.uji.ei1027.ovi.utils.PasswordUtils;
 import es.uji.ei1027.ovi.validator.ChangePasswordValidator;
 import es.uji.ei1027.ovi.validator.PapPatiValidator;
@@ -15,8 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/papPati")
@@ -25,6 +26,7 @@ public class PapPatiController {
     private static final String CANVI_CONTRASENYA_PAPPATI_VIEW = "papPati/canviarContrasenya";
     private PapPatiDao papPatiDao;
     private CredentialsDao credentialsDao;
+    private ScheduleDao scheduleDao;
 
     @Autowired
     public void setPapPatiDao(PapPatiDao papPatiDao) {
@@ -35,6 +37,9 @@ public class PapPatiController {
     public void setCredentialsDao(CredentialsDao credentialsDao) {
         this.credentialsDao = credentialsDao;
     }
+
+    @Autowired
+    public void setScheduleDao(ScheduleDao scheduleDao) { this.scheduleDao = scheduleDao; }
 
     @RequestMapping("/register")
     public String addPapPati(Model model) {
@@ -87,13 +92,10 @@ public class PapPatiController {
     }
 
     @RequestMapping("/portal")
-    public String portal(HttpSession session) {
-        if (session.getAttribute("user") == null) {
-            return "redirect:/login";
-        }
-        if (isRejectedOrPending(session)) {
-            return "redirect:/pending";
-        }
+    public String portal(HttpSession session, Model model) {
+        Credentials credentials = (Credentials) session.getAttribute("user");
+        PapPati papPati = papPatiDao.getPapPatiByUsername(credentials.getUsername());
+        model.addAttribute("teHoraris", scheduleDao.hasSchedules(papPati.getPapID()));
         return "papPati/portal";
     }
 
@@ -177,9 +179,66 @@ public class PapPatiController {
         return "redirect:portal";
     }
 
-    private boolean isRejectedOrPending(HttpSession session) {
+    @RequestMapping("/horaris")
+    public String horaris(HttpSession session, Model model) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
         Credentials credentials = (Credentials) session.getAttribute("user");
-        if (credentials == null) return true;
-        return !credentials.getActivated() || credentials.isRejected();
+        PapPati papPati = papPatiDao.getPapPatiByUsername(credentials.getUsername());
+        List<Schedule> schedules = scheduleDao.getSchedulesByPap(papPati.getPapID());
+        model.addAttribute("schedules", schedules);
+        model.addAttribute("papID", papPati.getPapID());
+        return "papPati/horaris";
+    }
+
+    @RequestMapping("/horaris/add")
+    public String addHorari(Model model) {
+        model.addAttribute("schedule", new Schedule());
+        return "papPati/horarisForm";
+    }
+
+    @RequestMapping(value = "/horaris/add", method = RequestMethod.POST)
+    public String processAddHorari(@ModelAttribute("schedule") Schedule schedule,
+                                   HttpSession session,
+                                   Model model) {
+        boolean hasErrors = false;
+
+        if (schedule.getDayOfWeek() == 0) {
+            model.addAttribute("errorDia", "El dia és obligatori");
+            hasErrors = true;
+        }
+
+        if (schedule.getStartHour() == null) {
+            model.addAttribute("errorInici", "L'hora d'inici és obligatòria");
+            hasErrors = true;
+        }
+
+        if (schedule.getEndHour() == null) {
+            model.addAttribute("errorFi", "L'hora de fi és obligatòria");
+            hasErrors = true;
+        }
+
+        if (schedule.getStartHour() != null && schedule.getEndHour() != null
+                && !schedule.getEndHour().isAfter(schedule.getStartHour())) {
+            model.addAttribute("errorFi", "L'hora de fi ha de ser posterior a l'hora d'inici");
+            hasErrors = true;
+        }
+
+        if (hasErrors) {
+            return "papPati/horarisForm";
+        }
+
+        Credentials credentials = (Credentials) session.getAttribute("user");
+        PapPati papPati = papPatiDao.getPapPatiByUsername(credentials.getUsername());
+        schedule.setPapID(papPati.getPapID());
+        scheduleDao.addSchedule(schedule);
+        return "redirect:/papPati/horaris";
+    }
+
+    @RequestMapping(value = "/horaris/delete/{scheduleID}", method = RequestMethod.POST)
+    public String deleteHorari(@PathVariable("scheduleID") int scheduleID) {
+        scheduleDao.deleteSchedule(scheduleID);
+        return "redirect:/papPati/horaris";
     }
 }

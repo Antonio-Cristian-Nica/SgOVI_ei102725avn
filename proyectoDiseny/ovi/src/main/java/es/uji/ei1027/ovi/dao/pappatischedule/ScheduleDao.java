@@ -51,4 +51,33 @@ public class ScheduleDao {
     public void deleteSchedule(int scheduleID) {
         jdbcTemplate.update("DELETE FROM SCHEDULE WHERE scheduleID=?", scheduleID);
     }
+
+    public boolean hasSchedules(int papID) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM SCHEDULE WHERE papID=?",
+                Integer.class, papID);
+        return count != null && count > 0;
+    }
+
+    // Elimina TODOS los horarios de un PAP/PATI
+    public void deleteAllSchedulesByPap(int papID) {
+        jdbcTemplate.update("DELETE FROM SCHEDULE WHERE papID=?", papID);
+    }
+
+    // Elimina los horarios de un día concreto de un PAP/PATI
+    public void deleteSchedulesByDay(int papID, int dayOfWeek) {
+        jdbcTemplate.update(
+                "DELETE FROM SCHEDULE WHERE papID=? AND dayOfWeek=?",
+                papID, dayOfWeek);
+    }
+
+    public List<Integer> getPapPatiIDsCompatibles(int requestID) {
+        return jdbcTemplate.queryForList(
+                "SELECT DISTINCT s.papID FROM SCHEDULE s " +
+                        "INNER JOIN REQUEST_SCHEDULE rs ON s.dayOfWeek = rs.dayOfWeek " +
+                        "WHERE rs.requestID = ? " +
+                        "AND s.startHour <= rs.startHour " +
+                        "AND s.endHour >= rs.endHour",
+                Integer.class, requestID);
+    }
 }

@@ -13,6 +13,12 @@
     <h2>Benvingut/da, <span th:text="${session.user.username}"></span></h2>
     <p>Aquest és el teu espai personal. Selecciona una opció per a continuar.</p>
 
+    <div th:if="${!teHoraris}" class="alert alert-info">
+        ⚠️ Encara no tens horaris registrats.
+        <a th:href="@{/papPati/horaris}">Afegeix la teua disponibilitat</a>
+        per a poder ser assignat a sol·licituds d'assistència.
+    </div>
+
     <div class="portal-grid">
 
         <a th:href="@{/papPati/edit}" class="portal-card">

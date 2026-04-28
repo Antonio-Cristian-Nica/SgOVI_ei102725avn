@@ -7,7 +7,7 @@ public class AssistanceRequest {
     private String serviceLocation;
     private String requiredAssistance;
     private LocalDateTime creationDate;
-    private String status; // 'accepted', 'rejected', 'inProgress'
+    private String status; // 'inProgress', 'accepted', 'rejected', 'closedWithContract', 'closedContractEnded'
     private int oviID; // FK → OviUser
 
     public int getRequestID() { return requestID; }
