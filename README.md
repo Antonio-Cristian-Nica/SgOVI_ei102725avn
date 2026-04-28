@@ -16,8 +16,8 @@ La contraseña para el acceso a la base de datos es → vivaMessi1010
 Cuentas para probar las diferentes funcionalidades implementadas:
 
       - Administrador --> admin0 (1234)
-      - Usuario OVI de diseño físico--> juan.perez (patata)
-      - PAP/PATI de diseño físico--> ana.garcia (patata)
+      - Usuario OVI de diseño físico--> juan.perez (1234)
+      - PAP/PATI de diseño físico--> ana.garcia (1234)
 
 ## Lo que debe hacer la aplicación
 1. Gestión de Ovi Users --> El sistema posibilita el alta y la modificación de datos personales y de contacto de cada OVI User, incluyendo el registro explícito del consentimiento informado según la normativa LOPD/RGPD. Implementado:
