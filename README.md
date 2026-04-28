@@ -1,10 +1,6 @@
-# SgOVI_ei102725avn
-SgOVI - Sistema de Gestión de Oficina de Vida Independiente. Proyecto académico diseñado para administrar usuarios con diversidad funcional, gestionar el catálogo de actividades sociales y coordinar a los profesionales de asistencia personal (PAP/PATI).
-
 Enlaces de interés:
 - https://ovicastello.org/
 - https://docs.google.com/forms/d/e/1FAIpQLSelYRAnQE9fS0C3xpDTZJlK2HaI8BtbXQ1x3g4GEI60EKAYrQ/viewform
-
 
 ## Instrucciones de acceso a la BBDD
 Para el acceso a la base de datos de db-aules usamos el siguiente comando →  psql -h db-aules.uji.es -U ei102725avn ei102725avn
@@ -13,36 +9,101 @@ El nombre del grupo es →  ei102725avn
 
 La contraseña para el acceso a la base de datos es → vivaMessi1010
 
-Cuentas para probar las diferentes funcionalidades implementadas:
+# SgOVI - Sistema de Gestió de l'Oficina Vida Independent
 
-      - Administrador --> admin0 (1234)
-      - Usuario OVI de diseño físico--> juan.perez (1234)
-      - PAP/PATI de diseño físico--> ana.garcia (1234)
+Aplicació web desenvolupada amb Spring Boot MVC + Thymeleaf + PostgreSQL per a la gestió de l'Oficina Vida Independent de Castelló.
 
-## Lo que debe hacer la aplicación
-1. Gestión de Ovi Users --> El sistema posibilita el alta y la modificación de datos personales y de contacto de cada OVI User, incluyendo el registro explícito del consentimiento informado según la normativa LOPD/RGPD. Implementado:
+## Tecnologies utilitzades
 
-      - Registro de OVI Users mediante formulario con validación completa de todos los campos, incluyendo formato de email, teléfono, edad mínima de 3 años y aceptación LOPD.
-      - Las credenciales se guardan en la tabla CREDENTIALS con la cuenta desactivada (activated = false) y estado approvalPending hasta que el técnico la valide
-      - Las contraseñas se encriptan con JASYPT antes de guardarse en la BD
-      - El técnico OVI puede ver el listado de usuarios pendientes y activar su cuenta desde su portal, lo que cambia activated = true y status = active
-      - Una vez activada la cuenta, el usuario puede acceder a su portal completo con todas las opciones disponibles. Si intenta acceder antes de ser validado, verá una página informativa con el estado actual de su cuenta
-      - Los usuarios pueden modificar sus datos personales desde su portal
-      - Los usuarios pueden cambiar su contraseña desde su portal, introduciendo la contraseña actual y la nueva (mínimo 6 caracteres).
+- Java 21
+- Spring Boot 3.4.1
+- Thymeleaf 3.1 + Layout Dialect
+- PostgreSQL
+- JASYPT (encriptació de contrasenyes)
+- Bootstrap / CSS propi
 
+## Comptes de prova
 
-2. Gestión de candidatos a PAP o PATI --> Cualquier persona interesada puede registrarse como PAP/PATI para trabajar como asistente personal. Implementado:
+| Rol | Usuari | Contrasenya | Estat |
+|-----|--------|-------------|-------|
+| Administrador | admin0 | 1234 | Actiu |
+| OVI User (amb contracte) | juan.perez | 1234 | Actiu |
+| OVI User (negociant) | maria.rod | 1234 | Actiu |
+| OVI User (sol·licitud en revisió) | luis.gomez | 1234 | Actiu |
+| OVI User (pendent activació) | sara.leon | 1234 | Pendent |
+| OVI User (rebutjat) | pedro.martin | 1234 | Rebutjat |
+| PAP/PATI (amb contracte) | ana.garcia | 1234 | Actiu |
+| PAP/PATI (negociant) | carlos.ruiz | 1234 | Actiu |
+| PAP/PATI (recomanat sense negociació) | elena.b | 1234 | Actiu |
+| PAP/PATI (sense horaris) | marcos.sanz | 1234 | Actiu |
+| PAP/PATI (pendent activació) | lucia.mendez | 1234 | Pendent |
+| PAP/PATI (rebutjat) | roberto.f | 1234 | Rebutjat |
 
-      - Registro de PAP/PATI mediante formulario con validación completa, incluyendo formación académica, experiencia profesional, áreas de especialización, documentos adjuntos, edad mínima de 18 años y aceptación LOPD.
-      - Al igual que los OVI Users, las credenciales se guardan con la cuenta desactivada y estado approvalPending hasta validación del técnico.
-      - Las contraseñas se encriptan con JASYPT.
-      - El técnico OVI puede ver el listado de PAP/PATIs pendientes y activar su cuenta desde su portal.
-      - Una vez activada, el PAP/PATI accede a su portal con todas sus opciones. Si accede antes de ser validado, ve una página informativa con el estado de su cuenta.
-      - Los PAP/PATIs pueden modificar sus datos personales y cambiar su contraseña desde su portal.
+## Funcionalitats implementades
 
-FALTAN ACABAR LAS DISTINTAS OPCIONES QUE TIENE CADA USUARIO DENTRO DE MI PORTAL, ES DECIR, QUE TODAS LLEVEN A ALGUNA PAGINA REAL
+### 1. Gestió d'OVI Users
+- Registre mitjançant formulari amb validació completa: format d'email, telèfon, edat mínima de 3 anys i acceptació LOPD
+- Les credencials es guarden amb el compte desactivat (`activated = false`) i estat `approvalPending` fins que el tècnic la valide
+- Les contrasenyes s'encripten amb JASYPT abans de guardar-se a la BD
+- El tècnic OVI pot veure el llistat d'usuaris pendents i activar el seu compte des del seu portal
+- Una vegada activat, l'usuari accedeix al seu portal complet. Si intenta accedir abans de ser validat, veu una pàgina informativa amb l'estat del seu compte i el motiu de rebuig si escau
+- Els usuaris poden modificar les seues dades personals i canviar la contrasenya des del seu portal
+- Gestió del tutor legal: l'OVI User pot afegir, editar i eliminar el seu tutor legal
 
-3. Solicitudes de Asistencia Personal --> Las personas usuarias de la OVI deben poder registrar una petición de asistencia personal y seguir el estado de la misma (en revisión, aprobada, cerrada con contrato, cerrada con contrato finalizado o rechazada). La asignación se hará por parte del técnico directamente, es decir, lo hará este de forma manual a través de una opción que tendrá para ello en la sección "Mi portal". Si se llega a un acuerdo definitivo, se firmará un contrato, por lo que la aplicación debe guardar los datos de inicio y final de contrato, y el documento PDF del contrato definitivo. (Esto último preguntarle en clase). 
+### 2. Gestió de candidats PAP/PATI
+- Registre mitjançant formulari amb validació completa: formació acadèmica, experiència professional, àrees d'especialització, documents adjunts, edat mínima de 18 anys i acceptació LOPD
+- Al igual que els OVI Users, les credencials es guarden desactivades fins a la validació del tècnic
+- Les contrasenyes s'encripten amb JASYPT
+- El tècnic OVI pot veure el llistat de PAP/PATIs pendents i activar el seu compte
+- Una vegada activat, el PAP/PATI accedeix al seu portal complet
+- Els PAP/PATIs poden modificar les seues dades personals i canviar la contrasenya
+- Gestió d'horaris de disponibilitat: el PAP/PATI pot afegir i eliminar franges horàries per dia de la setmana. Si no té horaris registrats, apareix una alerta al portal indicant-ho
+- Consulta de sol·licituds assignades i accés a les negociacions actives
+- Consulta de l'historial de contractes
+
+### 3. Sol·licituds d'Assistència Personal
+- Els OVI Users poden crear sol·licituds d'assistència indicant localització, tipus d'assistència i horaris específics
+- Les sol·licituds sense horaris no es poden finalitzar
+- Els horaris han de ser dates futures
+- El tècnic OVI gestiona totes les sol·licituds des del seu portal:
+  - Veu la informació completa de la persona sol·licitant i els horaris
+  - El sistema selecciona automàticament els PAP/PATIs compatibles segons disponibilitat horària
+  - El tècnic afegeix PAP/PATIs recomanats i accepta o rebutja la sol·licitud
+- Una vegada acceptada, l'OVI User veu els PAP/PATIs recomanats i pot iniciar negociacions
+- Les dues parts (OVI User i PAP/PATI) poden intercanviar missatges dins de la negociació
+- Quan ambdues parts confirmen l'acord, la negociació es tanca com a `finished` i les altres negociacions actives de la mateixa sol·licitud es tanquen automàticament com a `noAgreement`
+- El tècnic genera el contracte a partir de la negociació finalitzada, indicant dates d'inici i fi del servei i l'URL del document PDF
+- Els OVI Users i PAP/PATIs poden consultar els seus contractes des del seu portal
+
+### 4. Activitats de Formació i Divulgació
+- En construcció
+
+### 5. Gestió d'Instructors
+- En construcció
+
+## Casos de prova disponibles (psswd = 1234)
+
+### OVI Users
+- **juan.perez**: té una sol·licitud tancada amb contracte actiu amb Ana García
+- **maria.rod**: té una sol·licitud acceptada amb dues negociacions simultànies en curs (Ana García i Carlos Ruiz)
+- **luis.gomez**: té una sol·licitud en revisió sense recomanats
+- **sara.leon**: compte pendent d'activació (per provar pàgina pending)
+- **pedro.martin**: compte rebutjat amb motiu (per provar pàgina pending amb rebuig)
+
+### PAP/PATIs
+- **ana.garcia**: té horaris, un contracte actiu amb Juan i una negociació en curs amb María
+- **carlos.ruiz**: té horaris i una negociació en curs amb María
+- **elena.b**: té horaris i és recomanat per a una sol·licitud sense negociació iniciada
+- **marcos.sanz**: té el compte actiu però NO té horaris (per provar l'alerta al portal)
+- **lucia.mendez**: compte pendent d'activació
+- **roberto.f**: compte rebutjat amb motiu
+
+### Activitats
+- **Taller Autonomia Personal** (formació): quasi plena, 3 inscrits de 5 places
+- **Xerrada Drets Socials** (divulgació): àmplia capacitat, 2 inscrits
+- **Curs Llengua de Signes** (formació): buida, per probar el procés d'inscripció complet
+
+## Estructura del projecte
 
 4. Actividades de formación y divulgación --> El técnico OVI será el encargado de gestionar la creación de las distintas actividades. Esta gestión incluirá la creación de las actividades, la asignación de los instructores que impartan la actividad. Habrán dos tipos de actividades: actividades de formación con un número limitado de participantes, y luego actividades de divulgación en las que no se requerirá inscripción, pero también estará disponible. En el caso de las actividades de formación, la aplicación deberá proporcionar un proceso de inscripción a esa actividades con los datos personales de la persona que participe. Y una vez acabe la formación, el instructor definido deberá poder registrar la asistencia de cada participante a la actividad, para que luego la aplicación pueda emitir a esos asistentes un certificado de asistencia en formato PDF. En las actividades de divulgación, el aforo se controlará in situ, será el instructor el que compruebe la asistencia de los participantes inscritos y también el que registrará el nombre de las personas participantes, la aplicación debe permitir esto.
 
