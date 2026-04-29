@@ -22,6 +22,7 @@ public class InstructorController {
         this.instructorDao = instructorDao;
     }
 
+    // Mostra el portal de l'instructor autenticat
     @RequestMapping("/portal")
     public String portal(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {

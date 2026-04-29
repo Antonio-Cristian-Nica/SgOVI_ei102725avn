@@ -69,7 +69,7 @@ public class OviUserSolicitudController {
         this.contractDao = contractDao;
     }
 
-    // LLISTAT DE SOL·LICITUDS
+    // Mostra el llistat de sol·licituds de l'usuari OVI
     @RequestMapping
     public String list(HttpSession session, Model model) {
         Credentials credentials = (Credentials) session.getAttribute("user");
@@ -79,14 +79,14 @@ public class OviUserSolicitudController {
         return "oviuser/solicitudes/list";
     }
 
-    // FORMULARI NOVA SOL·LICITUD
+    // Mostra el formulari per a crear una nova sol·licitud
     @RequestMapping("/add")
     public String add(Model model) {
         model.addAttribute("solicitud", new AssistanceRequest());
         return "oviuser/solicitudes/add";
     }
 
-    // GUARDAR NOVA SOL·LICITUD
+    // Guarda una nova sol·licitud
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String processAdd(@ModelAttribute("solicitud") AssistanceRequest solicitud,
                              HttpSession session, Model model) {
@@ -110,7 +110,7 @@ public class OviUserSolicitudController {
         return "redirect:/oviUser/solicitudes/" + requestID + "/horaris?nova=true";
     }
 
-    // AFEGIR HORARIS A LA SOL·LICITUD
+    // Mostra els horaris associats a una sol·licitud
     @RequestMapping("/{requestID}/horaris")
     public String horaris(@PathVariable int requestID,
                           @RequestParam(value = "nova", defaultValue = "false") boolean nova,
@@ -123,7 +123,7 @@ public class OviUserSolicitudController {
         return "oviuser/solicitudes/horaris";
     }
 
-    // GUARDAR HORARI
+    // Guarda un nou horari per a la sol·licitud
     @RequestMapping(value = "/{requestID}/horaris/add", method = RequestMethod.POST)
     public String addHorari(@PathVariable int requestID,
                             @ModelAttribute("newHorari") RequestSchedule horari,
@@ -147,7 +147,7 @@ public class OviUserSolicitudController {
         return "redirect:/oviUser/solicitudes/" + requestID + "/horaris?nova=true";
     }
 
-    // ELIMINAR HORARI
+    // Elimina un horari d'una sol·licitud
     @RequestMapping(value = "/{requestID}/horaris/delete/{horariID}", method = RequestMethod.POST)
     public String deleteHorari(@PathVariable int requestID,
                                @PathVariable int horariID,
@@ -156,7 +156,7 @@ public class OviUserSolicitudController {
         return "redirect:/oviUser/solicitudes/" + requestID + "/horaris?nova=" + nova;
     }
 
-    // DETALL SOL·LICITUD
+    // Mostra el detall d'una sol·licitud
     @RequestMapping("/{requestID}")
     public String detail(@PathVariable int requestID, Model model) {
         AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(requestID);
@@ -192,7 +192,7 @@ public class OviUserSolicitudController {
         return "oviuser/solicitudes/detail";
     }
 
-    // ELIMINAR SOL·LICITUD
+    // Elimina una sol·licitud i els seus horaris
     @RequestMapping("/delete/{requestID}")
     public String delete(@PathVariable int requestID) {
         requestScheduleDao.deleteSchedulesByRequest(requestID);
@@ -200,7 +200,7 @@ public class OviUserSolicitudController {
         return "redirect:/oviUser/solicitudes";
     }
 
-    // FORMULARI EDITAR SOL·LICITUD
+    // Mostra el formulari per a editar una sol·licitud
     @RequestMapping("/edit/{requestID}")
     public String edit(@PathVariable int requestID, Model model) {
         AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(requestID);
@@ -208,7 +208,7 @@ public class OviUserSolicitudController {
         return "oviuser/solicitudes/edit";
     }
 
-    // GUARDAR EDICIÓ SOL·LICITUD
+    // Guarda els canvis d'una sol·licitud
     @RequestMapping(value = "/edit/{requestID}", method = RequestMethod.POST)
     public String processEdit(@PathVariable int requestID,
                               @ModelAttribute("solicitud") AssistanceRequest solicitud,
@@ -228,6 +228,7 @@ public class OviUserSolicitudController {
         return "redirect:/oviUser/solicitudes/" + requestID;
     }
 
+    // Inicia una negociació amb un PAP/PATI recomanat
     @RequestMapping(value = "/{requestID}/negociar/{papID}", method = RequestMethod.POST)
     public String iniciarNegociacio(@PathVariable int requestID,
                                     @PathVariable int papID) {

@@ -74,20 +74,20 @@ public class AdminSolicitudController {
         this.negotiationDao = negotiationDao;
     }
 
-    // LLISTAT DE TOTES LES SOL·LICITUDS
+    // Mostra el llistat de totes les sol·licituds
     @RequestMapping
     public String list(Model model) {
         model.addAttribute("solicitudes", assistanceRequestDao.getAssistanceRequests());
         return "admin/solicitudes/list";
     }
 
-    // DETALL SOL·LICITUD
+    // Mostra el detall d'una sol·licitud
     @RequestMapping("/{requestID}")
     public String detail(@PathVariable int requestID, Model model) {
         return carregarDetail(requestID, model, null);
     }
 
-    // AFEGIR PAP/PATI RECOMANAT
+    // Afig un PAP/PATI recomanat a una sol·licitud
     @RequestMapping(value = "/{requestID}/recomanar", method = RequestMethod.POST)
     public String recomanar(@PathVariable int requestID,
                             @RequestParam("papID") String papIDStr,
@@ -103,12 +103,12 @@ public class AdminSolicitudController {
         return "redirect:/admin/solicitudes/" + requestID;
     }
 
+    // Carrega tota la informació necessària per a la vista de detall
     private String carregarDetail(int requestID, Model model, String errorPapID) {
         AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(requestID);
         List<RequestSchedule> horaris = requestScheduleDao.getRequestSchedulesByRequest(requestID);
         List<RecommendedPapPati> recomanats = recommendedPapPatiDao.getRecommendedByRequest(requestID);
 
-        // Obtenim els IDs compatibles i excloem els ja recomanats
         List<Integer> papIDsCompatibles = scheduleDao.getPapPatiIDsCompatibles(requestID);
         List<Integer> papIDsRecomanats = recomanats.stream()
                 .map(RecommendedPapPati::getPapID)
@@ -164,6 +164,7 @@ public class AdminSolicitudController {
         return "admin/solicitudes/detail";
     }
 
+    // Accepta una sol·licitud
     @RequestMapping(value = "/{requestID}/acceptar", method = RequestMethod.POST)
     public String acceptar(@PathVariable int requestID) {
         AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(requestID);
@@ -172,6 +173,7 @@ public class AdminSolicitudController {
         return "redirect:/admin/solicitudes/" + requestID;
     }
 
+    // Rebutja una sol·licitud
     @RequestMapping(value = "/{requestID}/rebutjar", method = RequestMethod.POST)
     public String rebutjar(@PathVariable int requestID) {
         AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(requestID);
@@ -180,7 +182,7 @@ public class AdminSolicitudController {
         return "redirect:/admin/solicitudes/" + requestID;
     }
 
-    // ELIMINAR PAP/PATI RECOMANAT
+    // Elimina un PAP/PATI recomanat d'una sol·licitud
     @RequestMapping(value = "/{requestID}/recomanar/delete/{papID}", method = RequestMethod.POST)
     public String deleteRecomanat(@PathVariable int requestID,
                                   @PathVariable int papID) {

@@ -46,12 +46,14 @@ public class LoginController {
         this.papPatiDao = papPatiDao;
     }
 
+    // Mostra el formulari d'inici de sessió
     @RequestMapping("/login")
     public String showLogin(Model model) {
         model.addAttribute("user", new Credentials());
         return LOGIN_VIEW;
     }
 
+    // Valida les credencials i redirigix l'usuari segons el seu rol
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String processLogin(@ModelAttribute("user") Credentials user,
                                BindingResult bindingResult,
@@ -86,7 +88,7 @@ public class LoginController {
 
         session.setAttribute("user", credentials);
 
-        // Cuenta no activada → pending
+        // Si el compte no està activat, es mostra la pàgina de pendent
         if (!credentials.getActivated()) {
             switch (credentials.getRole()) {
                 case ROL_USER_OVI:
@@ -101,7 +103,7 @@ public class LoginController {
             return "redirect:/pending";
         }
 
-        // Cuenta activada → redirigir según rol
+        // Si hi havia una pàgina pendent, es redirigix allí
         String nextUrl = (String) session.getAttribute("nextUrl");
         if (nextUrl != null) {
             session.removeAttribute("nextUrl");
@@ -127,12 +129,14 @@ public class LoginController {
         }
     }
 
+    // Tanca la sessió actual
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
     }
 
+    // Mostra la pàgina d'estat de compte pendent
     @RequestMapping("/pending")
     public String pending(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
@@ -154,6 +158,7 @@ public class LoginController {
         return "pending";
     }
 
+    // Redirigix l'usuari autenticat al seu portal
     @RequestMapping("/mi-portal")
     public String miPortal(HttpSession session) {
         if (session.getAttribute("user") == null) {

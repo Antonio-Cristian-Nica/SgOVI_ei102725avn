@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SgOVIErrorController implements ErrorController {
     private static final String STATUS = "status";
     private static final String ERROR = "error";
+
+    // Gestiona els errors generals de l'aplicació
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, Model model) {
         Integer statusCode = (Integer) request.getAttribute("jakarta.servlet.error.status_code");

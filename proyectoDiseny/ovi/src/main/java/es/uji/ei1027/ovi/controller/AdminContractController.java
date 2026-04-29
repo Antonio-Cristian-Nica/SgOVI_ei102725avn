@@ -20,6 +20,7 @@ import java.util.Map;
 @RequestMapping("/admin/contractes")
 public class AdminContractController {
 
+    // Controlador per a gestionar els contractes des de l'administració
     private ContractDao contractDao;
     private NegotiationDao negotiationDao;
     private AssistanceRequestDao assistanceRequestDao;
@@ -51,7 +52,7 @@ public class AdminContractController {
         this.papPatiDao = papPatiDao;
     }
 
-    // LLISTAT DE NEGOCIACIONS FINALITZADES
+    // Mostra les negociacions finalitzades i els seus contractes
     @RequestMapping
     public String list(Model model) {
         List<Negotiation> negociacions = negotiationDao.getNegotiationsFinished();
@@ -77,7 +78,7 @@ public class AdminContractController {
         return "admin/contractes/list";
     }
 
-    // FORMULARI CREAR CONTRACTE
+    // Carrega el formulari per a afegir un contracte
     @RequestMapping("/add/{negociacioID}")
     public String add(@PathVariable int negociacioID, Model model) {
         Negotiation neg = negotiationDao.getNegotiation(negociacioID);
@@ -93,7 +94,7 @@ public class AdminContractController {
         return "admin/contractes/add";
     }
 
-    // GUARDAR CONTRACTE
+    // Valida i guarda un nou contracte
     @RequestMapping(value = "/add/{negociacioID}", method = RequestMethod.POST)
     public String processAdd(@PathVariable int negociacioID,
                              @ModelAttribute("contract") Contract contract,
@@ -135,7 +136,6 @@ public class AdminContractController {
         contract.setStatus("active");
         contractDao.addContract(contract);
 
-        // Canviar estat de la sol·licitud a closedWithContract
         Negotiation neg = negotiationDao.getNegotiation(negociacioID);
         AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
         sol.setStatus("closedWithContract");
@@ -144,7 +144,7 @@ public class AdminContractController {
         return "redirect:/admin/contractes";
     }
 
-    // DETALL CONTRACTE
+    // Mostra el detall d'un contracte
     @RequestMapping("/{contractID}")
     public String detail(@PathVariable int contractID, Model model) {
         Contract contract = contractDao.getContract(contractID);

@@ -81,12 +81,14 @@ public class PapPatiController {
         this.contractDao = contractDao;
     }
 
+    // Mostra el formulari de registre de PAP/PATI
     @RequestMapping("/register")
     public String addPapPati(Model model) {
         model.addAttribute("pappati", new PapPatiRegistration());
         return "papPati/register";
     }
 
+    // Processa el registre d'un nou PAP/PATI
     @RequestMapping(value="/register", method=RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("pappati") PapPatiRegistration registration,
                                    BindingResult bindingResult) {
@@ -120,17 +122,20 @@ public class PapPatiController {
         return "redirect:registerSuccess";
     }
 
+    // Mostra la pàgina de registre completat
     @RequestMapping("/registerSuccess")
     public String registerSuccess() {
         return "registerSuccess";
     }
 
+    // Mostra el llistat de PAP/PATI
     @RequestMapping("/list")
     public String listPapPatis(Model model) {
         model.addAttribute("pappatis", papPatiDao.getPapPatis());
         return "papPati/list";
     }
 
+    // Mostra el portal del PAP/PATI
     @RequestMapping("/portal")
     public String portal(HttpSession session, Model model) {
         Credentials credentials = (Credentials) session.getAttribute("user");
@@ -139,6 +144,7 @@ public class PapPatiController {
         return "papPati/portal";
     }
 
+    // Mostra el formulari d'edició del PAP/PATI
     @RequestMapping("/edit")
     public String editPapPati(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
@@ -150,6 +156,7 @@ public class PapPatiController {
         return "papPati/edit";
     }
 
+    // Processa l'edició de les dades del PAP/PATI
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public String processEditSubmit(@ModelAttribute("pappati") PapPati papPati,
                                     BindingResult bindingResult,
@@ -169,6 +176,7 @@ public class PapPatiController {
         return "redirect:portal";
     }
 
+    // Mostra el formulari per a canviar la contrasenya
     @RequestMapping("/canviarContrasenya")
     public String canviarContrasenya(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
@@ -178,6 +186,7 @@ public class PapPatiController {
         return CANVI_CONTRASENYA_PAPPATI_VIEW;
     }
 
+    // Processa el canvi de contrasenya
     @RequestMapping(value = "/canviarContrasenya", method = RequestMethod.POST)
     public String processCanviarContrasenya(@ModelAttribute("changePasswordForm") ChangePasswordForm form,
                                             BindingResult bindingResult,
@@ -219,6 +228,7 @@ public class PapPatiController {
         return "redirect:portal";
     }
 
+    // Mostra els horaris del PAP/PATI
     @RequestMapping("/horaris")
     public String horaris(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
@@ -232,12 +242,14 @@ public class PapPatiController {
         return "papPati/horaris";
     }
 
+    // Mostra el formulari per a afegir un horari
     @RequestMapping("/horaris/add")
     public String addHorari(Model model) {
         model.addAttribute("schedule", new Schedule());
         return "papPati/horarisForm";
     }
 
+    // Guarda un nou horari
     @RequestMapping(value = "/horaris/add", method = RequestMethod.POST)
     public String processAddHorari(@ModelAttribute("schedule") Schedule schedule,
                                    HttpSession session,
@@ -276,12 +288,14 @@ public class PapPatiController {
         return "redirect:/papPati/horaris";
     }
 
+    // Elimina un horari
     @RequestMapping(value = "/horaris/delete/{scheduleID}", method = RequestMethod.POST)
     public String deleteHorari(@PathVariable("scheduleID") int scheduleID) {
         scheduleDao.deleteSchedule(scheduleID);
         return "redirect:/papPati/horaris";
     }
 
+    // Mostra les sol·licituds recomanades al PAP/PATI
     @RequestMapping("/solicitudes")
     public String solicitudes(HttpSession session, Model model) {
         Credentials credentials = (Credentials) session.getAttribute("user");
@@ -322,6 +336,7 @@ public class PapPatiController {
         return "papPati/solicitudes";
     }
 
+    // Mostra els contractes del PAP/PATI
     @RequestMapping("/contractes")
     public String contractes(HttpSession session, Model model) {
         Credentials credentials = (Credentials) session.getAttribute("user");

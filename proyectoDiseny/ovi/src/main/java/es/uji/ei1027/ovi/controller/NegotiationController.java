@@ -52,7 +52,7 @@ public class NegotiationController {
         this.requestScheduleDao = requestScheduleDao;
     }
 
-    // VEURE NEGOCIACIÓ - OVI USER
+    // Mostra el detall d'una negociació per a l'usuari OVI
     @RequestMapping("/oviUser/negociacio/{negociacioID}")
     public String detallOviUser(@PathVariable int negociacioID,
                                 HttpSession session, Model model) {
@@ -72,7 +72,7 @@ public class NegotiationController {
         return "negociacio/detail";
     }
 
-    // VEURE NEGOCIACIÓ - PAP/PATI
+    // Mostra el detall d'una negociació per al PAP/PATI
     @RequestMapping("/papPati/negociacio/{negociacioID}")
     public String detallPapPati(@PathVariable int negociacioID,
                                 HttpSession session, Model model) {
@@ -92,7 +92,7 @@ public class NegotiationController {
         return "negociacio/detail";
     }
 
-    // AFEGIR MISSATGE
+    // Afig un missatge nou a la conversa de la negociació
     @RequestMapping(value = "/negociacio/{negociacioID}/missatge", method = RequestMethod.POST)
     public String afegirMissatge(@PathVariable int negociacioID,
                                  @RequestParam("missatge") String missatge,
@@ -116,7 +116,7 @@ public class NegotiationController {
         return "redirect:/" + rol + "/negociacio/" + negociacioID;
     }
 
-    // CONFIRMAR ACORD - OVI USER
+    // Confirma l'acord des de la part de l'usuari OVI
     @RequestMapping(value = "/oviUser/negociacio/{negociacioID}/confirmar", method = RequestMethod.POST)
     public String confirmarOviUser(@PathVariable int negociacioID) {
         Negotiation neg = negotiationDao.getNegotiation(negociacioID);
@@ -129,7 +129,7 @@ public class NegotiationController {
         return "redirect:/oviUser/negociacio/" + negociacioID;
     }
 
-    // CONFIRMAR ACORD - PAP/PATI
+    // Confirma l'acord des de la part del PAP/PATI
     @RequestMapping(value = "/papPati/negociacio/{negociacioID}/confirmar", method = RequestMethod.POST)
     public String confirmarPapPati(@PathVariable int negociacioID) {
         Negotiation neg = negotiationDao.getNegotiation(negociacioID);
@@ -142,6 +142,7 @@ public class NegotiationController {
         return "redirect:/papPati/negociacio/" + negociacioID;
     }
 
+    // Tanca la resta de negociacions actives de la mateixa sol·licitud
     private void tancarAltresNegociacions(int requestID, int negociacioID) {
         List<Negotiation> altres = negotiationDao.getNegotiationsByRequest(requestID);
         for (Negotiation altra : altres) {
@@ -153,7 +154,7 @@ public class NegotiationController {
         }
     }
 
-    // NO ACORD - OVI USER
+    // Marca la negociació com a no acord des de la part de l'usuari OVI
     @RequestMapping(value = "/oviUser/negociacio/{negociacioID}/noAcord", method = RequestMethod.POST)
     public String noAcordOviUser(@PathVariable int negociacioID) {
         Negotiation neg = negotiationDao.getNegotiation(negociacioID);
@@ -162,7 +163,7 @@ public class NegotiationController {
         return "redirect:/oviUser/negociacio/" + negociacioID;
     }
 
-    // NO ACORD - PAP/PATI
+    // Marca la negociació com a no acord des de la part del PAP/PATI
     @RequestMapping(value = "/papPati/negociacio/{negociacioID}/noAcord", method = RequestMethod.POST)
     public String noAcordPapPati(@PathVariable int negociacioID) {
         Negotiation neg = negotiationDao.getNegotiation(negociacioID);

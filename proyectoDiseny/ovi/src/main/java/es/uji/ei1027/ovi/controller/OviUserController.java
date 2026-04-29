@@ -66,12 +66,14 @@ public class OviUserController {
         this.papPatiDao = papPatiDao;
     }
 
+    // Mostra el formulari de registre d'usuari OVI
     @RequestMapping("/register")
     public String addOviUser(Model model) {
         model.addAttribute("oviuser", new OviUserRegistration());
         return "oviuser/register";
     }
 
+    // Processa el registre d'un nou usuari OVI
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("oviuser") OviUserRegistration registration,
                                    BindingResult bindingResult) {
@@ -104,17 +106,20 @@ public class OviUserController {
         return "redirect:registerSuccess";
     }
 
+    // Mostra la pàgina de registre completat
     @RequestMapping("/registerSuccess")
     public String registerSuccess() {
         return "registerSuccess";
     }
 
+    // Comprova si l'usuari està pendent o rebutjat
     private boolean isRejectedOrPending(HttpSession session) {
         Credentials credentials = (Credentials) session.getAttribute("user");
         if (credentials == null) return true;
         return !credentials.getActivated() || credentials.isRejected();
     }
 
+    // Mostra el portal de l'usuari OVI
     @RequestMapping("/portal")
     public String portal(HttpSession session) {
         if (session.getAttribute("user") == null) {
@@ -126,6 +131,7 @@ public class OviUserController {
         return "oviuser/portal";
     }
 
+    // Mostra el formulari d'edició de l'usuari OVI
     @RequestMapping("/edit")
     public String editOviUser(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
@@ -137,6 +143,7 @@ public class OviUserController {
         return "oviuser/edit";
     }
 
+    // Processa l'edició de les dades de l'usuari OVI
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public String processEditSubmit(@ModelAttribute("oviuser") OviUser oviUser,
                                     BindingResult bindingResult,
@@ -156,6 +163,7 @@ public class OviUserController {
         return "redirect:portal";
     }
 
+    // Mostra el formulari per a canviar la contrasenya
     @RequestMapping("/canviarContrasenya")
     public String canviarContrasenya(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
@@ -165,6 +173,7 @@ public class OviUserController {
         return CANVI_CONTRASENYA_VIEW;
     }
 
+    // Processa el canvi de contrasenya
     @RequestMapping(value = "/canviarContrasenya", method = RequestMethod.POST)
     public String processCanviarContrasenya(@ModelAttribute("changePasswordForm") ChangePasswordForm form,
                                             BindingResult bindingResult,
@@ -203,6 +212,7 @@ public class OviUserController {
         return "redirect:portal";
     }
 
+    // Mostra la informació del tutor associat
     @RequestMapping("/tutor")
     public String tutor(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
@@ -218,12 +228,14 @@ public class OviUserController {
         return "oviuser/tutor";
     }
 
+    // Mostra el formulari per a afegir un tutor
     @RequestMapping("/tutor/add")
     public String addTutor(Model model) {
         model.addAttribute("tutor", new Tutor());
         return "oviuser/tutorForm";
     }
 
+    // Processa l'alta d'un nou tutor
     @RequestMapping(value = "/tutor/add", method = RequestMethod.POST)
     public String processAddTutor(@ModelAttribute("tutor") Tutor tutor,
                                   BindingResult bindingResult,
@@ -238,6 +250,7 @@ public class OviUserController {
         return "redirect:/oviUser/tutor";
     }
 
+    // Mostra el formulari per a editar el tutor
     @RequestMapping("/tutor/edit")
     public String editTutor(HttpSession session, Model model) {
         Credentials credentials = (Credentials) session.getAttribute("user");
@@ -246,6 +259,7 @@ public class OviUserController {
         return "oviuser/tutorForm";
     }
 
+    // Processa l'edició del tutor
     @RequestMapping(value = "/tutor/edit", method = RequestMethod.POST)
     public String processEditTutor(@ModelAttribute("tutor") Tutor tutor,
                                    BindingResult bindingResult,
@@ -260,6 +274,7 @@ public class OviUserController {
         return "redirect:/oviUser/tutor";
     }
 
+    // Elimina el tutor associat a l'usuari
     @RequestMapping(value = "/tutor/delete", method = RequestMethod.POST)
     public String deleteTutor(HttpSession session) {
         Credentials credentials = (Credentials) session.getAttribute("user");
@@ -269,6 +284,7 @@ public class OviUserController {
         return "redirect:/oviUser/tutor";
     }
 
+    // Mostra els contractes de l'usuari OVI
     @RequestMapping("/contractes")
     public String contractes(HttpSession session, Model model) {
         Credentials credentials = (Credentials) session.getAttribute("user");

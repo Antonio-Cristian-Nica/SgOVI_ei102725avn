@@ -7,6 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 public class UriInterceptor implements HandlerInterceptor {
 
+    // Afegix la URI actual al model per a poder usar-la en les vistes
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response,
                            Object handler, ModelAndView modelAndView) {

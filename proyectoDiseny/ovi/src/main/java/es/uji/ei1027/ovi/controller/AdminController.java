@@ -38,6 +38,7 @@ public class AdminController {
         this.credentialsDao = credentialsDao;
     }
 
+    // Mostra el portal d'administració
     @RequestMapping("/portal")
     public String portal(HttpSession session) {
         if (session.getAttribute("user") == null) {
@@ -50,6 +51,8 @@ public class AdminController {
     // =====================================================================
     // VALIDAR PAP/PATI
     // =====================================================================
+
+    // Mostra els PAP/PATI pendents de validació
     @RequestMapping("/validarPapPati")
     public String validarPapPati(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
@@ -60,6 +63,7 @@ public class AdminController {
         return "admin/validarPapPati";
     }
 
+    // Activa un compte de PAP/PATI pendent
     @RequestMapping(value = "/validarPapPati/{username}/activar", method = RequestMethod.POST)
     public String activarPapPati(@PathVariable("username") String username,
                                  HttpSession session) {
@@ -69,6 +73,7 @@ public class AdminController {
         return "redirect:/admin/validarPapPati";
     }
 
+    // Rebutja un compte de PAP/PATI indicant el motiu
     @RequestMapping(value = "/validarPapPati/{username}/rebutjar", method = RequestMethod.POST)
     public String rebutjarPapPati(@PathVariable("username") String username,
                                   @RequestParam("rejectionReason") String rejectionReason,
@@ -80,8 +85,10 @@ public class AdminController {
     }
 
     // =====================================================================
-    // GESTIONAR PAP/PATI (aceptados y rechazados)
+    // GESTIONAR PAP/PATI (acceptats i rebutjats)
     // =====================================================================
+
+    // Mostra els PAP/PATI ja gestionats
     @RequestMapping("/gestionarPapPati")
     public String gestionarPapPati(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) return REDIRECT_LOGIN;
@@ -89,6 +96,7 @@ public class AdminController {
         return "admin/gestionarPapPati";
     }
 
+    // Mostra el detall d'un PAP/PATI
     @RequestMapping("/gestionarPapPati/{username}")
     public String detallPapPati(@PathVariable("username") String username,
                                 HttpSession session, Model model) {
@@ -101,6 +109,8 @@ public class AdminController {
     // =====================================================================
     // VALIDAR OVI USERS
     // =====================================================================
+
+    // Mostra els usuaris OVI pendents de validació
     @RequestMapping("/validarOviUsers")
     public String validarOviUsers(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
@@ -111,6 +121,7 @@ public class AdminController {
         return "admin/validarOviUsers";
     }
 
+    // Activa un compte d'usuari OVI pendent
     @RequestMapping(value = "/validarOviUsers/{username}/activar", method = RequestMethod.POST)
     public String activarOviUser(@PathVariable("username") String username,
                                  HttpSession session) {
@@ -120,6 +131,7 @@ public class AdminController {
         return "redirect:/admin/validarOviUsers";
     }
 
+    // Rebutja un compte d'usuari OVI indicant el motiu
     @RequestMapping(value = "/validarOviUsers/{username}/rebutjar", method = RequestMethod.POST)
     public String rebutjarOviUser(@PathVariable("username") String username,
                                   @RequestParam("rejectionReason") String rejectionReason,
@@ -131,8 +143,10 @@ public class AdminController {
     }
 
     // =====================================================================
-    // GESTIONAR OVI USERS (aceptados y rechazados)
+    // GESTIONAR OVI USERS (acceptats i rebutjats)
     // =====================================================================
+
+    // Mostra els usuaris OVI ja gestionats
     @RequestMapping("/gestionarOviUsers")
     public String gestionarOviUsers(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) return REDIRECT_LOGIN;
@@ -140,6 +154,7 @@ public class AdminController {
         return "admin/gestionarOviUsers";
     }
 
+    // Mostra el detall d'un usuari OVI
     @RequestMapping("/gestionarOviUsers/{username}")
     public String detallOviUser(@PathVariable("username") String username,
                                 HttpSession session, Model model) {
@@ -149,6 +164,7 @@ public class AdminController {
         return "admin/detallOviUser";
     }
 
+    // Mostra les estadístiques bàsiques d'usuaris OVI i PAP/PATI
     @RequestMapping("/estadistiques")
     public String estadistiques(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) return REDIRECT_LOGIN;
