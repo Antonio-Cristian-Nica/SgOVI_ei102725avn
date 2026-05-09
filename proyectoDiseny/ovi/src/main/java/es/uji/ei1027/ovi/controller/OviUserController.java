@@ -12,6 +12,7 @@ import es.uji.ei1027.ovi.validator.ChangePasswordValidator;
 import es.uji.ei1027.ovi.validator.OviUserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -74,6 +75,7 @@ public class OviUserController {
     }
 
     // Processa el registre d'un nou usuari OVI
+    @Transactional
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("oviuser") OviUserRegistration registration,
                                    BindingResult bindingResult) {
@@ -81,13 +83,26 @@ public class OviUserController {
         OviUserValidator validator = new OviUserValidator();
         validator.validate(registration, bindingResult);
 
+        // Comprovació de duplicats abans d'inserir
+        if (registration.getUsername() != null
+                && credentialsDao.getCredentials(registration.getUsername()) != null) {
+            bindingResult.rejectValue("username", "duplicat",
+                    "Aquest nom d'usuari ja està agafat");
+        }
+
+        if (registration.getEmailAddress() != null
+                && oviUserDao.existsEmail(registration.getEmailAddress())) {
+            bindingResult.rejectValue("emailAddress", "duplicat",
+                    "Aquest correu electrònic ja està registrat");
+        }
+
         if (bindingResult.hasErrors()) {
             return "oviuser/register";
         }
 
         registration.setStatus("approvalPending");
 
-        // 1. Primero las credenciales
+        // 1. Primer les credencials (sense ID encara)
         Credentials credentials = new Credentials();
         credentials.setUsername(registration.getUsername());
         credentials.setPassword(PasswordUtils.encrypt(registration.getPassword()));
@@ -96,10 +111,10 @@ public class OviUserController {
         credentials.setId(0);
         credentialsDao.addCredentials(credentials);
 
-        // 2. Luego el OviUser
+        // 2. Després l'OviUser
         oviUserDao.addOviUser(registration);
 
-        // 3. Actualizamos el ID en credenciales con el oviID real
+        // 3. Actualitzem l'ID de credencials amb l'oviID real
         int oviID = oviUserDao.getLastInsertedId();
         credentialsDao.updateId(registration.getUsername(), oviID);
 

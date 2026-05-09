@@ -85,6 +85,14 @@ public class OviUserValidator implements Validator {
             } else if (registration.getPassword().length() > 100) {
                 errors.rejectValue("password", ERROR_LONGITUD, "La contrasenya no pot superar els 100 caràcters");
             }
+
+            // Comprovació de coincidència entre password i confirmPassword
+            if (registration.getConfirmPassword() == null || registration.getConfirmPassword().trim().isEmpty()) {
+                errors.rejectValue("confirmPassword", ERROR_OBLIGATORI, "Has de confirmar la contrasenya");
+            } else if (registration.getPassword() != null
+                    && !registration.getPassword().equals(registration.getConfirmPassword())) {
+                errors.rejectValue("confirmPassword", "noCoincideix", "Les contrasenyes no coincideixen");
+            }
         }
     }
 }

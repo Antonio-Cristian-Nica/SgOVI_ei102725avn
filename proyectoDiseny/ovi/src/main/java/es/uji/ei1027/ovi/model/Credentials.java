@@ -1,5 +1,12 @@
 package es.uji.ei1027.ovi.model;
 
+/*
+Esta clase representa una fila de la tabla CREDENTIALS. Spring lo usa de dos formas:
+(1) Thymeleaf lo lee/escribe en los formularios de login,
+y (2) JdbcTemplate lo rellena al consultar la BBDD a través del CredentialsRowMapper.
+La contraseña se guarda cifrada con Jasypt; nunca en claro.
+ */
+
 public class Credentials {
     private String username;
     private String password;
@@ -29,13 +36,4 @@ public class Credentials {
 
     public boolean getActivated() { return activated; }
     public void setActivated(boolean activated) { this.activated = activated; }
-
-    @Override
-    public String toString() {
-        return "Credentials{" +
-                "username='" + username + '\'' +
-                ", role='" + role + '\'' +
-                ", activated=" + activated +
-                '}';
-    }
 }

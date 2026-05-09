@@ -2,6 +2,12 @@ package es.uji.ei1027.ovi.model;
 
 import java.time.LocalDate;
 
+/*
+OviUser representa una fila de OVI_USER. tutorID es Integer (no int) porque la columna admite NULL.
+El campo status sigue un protocolo de tres valores: 'approvalPending' (recién registrado),
+'active' (validado por técnico), 'inactive' (rechazado o desactivado).
+ */
+
 public class OviUser {
     private int oviID;
     private String nameAndSurname;

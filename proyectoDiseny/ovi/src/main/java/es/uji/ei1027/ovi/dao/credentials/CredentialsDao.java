@@ -9,6 +9,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 
+/*
+CredentialsDao concentra todo el SQL de la tabla CREDENTIALS.
+JdbcTemplate ejecuta los queries y los traduce a objetos Credentials usando CredentialsRowMapper.
+queryForObject lanza EmptyResultDataAccessException si no encuentra fila → la capturo y devuelvo null.
+DuplicateKeyException si username repetido → la traduzco a SgOVIException.
+addCredentials se llama al registrarse, y luego updateId actualiza el ID real una vez creado el OviUser/PapPati en su tabla.
+ */
+
 @Repository
 public class CredentialsDao {
 
@@ -36,7 +44,7 @@ public class CredentialsDao {
                     credentials.getUsername(), credentials.getPassword(),
                     credentials.getRole(), credentials.getId(), credentials.getActivated());
         } catch (DuplicateKeyException e) {
-            throw new SgOVIException("Ese nombre de usuario ya está pillado", "Usuario duplicado");
+            throw new SgOVIException("Aquest nom d'usuari ja està agafat", "Usuari duplicat");
        }
     }
 

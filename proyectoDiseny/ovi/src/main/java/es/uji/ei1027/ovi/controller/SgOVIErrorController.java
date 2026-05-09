@@ -1,10 +1,16 @@
 package es.uji.ei1027.ovi.controller;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+/*
+  Implementa ErrorController para atrapar errores HTTP del contenedor (404, 500).
+  Se activa porque application.properties define server.error.path=/error y desactiva la whitelabel page.
+ */
 
 @Controller
 public class SgOVIErrorController implements ErrorController {
@@ -14,7 +20,8 @@ public class SgOVIErrorController implements ErrorController {
     // Gestiona els errors generals de l'aplicació
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, Model model) {
-        Integer statusCode = (Integer) request.getAttribute("jakarta.servlet.error.status_code");
+        Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+        Integer statusCode = (status != null) ? (Integer) status : null;
 
         if (statusCode == null) {
             model.addAttribute(STATUS, "???");

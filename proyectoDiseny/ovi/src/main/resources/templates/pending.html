@@ -34,6 +34,10 @@
                 Si creus que és un error, posa't en contacte amb l'organització.
             </div>
 
+            <div th:if="${status == null}" class="alert alert-info">
+                El teu compte encara no està actiu. Contacta amb l'organització per a més informació.
+            </div>
+
             <div class="form-actions">
                 <a th:href="@{/logout}" class="btn btn-secondary">Tancar sessió</a>
                 <a th:href="@{/contacto}" class="btn btn-primary">Contactar amb la OVI</a>
@@ -42,9 +46,6 @@
         </div>
     </div>
 </div>
-
-</body>
-</html>
 
 </body>
 </html>

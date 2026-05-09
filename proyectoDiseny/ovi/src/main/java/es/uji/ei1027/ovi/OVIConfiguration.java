@@ -33,7 +33,9 @@ public class OVIConfiguration implements WebMvcConfigurer {
                 )
                 .excludePathPatterns(
                         "/papPati/register",
+                        "/papPati/registerSuccess",
                         "/oviUser/register",
+                        "/oviUser/registerSuccess",
                         "/registerSuccess"
                 );
     }

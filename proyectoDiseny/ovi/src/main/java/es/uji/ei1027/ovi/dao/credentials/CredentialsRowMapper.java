@@ -5,6 +5,11 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/*
+El RowMapper traduce una fila ResultSet a un objeto Credentials.
+JdbcTemplate lo invoca por cada fila devuelta por el query.
+ */
+
 public class CredentialsRowMapper implements RowMapper<Credentials> {
     @Override
     public Credentials mapRow(ResultSet rs, int rowNum) throws SQLException {

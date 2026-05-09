@@ -1,3 +1,8 @@
+<!--
+    Vista única para todos los errores. Muestra info de SgOVIException (errorName + message) o
+    de error HTTP (status + error + message) según los datos disponibles.
+-->
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -14,12 +19,12 @@
 
             <h2 class="section-title">S'ha produït un error</h2>
 
-            <div th:if="${errorName}" class="alert alert-error">
+            <div th:if="${errorName != null}" class="alert alert-error">
                 <strong th:text="${errorName}"></strong>
                 <p th:text="${message}"></p>
             </div>
 
-            <div th:if="${errorName == null}" class="alert alert-error">
+            <div th:unless="${errorName != null}" class="alert alert-error">
                 <strong th:text="${status}"></strong>
                 <p th:text="${error}"></p>
                 <p th:text="${message}"></p>

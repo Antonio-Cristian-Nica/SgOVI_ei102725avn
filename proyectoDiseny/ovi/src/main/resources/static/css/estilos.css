@@ -5,11 +5,12 @@
     --bg-crema: #F7EBD0;
     --color-primario: #004AAD;
     --color-secundario: #008080;
-    --color-contraste: #CC6600;
-    --color-contraste-hover: #b35900;
+    --color-contraste: #A04E00;
+    --color-contraste-hover: #7A3A00;
+    --color-contraste-claro: #E89B5C;
     --texto-oscuro: #2C2416;
     --texto-medio: #555555;
-    --texto-suave: #888888;
+    --texto-suave: #6B6B6B;
     --borde-suave: rgba(0, 0, 0, 0.08);
     --borde-medio: #cccccc;
     --footer-bg: #2C2416;
@@ -209,7 +210,7 @@ nav a {
 
 nav a:hover {
     color: var(--color-contraste);
-    background-color: rgba(204, 102, 0, 0.07);
+    background-color: rgba(160, 78, 0, 0.07);
 }
 
 nav a.active {
@@ -620,7 +621,7 @@ textarea {
 }
 
 .data-table tr:hover td {
-    background-color: rgba(204, 102, 0, 0.05);
+    background-color: rgba(160, 78, 0, 0.05);
 }
 
 /* =========================================
@@ -782,7 +783,7 @@ textarea {
 }
 
 .stat-label {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     padding: 4px 10px;
     border-radius: 4px;
@@ -885,13 +886,13 @@ textarea {
     font-style: italic;
     line-height: 1.75;
     margin: 0 0 12px 0;
-    color: rgba(253, 245, 230, 0.92);
+    color: rgba(253, 245, 230, 0.95);
 }
 
 .hero-quote footer {
     font-size: 14px;
     font-weight: 700;
-    color: rgba(253, 245, 230, 0.55);
+    color: rgba(253, 245, 230, 0.85);
     border-top: none;
     padding: 0;
     margin: 0;
@@ -956,7 +957,7 @@ textarea {
 
 .pilar-icono {
     color: var(--color-contraste);
-    font-size: 10px;
+    font-size: 14px;
     display: block;
     margin-bottom: 8px;
 }
@@ -1003,7 +1004,7 @@ textarea {
 }
 
 .noticia-fecha {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--color-contraste);
     text-transform: uppercase;
@@ -1092,7 +1093,7 @@ textarea {
 
 .cta-texto p {
     font-size: 16px;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.9);
     margin: 0;
     line-height: 1.65;
 }
@@ -1106,14 +1107,14 @@ textarea {
 }
 
 .cta-login-texto {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
     margin: 0;
     text-align: center;
 }
 
 .cta-login-texto a {
-    color: var(--color-contraste);
+    color: var(--color-contraste-claro);
     font-weight: 700;
     text-decoration: none;
 }
@@ -1159,8 +1160,8 @@ footer {
 }
 
 .footer-info p {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.65);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
     line-height: 1.7;
     margin: 0;
 }
@@ -1171,12 +1172,12 @@ footer {
 }
 
 .footer-email {
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(255, 255, 255, 0.85);
     text-decoration: none;
 }
 
 .footer-email:hover {
-    color: var(--color-contraste);
+    color: var(--color-contraste-claro);
 }
 
 .footer-sponsors {
@@ -1184,11 +1185,11 @@ footer {
 }
 
 .footer-sponsors-title {
-    font-size: 11px;
+    font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin-bottom: 12px;
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .footer-sponsor-logo-main {
@@ -1219,15 +1220,15 @@ footer {
 
 .footer-links a {
     display: block;
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.55);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
     text-decoration: none;
     margin-bottom: 5px;
     transition: color 0.2s;
 }
 
 .footer-links a:hover {
-    color: var(--color-contraste);
+    color: var(--color-contraste-claro);
 }
 
 .footer-links a:focus-visible {
@@ -1241,9 +1242,37 @@ footer {
 }
 
 .footer-subfooter p {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.35);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
     margin: 0;
+}
+
+.lopd-details {
+    background-color: var(--bg-crema);
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+}
+
+.lopd-details summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--color-primario);
+}
+
+.lopd-details summary:hover {
+    color: var(--color-contraste);
+}
+
+.lopd-text {
+    margin-top: 14px;
+    font-size: 15px;
+    color: var(--texto-medio);
+}
+
+.lopd-text ul {
+    margin: 8px 0 8px 20px;
 }
 
 /* =========================================

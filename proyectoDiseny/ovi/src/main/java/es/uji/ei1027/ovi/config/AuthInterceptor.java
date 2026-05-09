@@ -5,27 +5,42 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+/**
+ * Comprova que l'usuari té sessió i el seu compte està actiu abans
+ * d'accedir a les zones privades. Es registra en OVIConfiguration.
+ */
 public class AuthInterceptor implements HandlerInterceptor {
 
-    // Comprova que l'usuari tinga una sessió vàlida abans d'accedir
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
 
         Credentials credentials = (Credentials) request.getSession().getAttribute("user");
 
-        // Sin sesión → login
+        // Sense sessió → guardar la URL i anar al login
         if (credentials == null) {
-            response.sendRedirect("/login");
+            saveRequestedUrl(request);
+            response.sendRedirect(request.getContextPath() + "/login");
             return false;
         }
 
-        // Cuenta no activada o rechazada → pending
+        // Compte no activat o rebutjat → pending
         if (!credentials.getActivated() || credentials.isRejected()) {
-            response.sendRedirect("/pending");
+            response.sendRedirect(request.getContextPath() + "/pending");
             return false;
         }
 
         return true;
+    }
+
+    // Desa la URL sol·licitada perquè el LoginController hi redirigisca després del login.
+    // Només per a GET: reintentar un POST després del login no té sentit.
+    private void saveRequestedUrl(HttpServletRequest request) {
+        if ("GET".equalsIgnoreCase(request.getMethod())) {
+            String uri = request.getRequestURI();
+            String query = request.getQueryString();
+            String fullUrl = (query != null) ? uri + "?" + query : uri;
+            request.getSession().setAttribute("nextUrl", fullUrl);
+        }
     }
 }

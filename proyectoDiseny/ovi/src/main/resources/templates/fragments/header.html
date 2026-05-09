@@ -27,7 +27,7 @@
         <div class="logo-section">
             <a th:href="@{/}" aria-label="Inici">
                 <img src="https://ovicastello.org/wp-content/uploads/2020/08/LOGO_Mesa-de-trabajo-1-90x90.png"
-                     alt="Logotipo de la Oficina Vida Independent"
+                     alt="Logotip de l'Oficina Vida Independent"
                      class="logo-img">
             </a>
             <div class="org-name">
@@ -38,18 +38,15 @@
 
         <!-- DERECHA: botones de autenticación -->
         <div class="auth-buttons">
-
             <th:block th:if="${session.user == null}">
                 <a th:href="@{/login}" class="btn btn-secondary">Iniciar sessió</a>
                 <a th:href="@{/registro}" class="btn btn-primary">Registrar-se</a>
             </th:block>
 
             <th:block th:if="${session.user != null}">
-
                 <span class="auth-welcome">
                     Benvingut/da, <span th:text="${session.user.username}">Usuari</span>
                 </span>
-
                 <a th:href="@{/logout}" class="btn btn-secondary">Tancar sessió</a>
             </th:block>
         </div>
@@ -77,9 +74,9 @@
                     OVI
                 </a>
             </li>
-            <li>
+            <li th:if="${session.user != null}">
                 <a th:href="@{/mi-portal}"
-                   th:classappend="${currentUri != null and (currentUri.startsWith('/mi-portal') or currentUri.startsWith('/papPati') or currentUri.startsWith('/oviUser') or currentUri.startsWith('/admin')) ? 'active' : ''}">
+                   th:classappend="${currentUri != null and (currentUri.startsWith('/mi-portal') or currentUri.startsWith('/papPati') or currentUri.startsWith('/oviUser') or currentUri.startsWith('/admin') or currentUri.startsWith('/instructor')) ? 'active' : ''}">
                     El meu portal
                 </a>
             </li>

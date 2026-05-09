@@ -11,77 +11,106 @@
 <div layout:fragment="content">
     <div class="form-section">
 
-        <h2 class="section-title">Registre de nou Usuari OVI</h2>
-        <p class="section-subtitle">Emplene tots els camps a continuació. Els camps marcats amb error s'han de corregir per a poder avançar.</p>
+        <h1 class="section-title">Registre de nou Usuari OVI</h1>
+        <p class="section-subtitle">
+            Emplene tots els camps a continuació. Els camps marcats amb
+            <span aria-hidden="true">*</span><span class="sr-only">asterisc</span>
+            són obligatoris.
+        </p>
 
-        <form th:action="@{/oviUser/register}" th:object="${oviuser}" method="post">
+        <form th:action="@{/oviUser/register}" th:object="${oviuser}" method="post" novalidate>
 
             <!-- SECCIÓ 1: CREDENCIALS -->
-            <h3 class="form-section-title">Accés a l'aplicació</h3>
-            <p class="form-section-subtitle">Tria les teues credencials. El compte estarà inactiu fins que el tècnic OVI el valide.</p>
+            <h2 class="form-section-title">Accés a l'aplicació</h2>
+            <p class="form-section-subtitle">
+                Tria les teues credencials. El compte estarà inactiu fins que
+                el tècnic OVI el valide.
+            </p>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="username">Nom d'usuari</label>
+                    <label for="username">Nom d'usuari <span aria-hidden="true">*</span></label>
                     <input type="text" id="username" th:field="*{username}"
                            th:class="${#fields.hasErrors('username')} ? 'input-error' : ''"
-                           placeholder="Ex: joan.garcia" />
+                           placeholder="Ex: joan.garcia"
+                           autocomplete="username" required />
                     <span class="error-text" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="password">Contrasenya</label>
+                    <label for="password">Contrasenya <span aria-hidden="true">*</span></label>
                     <input type="password" id="password" th:field="*{password}"
                            th:class="${#fields.hasErrors('password')} ? 'input-error' : ''"
-                           placeholder="Mínim 6 caràcters" />
+                           placeholder="Mínim 6 caràcters"
+                           autocomplete="new-password" required />
                     <span class="error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="confirmPassword">Confirma la contrasenya <span aria-hidden="true">*</span></label>
+                    <input type="password" id="confirmPassword" th:field="*{confirmPassword}"
+                           th:class="${#fields.hasErrors('confirmPassword')} ? 'input-error' : ''"
+                           placeholder="Repeteix la contrasenya"
+                           autocomplete="new-password" required />
+                    <span class="error-text" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
+                </div>
+
+                <div class="form-group">
+                    <!-- Espai buit per mantenir el grid de dues columnes -->
                 </div>
             </div>
 
             <hr class="section-divider">
 
             <!-- SECCIÓ 2: DADES PERSONALS -->
-            <h3 class="form-section-title">Dades personals</h3>
+            <h2 class="form-section-title">Dades personals</h2>
 
             <div class="form-group">
-                <label for="nameAndSurname">Nom i Cognoms</label>
+                <label for="nameAndSurname">Nom i Cognoms <span aria-hidden="true">*</span></label>
                 <input type="text" id="nameAndSurname" th:field="*{nameAndSurname}"
                        th:class="${#fields.hasErrors('nameAndSurname')} ? 'input-error' : ''"
-                       placeholder="Ex: Joan García i Pons" />
+                       placeholder="Ex: Joan García i Pons"
+                       autocomplete="name" required />
                 <span class="error-text" th:if="${#fields.hasErrors('nameAndSurname')}" th:errors="*{nameAndSurname}"></span>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="emailAddress">Correu Electrònic</label>
+                    <label for="emailAddress">Correu Electrònic <span aria-hidden="true">*</span></label>
                     <input type="email" id="emailAddress" th:field="*{emailAddress}"
                            th:class="${#fields.hasErrors('emailAddress')} ? 'input-error' : ''"
-                           placeholder="usuari@exemple.com" />
+                           placeholder="usuari@exemple.com"
+                           autocomplete="email" required />
                     <span class="error-text" th:if="${#fields.hasErrors('emailAddress')}" th:errors="*{emailAddress}"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="phoneNumber">Telèfon de contacte</label>
-                    <input type="text" id="phoneNumber" th:field="*{phoneNumber}"
+                    <label for="phoneNumber">Telèfon de contacte <span aria-hidden="true">*</span></label>
+                    <input type="tel" id="phoneNumber" th:field="*{phoneNumber}"
                            th:class="${#fields.hasErrors('phoneNumber')} ? 'input-error' : ''"
-                           placeholder="Ex: 600123456" />
+                           placeholder="Ex: 600123456"
+                           autocomplete="tel" required />
                     <span class="error-text" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="birthDate">Data de Naixement</label>
+                    <label for="birthDate">Data de Naixement <span aria-hidden="true">*</span></label>
                     <input type="date" id="birthDate" th:field="*{birthDate}"
-                           th:class="${#fields.hasErrors('birthDate')} ? 'input-error' : ''" />
+                           th:class="${#fields.hasErrors('birthDate')} ? 'input-error' : ''"
+                           autocomplete="bday" required />
                     <span class="error-text" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="homeAddress">Adreça Habitual</label>
+                    <label for="homeAddress">Adreça Habitual <span aria-hidden="true">*</span></label>
                     <input type="text" id="homeAddress" th:field="*{homeAddress}"
                            th:class="${#fields.hasErrors('homeAddress')} ? 'input-error' : ''"
-                           placeholder="Carrer, Número, Pis, Ciutat, Codi Postal" />
+                           placeholder="Carrer, Número, Pis, Ciutat, Codi Postal"
+                           autocomplete="street-address" required />
                     <span class="error-text" th:if="${#fields.hasErrors('homeAddress')}" th:errors="*{homeAddress}"></span>
                 </div>
             </div>
@@ -97,12 +126,40 @@
             <hr class="section-divider">
 
             <!-- SECCIÓ 3: LOPD -->
-            <h3 class="form-section-title">Protecció de dades</h3>
+            <h2 class="form-section-title">Protecció de dades</h2>
+
+            <details class="lopd-details">
+                <summary>Llegir el text complet de la Política de Protecció de Dades</summary>
+                <div class="lopd-text">
+                    <p>
+                        En compliment del Reglament General de Protecció de Dades
+                        (RGPD) i la Llei Orgànica de Protecció de Dades (LOPDGDD),
+                        l'informem que les seues dades seran tractades per
+                        l'<strong>Oficina per la Vida Independent Sole Arnau Ripollés</strong>
+                        amb les finalitats següents:
+                    </p>
+                    <ul>
+                        <li>Gestionar el seu registre i autenticació en l'aplicació SgOVI.</li>
+                        <li>Gestionar les seues sol·licituds d'assistència personal.</li>
+                        <li>Comunicar-se amb vosté sobre l'estat dels seus tràmits.</li>
+                    </ul>
+                    <p>
+                        Pot exercir els seus drets d'accés, rectificació, supressió,
+                        oposició, limitació i portabilitat enviant un correu a
+                        <a href="mailto:ovicastello@gmail.com">ovicastello@gmail.com</a>.
+                    </p>
+                </div>
+            </details>
 
             <div class="form-group">
-                <label class="checkbox-container" th:classappend="${#fields.hasErrors('LOPDAcceptance')} ? 'input-error' : ''">
+                <label class="checkbox-container" for="LOPDAcceptance"
+                       th:classappend="${#fields.hasErrors('LOPDAcceptance')} ? 'input-error' : ''">
                     <input type="checkbox" id="LOPDAcceptance" th:field="*{LOPDAcceptance}" />
-                    <span>He llegit i accepte la <strong>Política de Protecció de Dades (LOPD)</strong></span>
+                    <span>
+                        He llegit i accepte la
+                        <strong>Política de Protecció de Dades (LOPD)</strong>
+                        <span aria-hidden="true">*</span>
+                    </span>
                 </label>
                 <span class="error-text" th:if="${#fields.hasErrors('LOPDAcceptance')}" th:errors="*{LOPDAcceptance}"></span>
             </div>

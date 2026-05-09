@@ -5,6 +5,14 @@ import org.springframework.lang.NonNull;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+/*
+LoginValidator implementa Validator.
+supports() declara que valida la clase Credentials.
+validate() comprueba que username y password no estén vacíos.
+Si fallan, registra el error en errors → el BindingResult en el controlador llevará hasErrors()==true
+y la vista login.html mostrará el mensaje en el div th:errors.
+ */
+
 public class LoginValidator implements Validator {
 
     @Override

@@ -30,10 +30,15 @@ public class OviUserDao {
                 new OviUserRowMapper());
     }
 
+    // Devuelve null si no existe, en lugar de lanzar excepción
     public OviUser getOviUser(int oviID) {
-        return jdbcTemplate.queryForObject(
-                "SELECT * FROM OVI_USER WHERE oviID=?",
-                new OviUserRowMapper(), oviID);
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM OVI_USER WHERE oviID=?",
+                    new OviUserRowMapper(), oviID);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public void addOviUser(OviUserRegistration oviUser) {
@@ -80,6 +85,14 @@ public class OviUserDao {
         }
     }
 
+    // Comprova si ja existeix un OviUser amb aquest correu electrònic
+    public boolean existsEmail(String email) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM OVI_USER WHERE emailAddress=?",
+                Integer.class, email);
+        return count != null && count > 0;
+    }
+
     public void activateOviUser(String username) {
         jdbcTemplate.update(
                 "UPDATE OVI_USER SET status='active' WHERE username=?",
@@ -116,6 +129,4 @@ public class OviUserDao {
                 "UPDATE OVI_USER SET tutorID=NULL WHERE username=?",
                 username);
     }
-
-
 }
