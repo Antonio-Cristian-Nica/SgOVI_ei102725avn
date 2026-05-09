@@ -1,5 +1,6 @@
 package es.uji.ei1027.ovi;
 
+import es.uji.ei1027.ovi.config.AdminInterceptor;
 import es.uji.ei1027.ovi.config.AuthInterceptor;
 import es.uji.ei1027.ovi.config.UriInterceptor;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -38,5 +39,7 @@ public class OVIConfiguration implements WebMvcConfigurer {
                         "/oviUser/registerSuccess",
                         "/registerSuccess"
                 );
+        registry.addInterceptor(new AdminInterceptor())
+                .addPathPatterns("/admin/**");
     }
 }

@@ -507,6 +507,17 @@ textarea {
     border-top: 1px solid #e0e0e0;
 }
 
+.register-success-steps {
+    margin: 0 0 24px 20px;
+    padding: 0;
+    color: var(--texto-medio);
+    line-height: 1.7;
+}
+
+.register-success-steps li {
+    margin-bottom: 8px;
+}
+
 /* =========================================
    TÍTULOS DE SECCIÓN
    ========================================= */
@@ -624,6 +635,41 @@ textarea {
     background-color: rgba(160, 78, 0, 0.05);
 }
 
+/* =========================================
+   LLISTA DE DESCRIPCIONS (key-value)
+   ========================================= */
+.tutor-info {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 12px 24px;
+    margin: 24px 0;
+    padding: 20px;
+    background-color: var(--bg-crema);
+    border-radius: 8px;
+}
+
+.tutor-info dt {
+    font-weight: 700;
+    color: var(--footer-bg);
+}
+
+.tutor-info dd {
+    margin: 0;
+    color: var(--texto-medio);
+}
+
+@media (max-width: 600px) {
+    .tutor-info {
+        grid-template-columns: 1fr;
+        gap: 4px 0;
+    }
+    .tutor-info dt {
+        margin-top: 12px;
+    }
+    .tutor-info dt:first-child {
+        margin-top: 0;
+    }
+}
 /* =========================================
    CARDS DE PORTAL
    ========================================= */

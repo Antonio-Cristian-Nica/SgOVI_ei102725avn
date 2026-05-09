@@ -2,8 +2,11 @@ package es.uji.ei1027.ovi.dao.oviusertutor;
 
 import es.uji.ei1027.ovi.model.Tutor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
@@ -12,18 +15,23 @@ public class TutorDao {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public void setDataSource(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public void setDataSource(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     public List<Tutor> getTutors() {
         return jdbcTemplate.query("SELECT * FROM TUTOR", new TutorRowMapper());
     }
 
+    // Devuelve null si no existe, en lugar de lanzar excepción
     public Tutor getTutor(int tutorID) {
-        return jdbcTemplate.queryForObject(
-                "SELECT * FROM TUTOR WHERE tutorID=?",
-                new TutorRowMapper(), tutorID);
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM TUTOR WHERE tutorID=?",
+                    new TutorRowMapper(), tutorID);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public void addTutor(Tutor tutor) {

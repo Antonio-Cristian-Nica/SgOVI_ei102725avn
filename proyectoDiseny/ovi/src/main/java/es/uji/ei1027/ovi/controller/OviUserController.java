@@ -10,6 +10,7 @@ import es.uji.ei1027.ovi.model.*;
 import es.uji.ei1027.ovi.utils.PasswordUtils;
 import es.uji.ei1027.ovi.validator.ChangePasswordValidator;
 import es.uji.ei1027.ovi.validator.OviUserValidator;
+import es.uji.ei1027.ovi.validator.TutorValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -28,8 +30,10 @@ import java.util.Map;
 @Controller
 @RequestMapping("/oviUser")
 public class OviUserController {
+
     private static final String CANVI_CONTRASENYA_VIEW = "oviuser/canviarContrasenya";
-    private static final String REDIRECT_LOGIN = "redirect:/login";
+    private static final String USER_ATTR = "user";
+
     private OviUserDao oviUserDao;
     private CredentialsDao credentialsDao;
     private TutorDao tutorDao;
@@ -67,6 +71,10 @@ public class OviUserController {
         this.papPatiDao = papPatiDao;
     }
 
+    // =====================================================================
+    // REGISTRE
+    // =====================================================================
+
     // Mostra el formulari de registre d'usuari OVI
     @RequestMapping("/register")
     public String addOviUser(Model model) {
@@ -83,7 +91,6 @@ public class OviUserController {
         OviUserValidator validator = new OviUserValidator();
         validator.validate(registration, bindingResult);
 
-        // Comprovació de duplicats abans d'inserir
         if (registration.getUsername() != null
                 && credentialsDao.getCredentials(registration.getUsername()) != null) {
             bindingResult.rejectValue("username", "duplicat",
@@ -102,7 +109,6 @@ public class OviUserController {
 
         registration.setStatus("approvalPending");
 
-        // 1. Primer les credencials (sense ID encara)
         Credentials credentials = new Credentials();
         credentials.setUsername(registration.getUsername());
         credentials.setPassword(PasswordUtils.encrypt(registration.getPassword()));
@@ -111,10 +117,8 @@ public class OviUserController {
         credentials.setId(0);
         credentialsDao.addCredentials(credentials);
 
-        // 2. Després l'OviUser
         oviUserDao.addOviUser(registration);
 
-        // 3. Actualitzem l'ID de credencials amb l'oviID real
         int oviID = oviUserDao.getLastInsertedId();
         credentialsDao.updateId(registration.getUsername(), oviID);
 
@@ -127,32 +131,20 @@ public class OviUserController {
         return "registerSuccess";
     }
 
-    // Comprova si l'usuari està pendent o rebutjat
-    private boolean isRejectedOrPending(HttpSession session) {
-        Credentials credentials = (Credentials) session.getAttribute("user");
-        if (credentials == null) return true;
-        return !credentials.getActivated() || credentials.isRejected();
-    }
+    // =====================================================================
+    // PORTAL I DADES PERSONALS
+    // =====================================================================
 
     // Mostra el portal de l'usuari OVI
     @RequestMapping("/portal")
-    public String portal(HttpSession session) {
-        if (session.getAttribute("user") == null) {
-            return "redirect:/login";
-        }
-        if (isRejectedOrPending(session)) {
-            return "redirect:/pending";
-        }
+    public String portal() {
         return "oviuser/portal";
     }
 
     // Mostra el formulari d'edició de l'usuari OVI
     @RequestMapping("/edit")
     public String editOviUser(HttpSession session, Model model) {
-        if (session.getAttribute("user") == null) {
-            return REDIRECT_LOGIN;
-        }
-        Credentials credentials = (Credentials) session.getAttribute("user");
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
         OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
         model.addAttribute("oviuser", oviUser);
         return "oviuser/edit";
@@ -162,10 +154,8 @@ public class OviUserController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public String processEditSubmit(@ModelAttribute("oviuser") OviUser oviUser,
                                     BindingResult bindingResult,
-                                    HttpSession session) {
-        if (session.getAttribute("user") == null) {
-            return REDIRECT_LOGIN;
-        }
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
 
         OviUserValidator validator = new OviUserValidator();
         validator.validate(oviUser, bindingResult);
@@ -174,16 +164,28 @@ public class OviUserController {
             return "oviuser/edit";
         }
 
+        // Forçar que els camps d'identitat vinguen de BBDD, no del formulari, millora de seguretat
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
+        OviUser dbUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
+        oviUser.setOviID(dbUser.getOviID());
+        oviUser.setUsername(dbUser.getUsername());
+        oviUser.setTutorID(dbUser.getTutorID());
+        oviUser.setStatus(dbUser.getStatus());
+
         oviUserDao.updateOviUser(oviUser);
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Les teues dades s'han guardat correctament");
         return "redirect:portal";
     }
 
+    // =====================================================================
+    // CANVI DE CONTRASENYA
+    // =====================================================================
+
     // Mostra el formulari per a canviar la contrasenya
     @RequestMapping("/canviarContrasenya")
-    public String canviarContrasenya(HttpSession session, Model model) {
-        if (session.getAttribute("user") == null) {
-            return REDIRECT_LOGIN;
-        }
+    public String canviarContrasenya(Model model) {
         model.addAttribute("changePasswordForm", new ChangePasswordForm());
         return CANVI_CONTRASENYA_VIEW;
     }
@@ -193,10 +195,8 @@ public class OviUserController {
     public String processCanviarContrasenya(@ModelAttribute("changePasswordForm") ChangePasswordForm form,
                                             BindingResult bindingResult,
                                             HttpSession session,
-                                            Model model) {
-        if (session.getAttribute("user") == null) {
-            return REDIRECT_LOGIN;
-        }
+                                            Model model,
+                                            RedirectAttributes redirectAttributes) {
 
         ChangePasswordValidator validator = new ChangePasswordValidator();
         validator.validate(form, bindingResult);
@@ -205,35 +205,30 @@ public class OviUserController {
             return CANVI_CONTRASENYA_VIEW;
         }
 
-        Credentials credentials = (Credentials) session.getAttribute("user");
-        try {
-            if (!PasswordUtils.check(form.getCurrentPassword(), credentials.getPassword())) {
-                model.addAttribute("errorActual", "La contrasenya actual no és correcta");
-                return CANVI_CONTRASENYA_VIEW;
-            }
-        } catch (Exception e) {
-            if (!credentials.getPassword().equals(form.getCurrentPassword())) {
-                model.addAttribute("errorActual", "La contrasenya actual no és correcta");
-                return CANVI_CONTRASENYA_VIEW;
-            }
+        // Llegim la contrasenya actual de BBDD (no de la sessió, que està sanititzada)
+        Credentials sessionCredentials = (Credentials) session.getAttribute(USER_ATTR);
+        Credentials dbCredentials = credentialsDao.getCredentials(sessionCredentials.getUsername());
+
+        if (!PasswordUtils.check(form.getCurrentPassword(), dbCredentials.getPassword())) {
+            model.addAttribute("errorActual", "La contrasenya actual no és correcta");
+            return CANVI_CONTRASENYA_VIEW;
         }
 
         String newEncryptedPassword = PasswordUtils.encrypt(form.getNewPassword());
-        credentialsDao.updatePassword(credentials.getUsername(), newEncryptedPassword);
-
-        credentials.setPassword(newEncryptedPassword);
-        session.setAttribute("user", credentials);
-
+        credentialsDao.updatePassword(sessionCredentials.getUsername(), newEncryptedPassword);
+        redirectAttributes.addFlashAttribute("successMessage",
+                "La teua contrasenya s'ha canviat correctament");
         return "redirect:portal";
     }
+
+    // =====================================================================
+    // TUTOR
+    // =====================================================================
 
     // Mostra la informació del tutor associat
     @RequestMapping("/tutor")
     public String tutor(HttpSession session, Model model) {
-        if (session.getAttribute("user") == null) {
-            return "redirect:/login";
-        }
-        Credentials credentials = (Credentials) session.getAttribute("user");
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
         OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
 
         if (oviUser.getTutorID() != null) {
@@ -251,25 +246,40 @@ public class OviUserController {
     }
 
     // Processa l'alta d'un nou tutor
+    @Transactional
     @RequestMapping(value = "/tutor/add", method = RequestMethod.POST)
     public String processAddTutor(@ModelAttribute("tutor") Tutor tutor,
                                   BindingResult bindingResult,
-                                  HttpSession session) {
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+
+        TutorValidator validator = new TutorValidator();
+        validator.validate(tutor, bindingResult);
+
         if (bindingResult.hasErrors()) {
             return "oviuser/tutorForm";
         }
+
         tutorDao.addTutor(tutor);
         int tutorID = tutorDao.getLastInsertedId();
-        Credentials credentials = (Credentials) session.getAttribute("user");
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
         oviUserDao.updateTutorID(credentials.getUsername(), tutorID);
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "El tutor s'ha afegit correctament");
         return "redirect:/oviUser/tutor";
     }
 
     // Mostra el formulari per a editar el tutor
     @RequestMapping("/tutor/edit")
     public String editTutor(HttpSession session, Model model) {
-        Credentials credentials = (Credentials) session.getAttribute("user");
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
         OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
+
+        if (oviUser.getTutorID() == null) {
+            return "redirect:/oviUser/tutor";
+        }
+
         model.addAttribute("tutor", tutorDao.getTutor(oviUser.getTutorID()));
         return "oviuser/tutorForm";
     }
@@ -278,31 +288,59 @@ public class OviUserController {
     @RequestMapping(value = "/tutor/edit", method = RequestMethod.POST)
     public String processEditTutor(@ModelAttribute("tutor") Tutor tutor,
                                    BindingResult bindingResult,
-                                   HttpSession session) {
+                                   HttpSession session,
+                                   RedirectAttributes redirectAttributes) {
+
+        TutorValidator validator = new TutorValidator();
+        validator.validate(tutor, bindingResult);
+
         if (bindingResult.hasErrors()) {
             return "oviuser/tutorForm";
         }
-        Credentials credentials = (Credentials) session.getAttribute("user");
+
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
         OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
+
+        if (oviUser.getTutorID() == null) {
+            return "redirect:/oviUser/tutor";
+        }
+
         tutor.setTutorID(oviUser.getTutorID());
         tutorDao.updateTutor(tutor);
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Les dades del tutor s'han actualitzat correctament");
         return "redirect:/oviUser/tutor";
     }
 
     // Elimina el tutor associat a l'usuari
+    @Transactional
     @RequestMapping(value = "/tutor/delete", method = RequestMethod.POST)
-    public String deleteTutor(HttpSession session) {
-        Credentials credentials = (Credentials) session.getAttribute("user");
+    public String deleteTutor(HttpSession session, RedirectAttributes redirectAttributes) {
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
         OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
-        tutorDao.deleteTutor(oviUser.getTutorID());
+
+        if (oviUser.getTutorID() == null) {
+            return "redirect:/oviUser/tutor";
+        }
+
+        Integer tutorID = oviUser.getTutorID();
         oviUserDao.removeTutorID(credentials.getUsername());
+        tutorDao.deleteTutor(tutorID);
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "El tutor s'ha eliminat correctament");
         return "redirect:/oviUser/tutor";
     }
+
+    // =====================================================================
+    // CONTRACTES
+    // =====================================================================
 
     // Mostra els contractes de l'usuari OVI
     @RequestMapping("/contractes")
     public String contractes(HttpSession session, Model model) {
-        Credentials credentials = (Credentials) session.getAttribute("user");
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
         OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
         List<Contract> contractes = contractDao.getContractsByOviUser(oviUser.getOviID());
 

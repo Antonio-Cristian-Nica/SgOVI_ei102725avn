@@ -10,8 +10,10 @@
 
 <div layout:fragment="content">
 
-    <section class="index-section">
-        <h2 class="section-title">Contacte</h2>
+    <h1 class="sr-only">Contacte - Oficina Vida Independent</h1>
+
+    <section class="index-section" aria-labelledby="titol-contacte">
+        <h2 id="titol-contacte" class="section-title">Contacte</h2>
         <p class="section-subtitle">Estem ací per ajudar-te. Posa't en contacte amb nosaltres.</p>
 
         <div class="filosofia-grid">
@@ -45,9 +47,11 @@
                         <span class="pilar-icono" aria-hidden="true">◆</span>
                         <h3>Xarxes socials</h3>
                         <p>
-                            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a>
+                            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"
+                               aria-label="Instagram de l'OVI (s'obri en una pestanya nova)">Instagram</a>
                             ·
-                            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a>
+                            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer"
+                               aria-label="Facebook de l'OVI (s'obri en una pestanya nova)">Facebook</a>
                         </p>
                     </div>
                 </div>
@@ -55,13 +59,13 @@
 
             <!-- COLUMNA DERECHA -->
             <div>
-                <h3 class="contacte-registre-title">Vols formar part de la OVI?</h3>
+                <h2 class="contacte-registre-title">Vols formar part de la OVI?</h2>
                 <p class="contacte-registre-subtitle">Selecciona el perfil que millor s'adapte a tu:</p>
 
                 <div class="portal-grid portal-grid-single">
 
                     <a th:href="@{/oviUser/register}" class="portal-card">
-                        <h3>👤 Soc Usuari/a OVI</h3>
+                        <h3><span aria-hidden="true">👤</span> Soc Usuari/a OVI</h3>
                         <p>
                             Soc una persona amb diversitat funcional i necessito assistència personal.
                             Vull registrar-me per gestionar les meues sol·licituds, inscriure'm
@@ -70,7 +74,7 @@
                     </a>
 
                     <a th:href="@{/papPati/register}" class="portal-card">
-                        <h3>🤝 Soc PAP/PATI</h3>
+                        <h3><span aria-hidden="true">🤝</span> Soc PAP/PATI</h3>
                         <p>
                             Estic interessat/da en treballar com a assistent personal.
                             Vull registrar-me per oferir els meus serveis, gestionar
@@ -79,7 +83,7 @@
                     </a>
 
                     <a th:href="@{/login}" class="portal-card">
-                        <h3>🔑 Ja tinc compte</h3>
+                        <h3><span aria-hidden="true">🔑</span> Ja tinc compte</h3>
                         <p>
                             Ja estic registrat/da i vull accedir al meu portal
                             per gestionar les meues dades i sol·licituds.

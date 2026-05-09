@@ -12,25 +12,27 @@
     <div class="login-wrapper">
         <div class="form-section">
 
-            <h2 class="section-title">Iniciar Sessió</h2>
+            <h1 class="section-title">Iniciar Sessió</h1>
             <p class="section-subtitle">Introdueix les teues credencials per a accedir.</p>
 
-            <div th:if="${loginError}" class="alert alert-error">
+            <div th:if="${loginError}" class="alert alert-error" role="alert">
                 <span th:text="${loginError}"></span>
             </div>
 
-            <form th:action="@{/login}" method="post">
+            <form th:action="@{/login}" method="post" novalidate>
 
                 <div class="form-group">
                     <label for="username">Nom d'usuari</label>
                     <input type="text" id="username" name="username"
-                           placeholder="El teu nom d'usuari" />
+                           placeholder="El teu nom d'usuari"
+                           autocomplete="username" required />
                 </div>
 
                 <div class="form-group">
                     <label for="password">Contrasenya</label>
                     <input type="password" id="password" name="password"
-                           placeholder="La teua contrasenya" />
+                           placeholder="La teua contrasenya"
+                           autocomplete="current-password" required />
                 </div>
 
                 <div class="form-actions">

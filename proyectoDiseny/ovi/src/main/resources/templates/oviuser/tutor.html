@@ -9,60 +9,56 @@
 <body>
 
 <div layout:fragment="content">
+    <div class="form-section">
 
-    <h2 class="section-title">El meu tutor legal</h2>
+        <h1 class="section-title">El meu tutor legal</h1>
 
-    <!-- SI TÉ TUTOR -->
-    <div th:if="${teTutor}">
-        <p class="section-subtitle">Aquestes són les dades del teu tutor legal actual.</p>
+        <!-- SI TÉ TUTOR -->
+        <div th:if="${teTutor}">
+            <p class="section-subtitle">Aquestes són les dades del teu tutor legal actual.</p>
 
-        <table class="data-table">
-            <tr>
-                <th>Nom i Cognoms</th>
-                <td th:text="${tutor.nameAndSurname}"></td>
-            </tr>
-            <tr>
-                <th>Correu Electrònic</th>
-                <td th:text="${tutor.emailAddress}"></td>
-            </tr>
-            <tr>
-                <th>Telèfon</th>
-                <td th:text="${tutor.phoneNumber}"></td>
-            </tr>
-            <tr>
-                <th>Data de Naixement</th>
-                <td th:text="${tutor.birthDate}"></td>
-            </tr>
-            <tr>
-                <th>Adreça</th>
-                <td th:text="${tutor.homeAddress}"></td>
-            </tr>
-            <tr>
-                <th>Relació amb l'usuari</th>
-                <td th:text="${tutor.relationshipWithUser}"></td>
-            </tr>
-        </table>
+            <dl class="tutor-info">
+                <dt>Nom i Cognoms</dt>
+                <dd th:text="${tutor.nameAndSurname}"></dd>
 
-        <div class="form-actions">
-            <a th:href="@{/oviUser/portal}" class="btn btn-secondary">Tornar al portal</a>
-            <form th:action="@{/oviUser/tutor/delete}" method="post">
-                <button type="submit" class="btn btn-rebutjar">Eliminar tutor</button>
-            </form>
-            <a th:href="@{/oviUser/tutor/edit}" class="btn btn-primary">Editar tutor</a>
+                <dt>Correu Electrònic</dt>
+                <dd th:text="${tutor.emailAddress}"></dd>
+
+                <dt>Telèfon</dt>
+                <dd th:text="${tutor.phoneNumber}"></dd>
+
+                <dt>Data de Naixement</dt>
+                <dd th:text="${#temporals.format(tutor.birthDate, 'dd/MM/yyyy')}"></dd>
+
+                <dt>Adreça</dt>
+                <dd th:text="${tutor.homeAddress}"></dd>
+
+                <dt>Relació amb l'usuari</dt>
+                <dd th:text="${tutor.relationshipWithUser}"></dd>
+            </dl>
+
+            <div class="form-actions">
+                <a th:href="@{/oviUser/portal}" class="btn btn-secondary">Tornar al portal</a>
+                <form th:action="@{/oviUser/tutor/delete}" method="post"
+                      onsubmit="return confirm('Estàs segur/a que vols eliminar el tutor legal? Aquesta acció no es pot desfer.');">
+                    <button type="submit" class="btn btn-rebutjar">Eliminar tutor</button>
+                </form>
+                <a th:href="@{/oviUser/tutor/edit}" class="btn btn-primary">Editar tutor</a>
+            </div>
         </div>
+
+        <!-- SI NO TÉ TUTOR -->
+        <div th:if="${!teTutor}">
+            <div class="alert alert-info">
+                No tens cap tutor legal assignat. Si necessites afegir-ne un, pots fer-ho a continuació.
+            </div>
+            <div class="form-actions">
+                <a th:href="@{/oviUser/portal}" class="btn btn-secondary">Tornar al portal</a>
+                <a th:href="@{/oviUser/tutor/add}" class="btn btn-primary">Afegir tutor legal</a>
+            </div>
+        </div>
+
     </div>
-
-    <!-- SI NO TÉ TUTOR -->
-    <div th:if="${!teTutor}">
-        <div class="alert alert-info">
-            No tens cap tutor legal assignat. Si necessites afegir-ne un, pots fer-ho a continuació.
-        </div>
-        <div class="form-actions">
-            <a th:href="@{/oviUser/portal}" class="btn btn-secondary">Tornar al portal</a>
-            <a th:href="@{/oviUser/tutor/add}" class="btn btn-primary">Afegir tutor legal</a>
-        </div>
-    </div>
-
 </div>
 
 </body>

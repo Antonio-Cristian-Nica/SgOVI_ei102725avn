@@ -10,7 +10,11 @@
 
 <div layout:fragment="content">
 
-    <h2 class="section-title">Usuaris OVI pendents de validació</h2>
+    <h1 class="section-title">Usuaris OVI pendents de validació</h1>
+    <p class="section-subtitle">
+        Revisa les sol·licituds de registre. En activar un compte, l'usuari podrà accedir
+        al portal. En rebutjar-la, l'usuari veurà el motiu en intentar iniciar sessió.
+    </p>
 
     <div th:if="${oviusers.isEmpty()}" class="alert alert-info">
         No hi ha usuaris pendents de validació en aquest moment.
@@ -34,20 +38,27 @@
                 <td th:text="${oviuser.nameAndSurname}"></td>
                 <td th:text="${oviuser.emailAddress}"></td>
                 <td th:text="${oviuser.phoneNumber}"></td>
-                <td th:text="${oviuser.birthDate}"></td>
-                <td th:text="${oviuser.functionalDiversity}"></td>
+                <td th:text="${#temporals.format(oviuser.birthDate, 'dd/MM/yyyy')}"></td>
+                <td th:text="${oviuser.functionalDiversity != null ? oviuser.functionalDiversity : '—'}"></td>
                 <td th:text="${oviuser.username}"></td>
                 <td class="table-actions">
                     <form th:action="@{/admin/validarOviUsers/{username}/activar(username=${oviuser.username})}"
-                          method="post">
+                          method="post"
+                          onsubmit="return confirm('Vols activar aquest compte?');">
                         <button type="submit" class="btn btn-primary">Activar</button>
                     </form>
                     <form th:action="@{/admin/validarOviUsers/{username}/rebutjar(username=${oviuser.username})}"
-                          method="post" class="rebutjar-form">
-                            <textarea name="rejectionReason"
-                                      class="rebutjar-textarea"
-                                      placeholder="Motiu del rebuig..."
-                                      required></textarea>
+                          method="post"
+                          class="rebutjar-form"
+                          onsubmit="return confirm('Vols rebutjar aquest compte? Aquesta acció no es pot desfer fàcilment.');">
+                        <label th:for="'rejectionReason-' + ${oviuser.username}" class="sr-only">
+                            Motiu del rebuig per a <span th:text="${oviuser.username}"></span>
+                        </label>
+                        <textarea th:id="'rejectionReason-' + ${oviuser.username}"
+                                  name="rejectionReason"
+                                  class="rebutjar-textarea"
+                                  placeholder="Motiu del rebuig..."
+                                  required></textarea>
                         <button type="submit" class="btn btn-rebutjar">Rebutjar</button>
                     </form>
                 </td>

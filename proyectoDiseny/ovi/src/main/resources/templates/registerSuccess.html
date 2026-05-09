@@ -12,16 +12,21 @@
     <div class="login-wrapper">
         <div class="form-section">
 
-            <h2 class="section-title">Registre completat correctament</h2>
+            <h1 class="section-title">Registre completat correctament</h1>
 
             <div class="alert alert-success">
-                <span>La teua sol·licitud ha sigut rebuda i es troba actualment pendent d'aprovació.</span>
+                La teua sol·licitud ha sigut rebuda i es troba actualment pendent d'aprovació.
             </div>
 
             <p class="section-subtitle">
-                El tècnic OVI revisarà la teua sol·licitud i activarà el teu compte quan siga validada.
-                Una vegada activat, podràs accedir a totes les funcionalitats de l'aplicació.
+                Què passarà a continuació?
             </p>
+
+            <ol class="register-success-steps">
+                <li>El tècnic OVI revisarà la teua sol·licitud.</li>
+                <li>Quan el teu compte estiga validat, rebràs accés complet a l'aplicació.</li>
+                <li>Mentrestant, pots iniciar sessió per consultar l'estat del teu compte.</li>
+            </ol>
 
             <div class="form-actions">
                 <a th:href="@{/login}" class="btn btn-secondary">Iniciar sessió</a>

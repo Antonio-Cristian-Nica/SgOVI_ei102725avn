@@ -10,9 +10,11 @@
 
 <div layout:fragment="content">
 
+    <h1 class="sr-only">Què és una OVI - Oficina Vida Independent</h1>
+
     <!-- QUÈ ÉS UNA OVI -->
-    <section class="index-section">
-        <h2 class="section-title">Què és una OVI?</h2>
+    <section class="index-section" aria-labelledby="titol-que-es">
+        <h2 id="titol-que-es" class="section-title">Què és una OVI?</h2>
         <p class="section-subtitle">Oficina de Vida Independent Sole Arnau Ripollés</p>
 
         <div class="filosofia-grid">
@@ -60,8 +62,8 @@
     </section>
 
     <!-- PROJECTES -->
-    <section class="index-section">
-        <h2 class="section-title">Projectes en els que participa OVI Castelló</h2>
+    <section class="index-section" aria-labelledby="titol-projectes">
+        <h2 id="titol-projectes" class="section-title">Projectes en els que participa OVI Castelló</h2>
         <p class="section-subtitle">Col·laboracions amb universitats i entitats del territori</p>
 
         <div class="noticias-grid">
@@ -70,16 +72,13 @@
                     <a href="https://ovicastello.org/wp-content/uploads/2023/07/EX230115.pdf"
                        target="_blank" rel="noopener noreferrer">
                         Formació per a l'Ocupació i la Vida Independent
+                        <span aria-hidden="true">(PDF)</span>
                     </a>
                 </h3>
                 <p class="noticia-resumen">
                     Unidiversitat, un programa de la Universitat Jaume I i Fundació Universitat–Empresa
                     per a joves amb diversitat intel·lectual.
                 </p>
-                <a href="https://ovicastello.org/wp-content/uploads/2023/07/EX230115.pdf"
-                   target="_blank" rel="noopener noreferrer" class="noticia-leer">
-                    Més informació →
-                </a>
             </article>
 
             <article class="noticia-card">
@@ -87,23 +86,20 @@
                     <a href="https://ovicastello.org/wp-content/uploads/2023/07/postgrado-accesibilidad.pdf"
                        target="_blank" rel="noopener noreferrer">
                         Post Grau, Accessibilitat Especialista en Disseny Universal
+                        <span aria-hidden="true">(PDF)</span>
                     </a>
                 </h3>
                 <p class="noticia-resumen">
                     Programa de la Universitat Internacional de Catalunya orientat a professionals
                     de l'accessibilitat i el disseny universal.
                 </p>
-                <a href="https://ovicastello.org/wp-content/uploads/2023/07/postgrado-accesibilidad.pdf"
-                   target="_blank" rel="noopener noreferrer" class="noticia-leer">
-                    Més informació →
-                </a>
             </article>
         </div>
     </section>
 
     <!-- XARXA D'OVIS -->
-    <section class="index-section">
-        <h2 class="section-title">Xarxa d'OVIs i organitzacions</h2>
+    <section class="index-section" aria-labelledby="titol-xarxa">
+        <h2 id="titol-xarxa" class="section-title">Xarxa d'OVIs i organitzacions</h2>
         <p class="section-subtitle">Entitats amb les que col·laborem i compartim valors</p>
 
         <div class="noticias-grid">
@@ -117,9 +113,6 @@
                 <p class="noticia-resumen">
                     Comunitat de reflexió filosòfica i de lluita pels drets de les persones amb diversitat funcional.
                 </p>
-                <a href="http://forovidaindependiente.org/" target="_blank" rel="noopener noreferrer" class="noticia-leer">
-                    Visitar →
-                </a>
             </article>
 
             <article class="noticia-card">
@@ -131,9 +124,6 @@
                 <p class="noticia-resumen">
                     Xarxa d'organitzacions amb l'objectiu de promoure polítiques i recursos per accedir a una vida independent.
                 </p>
-                <a href="https://federacionvi.org/" target="_blank" rel="noopener noreferrer" class="noticia-leer">
-                    Visitar →
-                </a>
             </article>
 
             <article class="noticia-card">
@@ -145,9 +135,6 @@
                 <p class="noticia-resumen">
                     ONG independent orientada a donar assistència legal per fer efectius els drets de les persones amb diversitat funcional.
                 </p>
-                <a href="https://asociacionsolcom.org" target="_blank" rel="noopener noreferrer" class="noticia-leer">
-                    Visitar →
-                </a>
             </article>
 
             <article class="noticia-card">
@@ -159,9 +146,6 @@
                 <p class="noticia-resumen">
                     Oficina de Vida Independent de la ciutat de Barcelona, constituïda l'any 2006 per la defensa de l'Assistència Personal.
                 </p>
-                <a href="https://ovibcn.org/quieres-conocer-la-ovi/" target="_blank" rel="noopener noreferrer" class="noticia-leer">
-                    Visitar →
-                </a>
             </article>
 
             <article class="noticia-card">
@@ -173,9 +157,6 @@
                 <p class="noticia-resumen">
                     Primera OVI a obrir les seues portes (juny 2006) i la més gran de les seves característiques a la Comunitat de Madrid.
                 </p>
-                <a href="https://www.aspaymmadrid.org/oficina-de-vida-independiente-ovi/" target="_blank" rel="noopener noreferrer" class="noticia-leer">
-                    Visitar →
-                </a>
             </article>
 
             <article class="noticia-card">
@@ -187,19 +168,16 @@
                 <p class="noticia-resumen">
                     Nascuda el 2011 amb intenció de convertir-se en la primera Oficina de Vida Independent d'Andalusia.
                 </p>
-                <a href="https://viandalucia.org/" target="_blank" rel="noopener noreferrer" class="noticia-leer">
-                    Visitar →
-                </a>
             </article>
 
         </div>
     </section>
 
     <!-- CTA CONTACTE -->
-    <section class="cta-registro">
+    <section class="cta-registro" aria-labelledby="titol-cta-contacte">
         <div class="cta-registro-inner">
             <div class="cta-texto">
-                <h2>Vols contactar amb nosaltres?</h2>
+                <h2 id="titol-cta-contacte">Vols contactar amb nosaltres?</h2>
                 <p>
                     Si tens qualsevol dubte sobre els nostres serveis o vols formar part de la OVI,
                     no dubtis en posar-te en contacte amb nosaltres.

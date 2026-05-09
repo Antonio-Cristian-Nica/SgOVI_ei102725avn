@@ -4,6 +4,7 @@ import es.uji.ei1027.ovi.model.Tutor;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class TutorRowMapper implements RowMapper<Tutor> {
     @Override
@@ -12,7 +13,7 @@ public class TutorRowMapper implements RowMapper<Tutor> {
         tutor.setTutorID(rs.getInt("tutorID"));
         tutor.setNameAndSurname(rs.getString("nameAndSurname"));
         tutor.setPhoneNumber(rs.getString("phoneNumber"));
-        tutor.setBirthDate(rs.getDate("birthDate").toLocalDate());
+        tutor.setBirthDate(rs.getObject("birthDate", LocalDate.class));
         tutor.setHomeAddress(rs.getString("homeAddress"));
         tutor.setEmailAddress(rs.getString("emailAddress"));
         tutor.setRelationshipWithUser(rs.getString("relationshipWithUser"));

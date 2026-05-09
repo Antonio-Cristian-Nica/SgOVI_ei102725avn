@@ -11,58 +11,66 @@
 <div layout:fragment="content">
     <div class="form-section">
 
-        <h2 class="section-title">Les meues dades</h2>
-        <p class="section-subtitle">Modifica les teues dades personals i de contacte.</p>
+        <h1 class="section-title">Les meues dades</h1>
+        <p class="section-subtitle">
+            Modifica les teues dades personals i de contacte. Els camps marcats amb
+            <span aria-hidden="true">*</span><span class="sr-only">asterisc</span>
+            són obligatoris.
+        </p>
 
-        <form th:action="@{/oviUser/edit}" th:object="${oviuser}" method="post">
+        <form th:action="@{/oviUser/edit}" th:object="${oviuser}" method="post" novalidate>
 
             <input type="hidden" th:field="*{oviID}" />
             <input type="hidden" th:field="*{status}" />
             <input type="hidden" th:field="*{username}" />
             <input type="hidden" th:field="*{tutorID}" />
 
-            <!-- SECCIÓ 1: DADES PERSONALS -->
-            <h3 class="form-section-title">Dades personals</h3>
+            <h2 class="form-section-title">Dades personals</h2>
 
             <div class="form-group">
-                <label for="nameAndSurname">Nom i Cognoms</label>
+                <label for="nameAndSurname">Nom i Cognoms <span aria-hidden="true">*</span></label>
                 <input type="text" id="nameAndSurname" th:field="*{nameAndSurname}"
                        th:class="${#fields.hasErrors('nameAndSurname')} ? 'input-error' : ''"
-                       placeholder="Ex: Joan García i Pons" />
+                       placeholder="Ex: Joan García i Pons"
+                       autocomplete="name" required />
                 <span class="error-text" th:if="${#fields.hasErrors('nameAndSurname')}" th:errors="*{nameAndSurname}"></span>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="emailAddress">Correu Electrònic</label>
+                    <label for="emailAddress">Correu Electrònic <span aria-hidden="true">*</span></label>
                     <input type="email" id="emailAddress" th:field="*{emailAddress}"
                            th:class="${#fields.hasErrors('emailAddress')} ? 'input-error' : ''"
-                           placeholder="usuari@exemple.com" />
+                           placeholder="usuari@exemple.com"
+                           autocomplete="email" required />
                     <span class="error-text" th:if="${#fields.hasErrors('emailAddress')}" th:errors="*{emailAddress}"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="phoneNumber">Telèfon de contacte</label>
-                    <input type="text" id="phoneNumber" th:field="*{phoneNumber}"
+                    <label for="phoneNumber">Telèfon de contacte <span aria-hidden="true">*</span></label>
+                    <input type="tel" id="phoneNumber" th:field="*{phoneNumber}"
                            th:class="${#fields.hasErrors('phoneNumber')} ? 'input-error' : ''"
-                           placeholder="Ex: 600123456" />
+                           placeholder="Ex: 600123456"
+                           autocomplete="tel" required />
                     <span class="error-text" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="birthDate">Data de Naixement</label>
+                    <label for="birthDate">Data de Naixement <span aria-hidden="true">*</span></label>
                     <input type="date" id="birthDate" th:field="*{birthDate}"
-                           th:class="${#fields.hasErrors('birthDate')} ? 'input-error' : ''" />
+                           th:class="${#fields.hasErrors('birthDate')} ? 'input-error' : ''"
+                           autocomplete="bday" required />
                     <span class="error-text" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="homeAddress">Adreça Habitual</label>
+                    <label for="homeAddress">Adreça Habitual <span aria-hidden="true">*</span></label>
                     <input type="text" id="homeAddress" th:field="*{homeAddress}"
                            th:class="${#fields.hasErrors('homeAddress')} ? 'input-error' : ''"
-                           placeholder="Carrer, Número, Pis, Ciutat, Codi Postal" />
+                           placeholder="Carrer, Número, Pis, Ciutat, Codi Postal"
+                           autocomplete="street-address" required />
                     <span class="error-text" th:if="${#fields.hasErrors('homeAddress')}" th:errors="*{homeAddress}"></span>
                 </div>
             </div>
@@ -77,13 +85,17 @@
 
             <hr class="section-divider">
 
-            <!-- SECCIÓ 2: LOPD -->
-            <h3 class="form-section-title">Protecció de dades</h3>
+            <h2 class="form-section-title">Protecció de dades</h2>
 
             <div class="form-group">
-                <label class="checkbox-container" th:classappend="${#fields.hasErrors('LOPDAcceptance')} ? 'input-error' : ''">
+                <label class="checkbox-container" for="LOPDAcceptance"
+                       th:classappend="${#fields.hasErrors('LOPDAcceptance')} ? 'input-error' : ''">
                     <input type="checkbox" id="LOPDAcceptance" th:field="*{LOPDAcceptance}" />
-                    <span>He llegit i accepte la <strong>Política de Protecció de Dades (LOPD)</strong></span>
+                    <span>
+                        He llegit i accepte la
+                        <strong>Política de Protecció de Dades (LOPD)</strong>
+                        <span aria-hidden="true">*</span>
+                    </span>
                 </label>
                 <span class="error-text" th:if="${#fields.hasErrors('LOPDAcceptance')}" th:errors="*{LOPDAcceptance}"></span>
             </div>
