@@ -5,6 +5,7 @@ import es.uji.ei1027.ovi.dao.contract.ContractDao;
 import es.uji.ei1027.ovi.dao.negotiation.NegotiationDao;
 import es.uji.ei1027.ovi.dao.oviuser.OviUserDao;
 import es.uji.ei1027.ovi.dao.pappati.PapPatiDao;
+import es.uji.ei1027.ovi.dao.requestschedule.RequestScheduleDao;
 import es.uji.ei1027.ovi.model.*;
 import es.uji.ei1027.ovi.validator.ContractValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class AdminContractController {
     private AssistanceRequestDao assistanceRequestDao;
     private OviUserDao oviUserDao;
     private PapPatiDao papPatiDao;
+    private RequestScheduleDao requestScheduleDao;
 
     @Autowired
     public void setContractDao(ContractDao contractDao) {
@@ -56,6 +58,9 @@ public class AdminContractController {
     public void setPapPatiDao(PapPatiDao papPatiDao) {
         this.papPatiDao = papPatiDao;
     }
+
+    @Autowired
+    public void setRequestScheduleDao(RequestScheduleDao requestScheduleDao) {this.requestScheduleDao = requestScheduleDao;}
 
     // =====================================================================
     // LLISTAT GENERAL DE CONTRACTES
@@ -90,7 +95,7 @@ public class AdminContractController {
     // LLISTATS FILTRATS PER USUARI
     // =====================================================================
 
-    /**
+    /*
      * Llistat de contractes d'un OviUser concret. Accés des del detall de l'usuari.
      */
     @RequestMapping("/oviUser/{oviID}")
@@ -123,7 +128,7 @@ public class AdminContractController {
         return "admin/contractes/listByUser";
     }
 
-    /**
+    /*
      * Llistat de contractes d'un PAP/PATI concret. Accés des del detall del PAP/PATI.
      */
     @RequestMapping("/papPati/{papID}")
@@ -188,7 +193,9 @@ public class AdminContractController {
         AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
         OviUser oviUser = oviUserDao.getOviUser(sol.getOviID());
         PapPati papPati = papPatiDao.getPapPati(neg.getPapID());
+        List<RequestSchedule> horaris = requestScheduleDao.getRequestSchedulesByRequest(neg.getRequestID());
 
+        model.addAttribute("horaris", horaris);
         model.addAttribute("neg", neg);
         model.addAttribute("sol", sol);
         model.addAttribute("oviUser", oviUser);
@@ -223,10 +230,12 @@ public class AdminContractController {
 
         if (bindingResult.hasErrors()) {
             AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
+            List<RequestSchedule> horaris = requestScheduleDao.getRequestSchedulesByRequest(neg.getRequestID());
             model.addAttribute("neg", neg);
             model.addAttribute("sol", sol);
             model.addAttribute("oviUser", oviUserDao.getOviUser(sol.getOviID()));
             model.addAttribute("papPati", papPatiDao.getPapPati(neg.getPapID()));
+            model.addAttribute("horaris", horaris);
             return "admin/contractes/add";
         }
 
@@ -262,12 +271,14 @@ public class AdminContractController {
         AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
         OviUser oviUser = oviUserDao.getOviUser(sol.getOviID());
         PapPati papPati = papPatiDao.getPapPati(neg.getPapID());
+        List<RequestSchedule> horaris = requestScheduleDao.getRequestSchedulesByRequest(neg.getRequestID());
 
         model.addAttribute("contract", contract);
         model.addAttribute("neg", neg);
         model.addAttribute("sol", sol);
         model.addAttribute("oviUser", oviUser);
         model.addAttribute("papPati", papPati);
+        model.addAttribute("horaris", horaris);
         return "admin/contractes/detail";
     }
 
@@ -275,7 +286,7 @@ public class AdminContractController {
     // FINALITZAR CONTRACTE
     // =====================================================================
 
-    /**
+    /*
      * Marca un contracte com 'ended' i la sol·licitud associada com 'closedContractEnded'.
      */
     @Transactional
@@ -311,7 +322,7 @@ public class AdminContractController {
     // CANCEL·LAR CONTRACTE
     // =====================================================================
 
-    /**
+    /*
      * Marca un contracte com 'cancelled'. Útil quan l'acord no s'arriba a executar.
      */
     @Transactional

@@ -11,70 +11,139 @@
 <div layout:fragment="content">
     <div class="form-section">
 
-        <h2 class="section-title">Generar contracte</h2>
-        <p class="section-subtitle">Omple les dades del contracte d'assistència personal.</p>
+        <h1 class="section-title">Generar contracte</h1>
+        <p class="section-subtitle">
+            Omple les dades del contracte d'assistència personal. Els camps marcats amb
+            <span aria-hidden="true">*</span><span class="sr-only">asterisc</span>
+            són obligatoris.
+        </p>
 
         <div class="filosofia-grid">
             <div>
-                <h3 class="form-section-title">Usuari OVI</h3>
-                <table class="data-table">
-                    <tr>
-                        <th>Nom</th>
-                        <td th:text="${oviUser.nameAndSurname}"></td>
-                    </tr>
-                    <tr>
-                        <th>Correu</th>
-                        <td th:text="${oviUser.emailAddress}"></td>
-                    </tr>
-                </table>
+                <h2 class="form-section-title">Usuari OVI</h2>
+                <dl class="tutor-info">
+                    <dt>Nom</dt>
+                    <dd th:text="${oviUser.nameAndSurname}"></dd>
+
+                    <dt>Correu</dt>
+                    <dd th:text="${oviUser.emailAddress}"></dd>
+                </dl>
             </div>
             <div>
-                <h3 class="form-section-title">PAP/PATI</h3>
-                <table class="data-table">
-                    <tr>
-                        <th>Nom</th>
-                        <td th:text="${papPati.nameAndSurname}"></td>
-                    </tr>
-                    <tr>
-                        <th>Especialització</th>
-                        <td th:text="${papPati.specializationAreas}"></td>
-                    </tr>
-                </table>
+                <h2 class="form-section-title">PAP/PATI</h2>
+                <dl class="tutor-info">
+                    <dt>Nom</dt>
+                    <dd th:text="${papPati.nameAndSurname}"></dd>
+
+                    <dt>Especialització</dt>
+                    <dd th:text="${papPati.specializationAreas}"></dd>
+                </dl>
             </div>
         </div>
 
-        <h3 class="form-section-title">Conversa de la negociació</h3>
-        <div class="negociacio-conversa">
-            <pre th:text="${neg.conversation}" class="negociacio-text"></pre>
+        <h2 class="form-section-title">Sol·licitud</h2>
+        <dl class="tutor-info">
+            <dt>Localització</dt>
+            <dd th:text="${sol.serviceLocation}"></dd>
+
+            <dt>Assistència requerida</dt>
+            <dd style="white-space: pre-wrap;" th:text="${sol.requiredAssistance}"></dd>
+        </dl>
+
+        <h2 class="form-section-title">Horaris sol·licitats</h2>
+        <div th:if="${horaris == null or horaris.isEmpty()}" class="alert alert-info">
+            No hi ha horaris registrats per a aquesta sol·licitud.
+        </div>
+        <table th:if="${horaris != null and !horaris.isEmpty()}" class="data-table">
+            <thead>
+            <tr>
+                <th>Data</th>
+                <th>Dia</th>
+                <th>Inici</th>
+                <th>Fi</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="horari : ${horaris}">
+                <td th:text="${#temporals.format(horari.date, 'dd/MM/yyyy')}"></td>
+                <td th:switch="${horari.dayOfWeek}">
+                    <span th:case="1">Dilluns</span>
+                    <span th:case="2">Dimarts</span>
+                    <span th:case="3">Dimecres</span>
+                    <span th:case="4">Dijous</span>
+                    <span th:case="5">Divendres</span>
+                    <span th:case="6">Dissabte</span>
+                    <span th:case="7">Diumenge</span>
+                </td>
+                <td th:text="${#temporals.format(horari.startHour, 'HH:mm')}"></td>
+                <td th:text="${#temporals.format(horari.endHour, 'HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2 class="form-section-title">Conversa de la negociació</h2>
+
+        <div th:if="${neg.conversation == null or #strings.isEmpty(neg.conversation)}"
+             class="chat-empty">
+            Aquesta negociació no té missatges registrats.
         </div>
 
-        <h3 class="form-section-title">Dades del contracte</h3>
+        <ol th:if="${neg.conversation != null and !#strings.isEmpty(neg.conversation)}"
+            class="chat-messages"
+            aria-label="Missatges de la negociació">
+
+            <li th:each="linia : ${neg.conversation.split('\n')}"
+                th:with="
+                    esOvi=${#strings.contains(linia, '- OVI User]')},
+                    tancamentClau=${#strings.indexOf(linia, ']')},
+                    emissor=${tancamentClau >= 0 ? #strings.substring(linia, 1, tancamentClau) : 'Desconegut'},
+                    contingut=${tancamentClau >= 0 ? #strings.substring(linia, tancamentClau + 2) : linia}
+                "
+                th:class="${esOvi} ? 'chat-message chat-message-other' : 'chat-message chat-message-other-pap'">
+
+                <article>
+                    <header class="chat-meta">
+                        <span class="chat-author" th:text="${emissor}"></span>
+                    </header>
+                    <p class="chat-content" th:text="${contingut}"></p>
+                </article>
+            </li>
+        </ol>
+
+        <h2 class="form-section-title">Dades del contracte</h2>
 
         <form th:action="@{/admin/contractes/add/{id}(id=${neg.negotiationID})}"
-              th:object="${contract}" method="post">
+              th:object="${contract}" method="post" novalidate
+              onsubmit="return confirm('Confirmes la creació d\'aquest contracte? La sol·licitud associada quedarà marcada com a tancada amb contracte.');">
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="startServiceDate">Data d'inici del servei</label>
+                    <label for="startServiceDate">Data d'inici del servei <span aria-hidden="true">*</span></label>
                     <input type="date" id="startServiceDate" th:field="*{startServiceDate}"
-                           th:class="${errorStart != null} ? 'input-error' : ''" />
-                    <span class="error-text" th:if="${errorStart}" th:text="${errorStart}"></span>
+                           th:class="${#fields.hasErrors('startServiceDate')} ? 'input-error' : ''"
+                           required />
+                    <span class="error-text" th:if="${#fields.hasErrors('startServiceDate')}"
+                          th:errors="*{startServiceDate}"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="endServiceDate">Data de fi del servei</label>
+                    <label for="endServiceDate">Data de fi del servei <span aria-hidden="true">*</span></label>
                     <input type="date" id="endServiceDate" th:field="*{endServiceDate}"
-                           th:class="${errorEnd != null} ? 'input-error' : ''" />
-                    <span class="error-text" th:if="${errorEnd}" th:text="${errorEnd}"></span>
+                           th:class="${#fields.hasErrors('endServiceDate')} ? 'input-error' : ''"
+                           required />
+                    <span class="error-text" th:if="${#fields.hasErrors('endServiceDate')}"
+                          th:errors="*{endServiceDate}"></span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="documentURL">URL del document PDF</label>
-                <input type="text" id="documentURL" th:field="*{documentURL}"
-                       th:class="${errorURL != null} ? 'input-error' : ''"
-                       placeholder="https://..." />
-                <span class="error-text" th:if="${errorURL}" th:text="${errorURL}"></span>
+                <label for="documentURL">URL del document PDF <span aria-hidden="true">*</span></label>
+                <input type="url" id="documentURL" th:field="*{documentURL}"
+                       th:class="${#fields.hasErrors('documentURL')} ? 'input-error' : ''"
+                       placeholder="https://..."
+                       required />
+                <span class="error-text" th:if="${#fields.hasErrors('documentURL')}"
+                      th:errors="*{documentURL}"></span>
             </div>
 
             <div class="form-actions">

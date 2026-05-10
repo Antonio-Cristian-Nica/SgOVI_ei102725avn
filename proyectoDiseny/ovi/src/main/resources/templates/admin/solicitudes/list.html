@@ -10,7 +10,7 @@
 
 <div layout:fragment="content">
 
-    <h2 class="section-title">Gestió de sol·licituds d'assistència</h2>
+    <h1 class="section-title">Gestió de sol·licituds d'assistència</h1>
     <p class="section-subtitle">Llistat de totes les sol·licituds registrades al sistema.</p>
 
     <div th:if="${solicitudes.isEmpty()}" class="alert alert-info">
@@ -33,7 +33,7 @@
             <tr th:each="sol : ${solicitudes}">
                 <td th:text="${sol.requestID}"></td>
                 <td th:text="${sol.serviceLocation}"></td>
-                <td th:text="${sol.requiredAssistance}"></td>
+                <td th:text="${#strings.abbreviate(sol.requiredAssistance, 80)}"></td>
                 <td th:text="${#temporals.format(sol.creationDate, 'dd/MM/yyyy')}"></td>
                 <td>
                     <span th:if="${sol.status == 'inProgress'}" class="estat-pending">En revisió</span>
@@ -44,7 +44,7 @@
                 </td>
                 <td>
                     <a th:href="@{/admin/solicitudes/{id}(id=${sol.requestID})}"
-                       class="btn btn-secondary">Gestionar</a>
+                       class="btn btn-secondary btn-small">Gestionar</a>
                 </td>
             </tr>
             </tbody>

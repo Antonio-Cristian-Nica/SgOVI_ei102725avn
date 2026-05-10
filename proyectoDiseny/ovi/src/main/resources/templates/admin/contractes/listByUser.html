@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Contractes per usuari</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <h1 class="section-title" th:text="${titol}"></h1>
+    <p class="section-subtitle">Llistat de contractes associats a aquest usuari.</p>
+
+    <div th:if="${contractes.isEmpty()}" class="alert alert-info">
+        No hi ha contractes associats a aquest usuari encara.
+    </div>
+
+    <div th:if="${!contractes.isEmpty()}">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <!-- Si el llistat és per OviUser, mostrem el PAP/PATI -->
+                <th th:if="${papPatis != null}">PAP/PATI</th>
+                <!-- Si el llistat és per PAP/PATI, mostrem l'OviUser -->
+                <th th:if="${oviUsers != null}">Usuari OVI</th>
+                <th>Data inici servei</th>
+                <th>Data fi servei</th>
+                <th>Estat</th>
+                <th>Accions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="contracte : ${contractes}">
+                <td th:text="'#' + ${contracte.contractID}"></td>
+
+                <td th:if="${papPatis != null}"
+                    th:text="${papPatis[contracte.contractID].nameAndSurname}"></td>
+
+                <td th:if="${oviUsers != null}"
+                    th:text="${oviUsers[contracte.contractID].nameAndSurname}"></td>
+
+                <td th:text="${#temporals.format(contracte.startServiceDate, 'dd/MM/yyyy')}"></td>
+                <td th:text="${#temporals.format(contracte.endServiceDate, 'dd/MM/yyyy')}"></td>
+                <td>
+                    <span th:if="${contracte.status == 'active'}" class="estat-actiu">Actiu</span>
+                    <span th:if="${contracte.status == 'ended'}" class="estat-inactiu">Finalitzat</span>
+                    <span th:if="${contracte.status == 'cancelled'}" class="estat-inactiu">Cancel·lat</span>
+                </td>
+                <td>
+                    <a th:href="@{/admin/contractes/{id}(id=${contracte.contractID})}"
+                       class="btn btn-secondary btn-small">Veure</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-actions">
+        <a th:href="@{${backUrl}}" class="btn btn-secondary">Tornar</a>
+        <a th:href="@{/admin/contractes}" class="btn btn-secondary">Veure tots els contractes</a>
+    </div>
+
+</div>
+
+</body>
+</html>

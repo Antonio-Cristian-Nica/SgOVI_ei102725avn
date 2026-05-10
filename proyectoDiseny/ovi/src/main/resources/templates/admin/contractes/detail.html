@@ -10,102 +10,167 @@
 
 <div layout:fragment="content">
 
-    <h2 class="section-title">Detall del contracte</h2>
+    <h1 class="section-title" th:text="'Contracte #' + ${contract.contractID}"></h1>
+    <p class="section-subtitle">
+        Estat actual:
+        <span th:if="${contract.status == 'active'}" class="estat-actiu">Actiu</span>
+        <span th:if="${contract.status == 'ended'}" class="estat-inactiu">Finalitzat</span>
+        <span th:if="${contract.status == 'cancelled'}" class="estat-inactiu">Cancel·lat</span>
+    </p>
 
     <div class="filosofia-grid">
 
         <div>
-            <h3 class="form-section-title">Dades del contracte</h3>
-            <table class="data-table">
-                <tr>
-                    <th>Versió</th>
-                    <td th:text="${contract.version}"></td>
-                </tr>
-                <tr>
-                    <th>Data creació</th>
-                    <td th:text="${contract.creationDate}"></td>
-                </tr>
-                <tr>
-                    <th>Data inici servei</th>
-                    <td th:text="${contract.startServiceDate}"></td>
-                </tr>
-                <tr>
-                    <th>Data fi servei</th>
-                    <td th:text="${contract.endServiceDate}"></td>
-                </tr>
-                <tr>
-                    <th>Estat</th>
-                    <td>
-                        <span th:if="${contract.status == 'active'}" class="estat-actiu">Actiu</span>
-                        <span th:if="${contract.status == 'ended'}" class="estat-inactiu">Finalitzat</span>
-                        <span th:if="${contract.status == 'cancelled'}" class="estat-inactiu">Cancel·lat</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Document PDF</th>
-                    <td>
-                        <a th:href="${contract.documentURL}" target="_blank"
-                           class="btn btn-secondary btn-small">Veure document</a>
-                    </td>
-                </tr>
-            </table>
+            <h2 class="form-section-title">Dades del contracte</h2>
+            <dl class="tutor-info">
+                <dt>Versió</dt>
+                <dd th:text="${contract.version}"></dd>
 
-            <h3 class="form-section-title">Usuari OVI</h3>
-            <table class="data-table">
-                <tr>
-                    <th>Nom</th>
-                    <td th:text="${oviUser.nameAndSurname}"></td>
-                </tr>
-                <tr>
-                    <th>Correu</th>
-                    <td th:text="${oviUser.emailAddress}"></td>
-                </tr>
-                <tr>
-                    <th>Telèfon</th>
-                    <td th:text="${oviUser.phoneNumber}"></td>
-                </tr>
-            </table>
+                <dt>Data creació</dt>
+                <dd th:text="${#temporals.format(contract.creationDate, 'dd/MM/yyyy')}"></dd>
 
-            <h3 class="form-section-title">PAP/PATI</h3>
-            <table class="data-table">
-                <tr>
-                    <th>Nom</th>
-                    <td th:text="${papPati.nameAndSurname}"></td>
-                </tr>
-                <tr>
-                    <th>Especialització</th>
-                    <td th:text="${papPati.specializationAreas}"></td>
-                </tr>
-                <tr>
-                    <th>Localitat</th>
-                    <td th:text="${papPati.locality}"></td>
-                </tr>
-            </table>
+                <dt>Data inici servei</dt>
+                <dd th:text="${#temporals.format(contract.startServiceDate, 'dd/MM/yyyy')}"></dd>
+
+                <dt>Data fi servei</dt>
+                <dd th:text="${#temporals.format(contract.endServiceDate, 'dd/MM/yyyy')}"></dd>
+
+                <dt>Document</dt>
+                <dd>
+                    <a th:href="${contract.documentURL}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="btn btn-secondary btn-small">
+                        Veure document (PDF)
+                    </a>
+                </dd>
+            </dl>
+
+            <h2 class="form-section-title">Usuari OVI</h2>
+            <dl class="tutor-info">
+                <dt>Nom</dt>
+                <dd th:text="${oviUser.nameAndSurname}"></dd>
+
+                <dt>Correu</dt>
+                <dd th:text="${oviUser.emailAddress}"></dd>
+
+                <dt>Telèfon</dt>
+                <dd th:text="${oviUser.phoneNumber}"></dd>
+            </dl>
+
+            <h2 class="form-section-title">PAP/PATI</h2>
+            <dl class="tutor-info">
+                <dt>Nom</dt>
+                <dd th:text="${papPati.nameAndSurname}"></dd>
+
+                <dt>Especialització</dt>
+                <dd th:text="${papPati.specializationAreas}"></dd>
+
+                <dt>Localitat</dt>
+                <dd th:text="${papPati.locality}"></dd>
+            </dl>
         </div>
 
         <div>
-            <h3 class="form-section-title">Conversa de la negociació</h3>
-            <div class="negociacio-conversa">
-                <pre th:text="${neg.conversation}" class="negociacio-text"></pre>
+            <h2 class="form-section-title">Sol·licitud d'assistència</h2>
+            <dl class="tutor-info">
+                <dt>Localització</dt>
+                <dd th:text="${sol.serviceLocation}"></dd>
+
+                <dt>Assistència requerida</dt>
+                <dd style="white-space: pre-wrap;" th:text="${sol.requiredAssistance}"></dd>
+            </dl>
+
+            <h2 class="form-section-title">Horaris sol·licitats</h2>
+            <div th:if="${horaris == null or horaris.isEmpty()}" class="alert alert-info">
+                No hi ha horaris registrats.
+            </div>
+            <table th:if="${horaris != null and !horaris.isEmpty()}" class="data-table">
+                <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Dia</th>
+                    <th>Inici</th>
+                    <th>Fi</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="horari : ${horaris}">
+                    <td th:text="${#temporals.format(horari.date, 'dd/MM/yyyy')}"></td>
+                    <td th:switch="${horari.dayOfWeek}">
+                        <span th:case="1">Dilluns</span>
+                        <span th:case="2">Dimarts</span>
+                        <span th:case="3">Dimecres</span>
+                        <span th:case="4">Dijous</span>
+                        <span th:case="5">Divendres</span>
+                        <span th:case="6">Dissabte</span>
+                        <span th:case="7">Diumenge</span>
+                    </td>
+                    <td th:text="${#temporals.format(horari.startHour, 'HH:mm')}"></td>
+                    <td th:text="${#temporals.format(horari.endHour, 'HH:mm')}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h2 class="form-section-title">Conversa de la negociació</h2>
+
+            <div th:if="${neg.conversation == null or #strings.isEmpty(neg.conversation)}"
+                 class="chat-empty">
+                Aquesta negociació no té missatges registrats.
             </div>
 
-            <h3 class="form-section-title">Sol·licitud d'assistència</h3>
-            <table class="data-table">
-                <tr>
-                    <th>Localització</th>
-                    <td th:text="${sol.serviceLocation}"></td>
-                </tr>
-                <tr>
-                    <th>Assistència requerida</th>
-                    <td th:text="${sol.requiredAssistance}"></td>
-                </tr>
-            </table>
+            <ol th:if="${neg.conversation != null and !#strings.isEmpty(neg.conversation)}"
+                class="chat-messages"
+                aria-label="Missatges de la negociació">
+
+                <li th:each="linia : ${neg.conversation.split('\n')}"
+                    th:with="
+                        esOvi=${#strings.contains(linia, '- OVI User]')},
+                        tancamentClau=${#strings.indexOf(linia, ']')},
+                        emissor=${tancamentClau >= 0 ? #strings.substring(linia, 1, tancamentClau) : 'Desconegut'},
+                        contingut=${tancamentClau >= 0 ? #strings.substring(linia, tancamentClau + 2) : linia}
+                    "
+                    th:class="${esOvi} ? 'chat-message chat-message-other' : 'chat-message chat-message-other-pap'">
+
+                    <article>
+                        <header class="chat-meta">
+                            <span class="chat-author" th:text="${emissor}"></span>
+                        </header>
+                        <p class="chat-content" th:text="${contingut}"></p>
+                    </article>
+                </li>
+            </ol>
         </div>
 
     </div>
 
+    <!-- ACCIONS DEL TÈCNIC -->
+    <hr class="section-divider">
+    <h2 class="form-section-title">Accions</h2>
+
+    <div th:if="${contract.status == 'active'}" class="form-actions">
+        <form th:action="@{/admin/contractes/{id}/finalitzar(id=${contract.contractID})}"
+              method="post"
+              onsubmit="return confirm('Confirmes que el servei ha finalitzat? La sol·licitud quedarà marcada com a contracte finalitzat.');">
+            <button type="submit" class="btn btn-primary">Marcar com a finalitzat</button>
+        </form>
+
+        <form th:action="@{/admin/contractes/{id}/cancellar(id=${contract.contractID})}"
+              method="post"
+              onsubmit="return confirm('Estàs segur/a que vols cancel·lar aquest contracte?');">
+            <button type="submit" class="btn btn-rebutjar">Cancel·lar contracte</button>
+        </form>
+    </div>
+
+    <div th:if="${contract.status == 'ended'}" class="alert alert-info" role="status">
+        Aquest contracte ja ha estat marcat com a finalitzat. No es poden fer més accions.
+    </div>
+
+    <div th:if="${contract.status == 'cancelled'}" class="alert alert-info" role="status">
+        Aquest contracte ha estat cancel·lat. No es poden fer més accions.
+    </div>
+
     <div class="form-actions">
-        <a href="javascript:history.back()" class="btn btn-secondary">Tornar enrere</a>
         <a th:href="@{/admin/contractes}" class="btn btn-secondary">Tornar al llistat</a>
     </div>
 

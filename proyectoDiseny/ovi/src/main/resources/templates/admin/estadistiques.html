@@ -10,14 +10,14 @@
 
 <div layout:fragment="content">
 
-    <h2 class="section-title">Estadístiques generals</h2>
+    <h1 class="section-title">Estadístiques generals</h1>
     <p class="section-subtitle">Resum de l'estat actual del sistema.</p>
 
     <div class="stats-grid">
 
         <!-- OVI USERS -->
-        <div class="stats-card">
-            <h3 class="stats-title">Usuaris OVI</h3>
+        <section class="stats-card" aria-labelledby="stats-ovi">
+            <h2 class="stats-title" id="stats-ovi">Usuaris OVI</h2>
             <div class="stats-row">
                 <div class="stat-item">
                     <span class="stat-number" th:text="${oviActius}"></span>
@@ -32,11 +32,11 @@
                     <span class="stat-label estat-inactiu">Rebutjats</span>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- PAP/PATI -->
-        <div class="stats-card">
-            <h3 class="stats-title">Candidats PAP/PATI</h3>
+        <section class="stats-card" aria-labelledby="stats-pap">
+            <h2 class="stats-title" id="stats-pap">Candidats PAP/PATI</h2>
             <div class="stats-row">
                 <div class="stat-item">
                     <span class="stat-number" th:text="${papActius}"></span>
@@ -51,19 +51,59 @@
                     <span class="stat-label estat-inactiu">Rebutjats</span>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- SOL·LICITUDS -->
-        <div class="stats-card stats-card-pending">
-            <h3 class="stats-title">Sol·licituds d'assistència</h3>
-            <p class="stats-pending-text">Disponible quan s'implemente la gestió de sol·licituds.</p>
-        </div>
+        <section class="stats-card" aria-labelledby="stats-sol">
+            <h2 class="stats-title" id="stats-sol">Sol·licituds d'assistència</h2>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-number" th:text="${solInRevisio}"></span>
+                    <span class="stat-label estat-pending">En revisió</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" th:text="${solAcceptades}"></span>
+                    <span class="stat-label estat-actiu">Acceptades</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" th:text="${solRebutjades}"></span>
+                    <span class="stat-label estat-inactiu">Rebutjades</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" th:text="${solAmbContracte}"></span>
+                    <span class="stat-label estat-actiu">Amb contracte</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" th:text="${solFinalitzades}"></span>
+                    <span class="stat-label estat-inactiu">Finalitzades</span>
+                </div>
+            </div>
+        </section>
 
-        <!-- ACTIVITATS -->
-        <div class="stats-card stats-card-pending">
-            <h3 class="stats-title">Activitats</h3>
+        <!-- CONTRACTES -->
+        <section class="stats-card" aria-labelledby="stats-contractes">
+            <h2 class="stats-title" id="stats-contractes">Contractes</h2>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-number" th:text="${contractesActius}"></span>
+                    <span class="stat-label estat-actiu">Actius</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" th:text="${contractesFinalitzats}"></span>
+                    <span class="stat-label estat-inactiu">Finalitzats</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" th:text="${contractesCancellats}"></span>
+                    <span class="stat-label estat-inactiu">Cancel·lats</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ACTIVITATS (encara pendent) -->
+        <section class="stats-card stats-card-pending" aria-labelledby="stats-activitats">
+            <h2 class="stats-title" id="stats-activitats">Activitats</h2>
             <p class="stats-pending-text">Disponible quan s'implemente la gestió d'activitats.</p>
-        </div>
+        </section>
 
     </div>
 

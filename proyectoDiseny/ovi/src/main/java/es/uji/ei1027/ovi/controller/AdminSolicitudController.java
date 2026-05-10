@@ -181,6 +181,14 @@ public class AdminSolicitudController {
             return "redirect:/admin/solicitudes/" + requestID;
         }
 
+        // Comprovar que té al menys una recomanació
+        List<RecommendedPapPati> recomanats = recommendedPapPatiDao.getRecommendedByRequest(requestID);
+        if (recomanats.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Has d'afegir almenys un PAP/PATI recomanat abans d'acceptar la sol·licitud");
+            return "redirect:/admin/solicitudes/" + requestID;
+        }
+
         assistanceRequestDao.updateStatus(requestID, "accepted");
 
         redirectAttributes.addFlashAttribute("successMessage",
@@ -228,10 +236,10 @@ public class AdminSolicitudController {
             return carregarDetail(requestID, model, "Has de seleccionar un PAP/PATI");
         }
 
-        // Comprovar que la sol·licitud està en estat acceptat
-        if (!"accepted".equals(solicitud.getStatus())) {
+        // Només es poden recomanar PAP/PATIs mentre la sol·licitud està en revisió
+        if (!"inProgress".equals(solicitud.getStatus())) {
             redirectAttributes.addFlashAttribute("errorMessage",
-                    "Només es pot recomanar PAP/PATIs en sol·licituds acceptades");
+                    "Només es poden recomanar PAP/PATIs en sol·licituds en revisió");
             return "redirect:/admin/solicitudes/" + requestID;
         }
 
@@ -265,7 +273,19 @@ public class AdminSolicitudController {
                                   @PathVariable int papID,
                                   RedirectAttributes redirectAttributes) {
 
-        // Si ja té negociació, no es pot eliminar
+        AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(requestID);
+        if (solicitud == null) {
+            return REDIRECT_LIST;
+        }
+
+        // Només es poden eliminar recomanacions si la sol·licitud encara està en revisió
+        if (!"inProgress".equals(solicitud.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "No es poden eliminar recomanacions una vegada acceptada la sol·licitud");
+            return "redirect:/admin/solicitudes/" + requestID;
+        }
+
+        // Si ja té negociació, no es pot eliminar (defensa addicional)
         if (recommendedPapPatiDao.hasNegotiation(requestID, papID)) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "No es pot eliminar la recomanació perquè ja té una negociació iniciada");

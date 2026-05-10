@@ -78,4 +78,11 @@ public class AssistanceRequestDao {
                 "SELECT MAX(requestID) FROM ASSISTANCE_REQUEST", Integer.class);
         return id != null ? id : 0;
     }
+
+    public int countByStatus(String status) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM ASSISTANCE_REQUEST WHERE status=?",
+                Integer.class, status);
+        return count != null ? count : 0;
+    }
 }

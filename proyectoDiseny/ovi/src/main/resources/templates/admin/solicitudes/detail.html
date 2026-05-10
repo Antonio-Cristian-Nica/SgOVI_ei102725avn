@@ -10,59 +10,54 @@
 
 <div layout:fragment="content">
 
-    <h2 class="section-title">Gestió de la sol·licitud</h2>
+    <h1 class="section-title">Gestió de la sol·licitud</h1>
+
+    <!-- Error de recomanació, si n'hi ha -->
+    <div th:if="${errorPapID}" class="alert alert-error" role="alert">
+        <span th:text="${errorPapID}"></span>
+    </div>
 
     <div class="filosofia-grid">
 
         <!-- COLUMNA ESQUERRA -->
         <div>
-            <h3 class="form-section-title">Persona sol·licitant</h3>
-            <table class="data-table">
-                <tr>
-                    <th>Nom i Cognoms</th>
-                    <td th:text="${oviUser.nameAndSurname}"></td>
-                </tr>
-                <tr>
-                    <th>Correu</th>
-                    <td th:text="${oviUser.emailAddress}"></td>
-                </tr>
-                <tr>
-                    <th>Telèfon</th>
-                    <td th:text="${oviUser.phoneNumber}"></td>
-                </tr>
-                <tr>
-                    <th>Diversitat funcional</th>
-                    <td th:text="${oviUser.functionalDiversity}"></td>
-                </tr>
-            </table>
+            <h2 class="form-section-title">Persona sol·licitant</h2>
+            <dl class="tutor-info">
+                <dt>Nom i Cognoms</dt>
+                <dd th:text="${oviUser.nameAndSurname}"></dd>
 
-            <h3 class="form-section-title">Informació de la sol·licitud</h3>
-            <table class="data-table">
-                <tr>
-                    <th>Localització</th>
-                    <td th:text="${solicitud.serviceLocation}"></td>
-                </tr>
-                <tr>
-                    <th>Assistència requerida</th>
-                    <td th:text="${solicitud.requiredAssistance}"></td>
-                </tr>
-                <tr>
-                    <th>Data creació</th>
-                    <td th:text="${#temporals.format(solicitud.creationDate, 'dd/MM/yyyy HH:mm')}"></td>
-                </tr>
-                <tr>
-                    <th>Estat</th>
-                    <td>
-                        <span th:if="${solicitud.status == 'inProgress'}" class="estat-pending">En revisió</span>
-                        <span th:if="${solicitud.status == 'accepted'}" class="estat-actiu">Acceptada</span>
-                        <span th:if="${solicitud.status == 'rejected'}" class="estat-inactiu">Rebutjada</span>
-                        <span th:if="${solicitud.status == 'closedWithContract'}" class="estat-actiu">Contracte actiu</span>
-                        <span th:if="${solicitud.status == 'closedContractEnded'}" class="estat-inactiu">Contracte finalitzat</span>
-                    </td>
-                </tr>
-            </table>
+                <dt>Correu</dt>
+                <dd th:text="${oviUser.emailAddress}"></dd>
 
-            <h3 class="form-section-title solicitud-horaris-title">Horaris sol·licitats</h3>
+                <dt>Telèfon</dt>
+                <dd th:text="${oviUser.phoneNumber}"></dd>
+
+                <dt>Diversitat funcional</dt>
+                <dd th:text="${oviUser.functionalDiversity != null ? oviUser.functionalDiversity : '—'}"></dd>
+            </dl>
+
+            <h2 class="form-section-title">Informació de la sol·licitud</h2>
+            <dl class="tutor-info">
+                <dt>Localització</dt>
+                <dd th:text="${solicitud.serviceLocation}"></dd>
+
+                <dt>Assistència requerida</dt>
+                <dd style="white-space: pre-wrap;" th:text="${solicitud.requiredAssistance}"></dd>
+
+                <dt>Data creació</dt>
+                <dd th:text="${#temporals.format(solicitud.creationDate, 'dd/MM/yyyy HH:mm')}"></dd>
+
+                <dt>Estat</dt>
+                <dd>
+                    <span th:if="${solicitud.status == 'inProgress'}" class="estat-pending">En revisió</span>
+                    <span th:if="${solicitud.status == 'accepted'}" class="estat-actiu">Acceptada</span>
+                    <span th:if="${solicitud.status == 'rejected'}" class="estat-inactiu">Rebutjada</span>
+                    <span th:if="${solicitud.status == 'closedWithContract'}" class="estat-actiu">Contracte actiu</span>
+                    <span th:if="${solicitud.status == 'closedContractEnded'}" class="estat-inactiu">Contracte finalitzat</span>
+                </dd>
+            </dl>
+
+            <h2 class="form-section-title solicitud-horaris-title">Horaris sol·licitats</h2>
             <div th:if="${horaris.isEmpty()}" class="alert alert-info">
                 No hi ha horaris registrats.
             </div>
@@ -78,46 +73,56 @@
                 <tbody>
                 <tr th:each="horari : ${horaris}">
                     <td th:text="${#temporals.format(horari.date, 'dd/MM/yyyy')}"></td>
-                    <td>
-                            <span th:switch="${horari.dayOfWeek}">
-                                <span th:case="1">Dilluns</span>
-                                <span th:case="2">Dimarts</span>
-                                <span th:case="3">Dimecres</span>
-                                <span th:case="4">Dijous</span>
-                                <span th:case="5">Divendres</span>
-                                <span th:case="6">Dissabte</span>
-                                <span th:case="7">Diumenge</span>
-                            </span>
+                    <td th:switch="${horari.dayOfWeek}">
+                        <span th:case="1">Dilluns</span>
+                        <span th:case="2">Dimarts</span>
+                        <span th:case="3">Dimecres</span>
+                        <span th:case="4">Dijous</span>
+                        <span th:case="5">Divendres</span>
+                        <span th:case="6">Dissabte</span>
+                        <span th:case="7">Diumenge</span>
                     </td>
-                    <td th:text="${horari.startHour}"></td>
-                    <td th:text="${horari.endHour}"></td>
+                    <td th:text="${#temporals.format(horari.startHour, 'HH:mm')}"></td>
+                    <td th:text="${#temporals.format(horari.endHour, 'HH:mm')}"></td>
                 </tr>
                 </tbody>
             </table>
 
-            <div th:if="${solicitud.status == 'inProgress'}" class="form-actions">
-                <form th:if="${!recomanats.isEmpty()}"
-                      th:action="@{/admin/solicitudes/{id}/acceptar(id=${solicitud.requestID})}"
-                      method="post">
-                    <button type="submit" class="btn btn-primary">Acceptar sol·licitud</button>
-                </form>
-                <form th:action="@{/admin/solicitudes/{id}/rebutjar(id=${solicitud.requestID})}"
-                      method="post">
-                    <button type="submit" class="btn btn-rebutjar">Rebutjar sol·licitud</button>
-                </form>
+            <!-- Accions del tècnic, només si la sol·licitud està en revisió -->
+            <div th:if="${solicitud.status == 'inProgress'}">
+
+                <!-- Avís si encara no hi ha recomanats: bloqueja l'acceptació -->
+                <div th:if="${recomanats.isEmpty()}" class="alert alert-info" role="status">
+                    Has d'afegir almenys un PAP/PATI recomanat abans de poder acceptar la sol·licitud.
+                </div>
+
+                <div class="form-actions">
+                    <form th:if="${!recomanats.isEmpty()}"
+                          th:action="@{/admin/solicitudes/{id}/acceptar(id=${solicitud.requestID})}"
+                          method="post"
+                          onsubmit="return confirm('Confirmes que vols acceptar aquesta sol·licitud? L\'usuari podrà començar a negociar amb els PAP/PATIs recomanats.');">
+                        <button type="submit" class="btn btn-primary">Acceptar sol·licitud</button>
+                    </form>
+
+                    <form th:action="@{/admin/solicitudes/{id}/rebutjar(id=${solicitud.requestID})}"
+                          method="post"
+                          onsubmit="return confirm('Estàs segur/a que vols rebutjar aquesta sol·licitud?');">
+                        <button type="submit" class="btn btn-rebutjar">Rebutjar sol·licitud</button>
+                    </form>
+                </div>
             </div>
         </div>
 
-        <!-- COLUMNA DRETA: PAP/PATIs recomanats -->
+        <!-- COLUMNA DRETA: PAP/PATIs recomanats i compatibles -->
         <div>
-            <h3 class="form-section-title">PAP/PATIs recomanats</h3>
+            <h2 class="form-section-title">PAP/PATIs recomanats</h2>
 
             <div th:if="${recomanats.isEmpty()}" class="alert alert-info">
                 No hi ha PAP/PATIs recomanats encara.
             </div>
 
             <div th:if="${!recomanats.isEmpty()}">
-                <div th:each="rec : ${recomanats}" class="pilar-card solicitud-rec-card">
+                <article th:each="rec : ${recomanats}" class="pilar-card solicitud-rec-card">
                     <div th:with="pap=${infoPapPatiRecomanats[rec.papID]}">
                         <h3 th:text="${pap.nameAndSurname}"></h3>
                         <p th:text="'Localitat: ' + ${pap.locality}"></p>
@@ -130,35 +135,40 @@
                     <div th:if="${solicitud.status == 'inProgress'}" class="solicitud-rec-actions">
                         <form th:if="${!teNegociacio[rec.papID]}"
                               th:action="@{/admin/solicitudes/{rid}/recomanar/delete/{pid}(rid=${solicitud.requestID},pid=${rec.papID})}"
-                              method="post">
+                              method="post"
+                              onsubmit="return confirm('Estàs segur/a que vols eliminar aquesta recomanació?');">
                             <button type="submit" class="btn btn-rebutjar btn-small">Eliminar</button>
                         </form>
                         <span th:if="${teNegociacio[rec.papID]}" class="estat-pending">Té negociació activa</span>
                     </div>
 
-                    <!-- Status closedWithContract o closedContractEnded: enllaç al contracte -->
+                    <!-- Estats closedWithContract o closedContractEnded: enllaç al contracte -->
                     <div th:if="${solicitud.status == 'closedWithContract' or solicitud.status == 'closedContractEnded'}">
                         <a th:if="${contractesPerPap[rec.papID] != null}"
                            th:href="@{/admin/contractes/{id}(id=${contractesPerPap[rec.papID].contractID})}"
                            class="btn btn-secondary btn-small">Veure contracte</a>
                     </div>
-                </div>
+                </article>
 
                 <!-- Missatge global per a status accepted, fora del bucle -->
-                <div th:if="${solicitud.status == 'accepted'}" class="alert alert-info solicitud-negociacio-msg">
-                    L'usuari està negociant amb els PAP/PATIs recomanats. Quan el contracte estiga finalitzat apareixerà un enllaç al mateix.
+                <div th:if="${solicitud.status == 'accepted'}" class="alert alert-info solicitud-negociacio-msg" role="status">
+                    L'usuari està negociant amb els PAP/PATIs recomanats. Quan algun acord es tanqui podràs formalitzar el contracte des de la secció de contractes.
                 </div>
             </div>
 
+            <!-- PAP/PATIs compatibles per a recomanar (només en revisió) -->
             <div th:if="${solicitud.status == 'inProgress'}" class="solicitud-add-rec">
-                <h3 class="form-section-title">PAP/PATIs compatibles</h3>
+                <h2 class="form-section-title">PAP/PATIs compatibles</h2>
+                <p class="section-subtitle">
+                    Aquests són els PAP/PATIs amb disponibilitat compatible amb els horaris demanats. Pots afegir-los com a recomanats.
+                </p>
 
                 <div th:if="${totsPapPatis.isEmpty()}" class="alert alert-info">
                     No hi ha PAP/PATIs amb disponibilitat compatible amb els horaris d'aquesta sol·licitud.
                 </div>
 
                 <div th:if="${!totsPapPatis.isEmpty()}">
-                    <div th:each="pap : ${totsPapPatis}" class="pappati-compatible-card">
+                    <article th:each="pap : ${totsPapPatis}" class="pappati-compatible-card">
 
                         <div class="pappati-compatible-info">
                             <h3 th:text="${pap.nameAndSurname}"></h3>
@@ -177,19 +187,17 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="h : ${horarisPapPati[pap.papID]}">
-                                    <td>
-                                <span th:switch="${h.dayOfWeek}">
-                                    <span th:case="1">Dilluns</span>
-                                    <span th:case="2">Dimarts</span>
-                                    <span th:case="3">Dimecres</span>
-                                    <span th:case="4">Dijous</span>
-                                    <span th:case="5">Divendres</span>
-                                    <span th:case="6">Dissabte</span>
-                                    <span th:case="7">Diumenge</span>
-                                </span>
+                                    <td th:switch="${h.dayOfWeek}">
+                                        <span th:case="1">Dilluns</span>
+                                        <span th:case="2">Dimarts</span>
+                                        <span th:case="3">Dimecres</span>
+                                        <span th:case="4">Dijous</span>
+                                        <span th:case="5">Divendres</span>
+                                        <span th:case="6">Dissabte</span>
+                                        <span th:case="7">Diumenge</span>
                                     </td>
-                                    <td th:text="${h.startHour}"></td>
-                                    <td th:text="${h.endHour}"></td>
+                                    <td th:text="${#temporals.format(h.startHour, 'HH:mm')}"></td>
+                                    <td th:text="${#temporals.format(h.endHour, 'HH:mm')}"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -205,9 +213,7 @@
                             </form>
                         </div>
 
-                    </div>
-
-                    <span class="error-text" th:if="${errorPapID}" th:text="${errorPapID}"></span>
+                    </article>
                 </div>
             </div>
         </div>

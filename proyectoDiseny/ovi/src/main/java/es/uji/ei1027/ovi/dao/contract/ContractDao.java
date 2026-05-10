@@ -87,4 +87,11 @@ public class ContractDao {
                 "SELECT MAX(contractID) FROM CONTRACT", Integer.class);
         return id != null ? id : 0;
     }
+
+    public int countByStatus(String status) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM CONTRACT WHERE status=?",
+                Integer.class, status);
+        return count != null ? count : 0;
+    }
 }

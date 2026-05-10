@@ -1,5 +1,7 @@
 package es.uji.ei1027.ovi.controller;
 
+import es.uji.ei1027.ovi.dao.assistancerequest.AssistanceRequestDao;
+import es.uji.ei1027.ovi.dao.contract.ContractDao;
 import es.uji.ei1027.ovi.dao.credentials.CredentialsDao;
 import es.uji.ei1027.ovi.dao.oviuser.OviUserDao;
 import es.uji.ei1027.ovi.dao.pappati.PapPatiDao;
@@ -20,6 +22,8 @@ public class AdminController {
     private PapPatiDao papPatiDao;
     private OviUserDao oviUserDao;
     private CredentialsDao credentialsDao;
+    private AssistanceRequestDao assistanceRequestDao;
+    private ContractDao contractDao;
 
     @Autowired
     public void setPapPatiDao(PapPatiDao papPatiDao) {
@@ -34,6 +38,16 @@ public class AdminController {
     @Autowired
     public void setCredentialsDao(CredentialsDao credentialsDao) {
         this.credentialsDao = credentialsDao;
+    }
+
+    @Autowired
+    public void setAssistanceRequestDao(AssistanceRequestDao assistanceRequestDao) {
+        this.assistanceRequestDao = assistanceRequestDao;
+    }
+
+    @Autowired
+    public void setContractDao(ContractDao contractDao) {
+        this.contractDao = contractDao;
     }
 
     // Mostra el portal d'administració
@@ -206,8 +220,8 @@ public class AdminController {
     }
 
     // =====================================================================
-    // ESTADÍSTIQUES
-    // =====================================================================
+// ESTADÍSTIQUES
+// =====================================================================
 
     @RequestMapping("/estadistiques")
     public String estadistiques(Model model) {
@@ -220,6 +234,18 @@ public class AdminController {
         model.addAttribute("papActius", papPatiDao.countByStatus("active"));
         model.addAttribute("papPendents", papPatiDao.countByStatus("approvalPending"));
         model.addAttribute("papRebutjats", papPatiDao.countByStatus("inactive"));
+
+        // Sol·licituds
+        model.addAttribute("solInRevisio", assistanceRequestDao.countByStatus("inProgress"));
+        model.addAttribute("solAcceptades", assistanceRequestDao.countByStatus("accepted"));
+        model.addAttribute("solRebutjades", assistanceRequestDao.countByStatus("rejected"));
+        model.addAttribute("solAmbContracte", assistanceRequestDao.countByStatus("closedWithContract"));
+        model.addAttribute("solFinalitzades", assistanceRequestDao.countByStatus("closedContractEnded"));
+
+        // Contractes
+        model.addAttribute("contractesActius", contractDao.countByStatus("active"));
+        model.addAttribute("contractesFinalitzats", contractDao.countByStatus("ended"));
+        model.addAttribute("contractesCancellats", contractDao.countByStatus("cancelled"));
 
         return "admin/estadistiques";
     }

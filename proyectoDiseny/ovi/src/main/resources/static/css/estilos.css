@@ -1431,13 +1431,14 @@ footer {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
 }
 
 .chat-message {
     max-width: 75%;
     display: flex;
     flex-direction: column;
+    list-style: none;
 }
 
 .chat-message-own {
@@ -1448,38 +1449,64 @@ footer {
     align-self: flex-start;
 }
 
-.chat-message article {
-    background-color: white;
-    padding: 10px 14px;
+/* Article base: forcem que no hereti background ni padding rar */
+.chat-messages .chat-message article {
+    padding: 12px 16px;
     border-radius: 12px;
-    border: 1px solid #ddd;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    margin: 0;
 }
 
-.chat-message-own article {
-    background-color: #003366;
-    color: white;
-    border-color: #003366;
+/* Missatge de l'altra persona: fons blanc */
+.chat-messages .chat-message-other article {
+    background-color: #ffffff !important;
+    border: 1px solid #d8d8d8;
+    color: #1a1a1a;
 }
 
-.chat-meta {
-    margin-bottom: 4px;
+/* Missatge propi: color de contrast del projecte */
+.chat-messages .chat-message-own article {
+    background-color: var(--color-contraste) !important;
+    color: #ffffff;
+    border: 1px solid var(--color-contraste);
+}
+
+/* Header dins del missatge: forçem que sigui transparent */
+.chat-messages .chat-message article > header,
+.chat-messages .chat-message .chat-meta {
+    background-color: transparent !important;
+    margin-bottom: 6px;
+    padding: 0 0 4px 0;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    display: block;
+}
+
+.chat-messages .chat-message-own .chat-meta {
+    border-bottom-color: rgba(255, 255, 255, 0.3);
 }
 
 .chat-author {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
-    color: #6B6B6B;
+    background-color: transparent !important;
+    padding: 0;
 }
 
-.chat-message-own .chat-author {
-    color: rgba(255, 255, 255, 0.85);
+.chat-messages .chat-message-other .chat-author {
+    color: var(--footer-bg);
+}
+
+.chat-messages .chat-message-own .chat-author {
+    color: #ffffff;
 }
 
 .chat-content {
     margin: 0;
     word-wrap: break-word;
-    line-height: 1.4;
+    line-height: 1.45;
+    font-size: 15px;
+    background-color: transparent !important;
 }
 
 @media (max-width: 600px) {
