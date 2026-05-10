@@ -13,6 +13,8 @@ La contraseña para el acceso a la base de datos es → vivaMessi1010
 
 Aplicació web desenvolupada amb Spring Boot MVC + Thymeleaf + PostgreSQL per a la gestió de l'Oficina Vida Independent de Castelló.
 
+Compte del Tècnic --> admin0 (1234)
+
 ## Tecnologies utilitzades
 
 - Java 21
@@ -21,23 +23,6 @@ Aplicació web desenvolupada amb Spring Boot MVC + Thymeleaf + PostgreSQL per a 
 - PostgreSQL
 - JASYPT (encriptació de contrasenyes)
 - Bootstrap / CSS propi
-
-## Comptes de prova
-
-| Rol | Usuari | Contrasenya | Estat |
-|-----|--------|-------------|-------|
-| Administrador | admin0 | 1234 | Actiu |
-| OVI User (amb contracte) | juan.perez | 1234 | Actiu |
-| OVI User (negociant) | maria.rod | 1234 | Actiu |
-| OVI User (sol·licitud en revisió) | luis.gomez | 1234 | Actiu |
-| OVI User (pendent activació) | sara.leon | 1234 | Pendent |
-| OVI User (rebutjat) | pedro.martin | 1234 | Rebutjat |
-| PAP/PATI (amb contracte) | ana.garcia | 1234 | Actiu |
-| PAP/PATI (negociant) | carlos.ruiz | 1234 | Actiu |
-| PAP/PATI (recomanat sense negociació) | elena.b | 1234 | Actiu |
-| PAP/PATI (sense horaris) | marcos.sanz | 1234 | Actiu |
-| PAP/PATI (pendent activació) | lucia.mendez | 1234 | Pendent |
-| PAP/PATI (rebutjat) | roberto.f | 1234 | Rebutjat |
 
 ## Funcionalitats implementades
 
@@ -81,27 +66,19 @@ Aplicació web desenvolupada amb Spring Boot MVC + Thymeleaf + PostgreSQL per a 
 ### 5. Gestió d'Instructors
 - En construcció
 
-## Casos de prova disponibles (psswd = 1234)
+## Casos de prova disponibles (psswd = patata)
 
 ### OVI Users
-- **juan.perez**: té una sol·licitud tancada amb contracte actiu amb Ana García
-- **maria.rod**: té una sol·licitud acceptada amb dues negociacions simultànies en curs (Ana García i Carlos Ruiz)
-- **luis.gomez**: té una sol·licitud en revisió sense recomanats
-- **sara.leon**: compte pendent d'activació (per provar pàgina pending)
-- **pedro.martin**: compte rebutjat amb motiu (per provar pàgina pending amb rebuig)
+- **willy.rex**: conta rebutjada amb motiu
+- **dani.villar**: conta pendent de aprovaciò
+- **toni.nica**: 
+- **edgar.adell**: 
 
 ### PAP/PATIs
-- **ana.garcia**: té horaris, un contracte actiu amb Juan i una negociació en curs amb María
-- **carlos.ruiz**: té horaris i una negociació en curs amb María
-- **elena.b**: té horaris i és recomanat per a una sol·licitud sense negociació iniciada
-- **marcos.sanz**: té el compte actiu però NO té horaris (per provar l'alerta al portal)
-- **lucia.mendez**: compte pendent d'activació
-- **roberto.f**: compte rebutjat amb motiu
-
-### Activitats
-- **Taller Autonomia Personal** (formació): quasi plena, 3 inscrits de 5 places
-- **Xerrada Drets Socials** (divulgació): àmplia capacitat, 2 inscrits
-- **Curs Llengua de Signes** (formació): buida, per probar el procés d'inscripció complet
+- **andres.iniesta**: conta pendent de aprovaciò
+- **xavi.hernandez**: conta rebutjada amb motiu
+- **leo.messi**: 
+- **joan.garcia**: 
 
 ## ------------------------
 
