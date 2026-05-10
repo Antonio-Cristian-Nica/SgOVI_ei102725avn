@@ -1,7 +1,10 @@
 -- 0. CREDENCIALES
 INSERT INTO CREDENTIALS (username, password, role, id, activated, rejected, rejectionReason) VALUES 
 -- Administrador
-('admin0', '1234', 'admin', 990, true, false, NULL),
+('admin0', '1234', 'admin', 990, true, false, NULL);
+
+-- ESTOS DE AQUI ABAJO YA NO SE USAN. POBLAMOS LA APLICACION USANDOLA --
+
 -- OVI Users: activo, pendiente, rechazado
 ('juan.perez', '1234', 'user_ovi', 1, true, false, NULL),   -- activo con solicitud y contrato
 ('maria.rod', '1234', 'user_ovi', 2, true, false, NULL),    -- activo con solicitud accepted y negociació en curs
