@@ -2,6 +2,7 @@ package es.uji.ei1027.ovi.dao.assistancerequest;
 
 import es.uji.ei1027.ovi.model.AssistanceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -19,19 +20,31 @@ public class AssistanceRequestDao {
     }
 
     public List<AssistanceRequest> getAssistanceRequests() {
-        return jdbcTemplate.query("SELECT * FROM ASSISTANCE_REQUEST", new AssistanceRequestRowMapper());
+        return jdbcTemplate.query(
+                "SELECT * FROM ASSISTANCE_REQUEST ORDER BY creationDate DESC",
+                new AssistanceRequestRowMapper());
     }
 
     public List<AssistanceRequest> getAssistanceRequestsByUser(int oviID) {
         return jdbcTemplate.query(
-                "SELECT * FROM ASSISTANCE_REQUEST WHERE oviID=?",
+                "SELECT * FROM ASSISTANCE_REQUEST WHERE oviID=? ORDER BY creationDate DESC",
                 new AssistanceRequestRowMapper(), oviID);
     }
 
+    public List<AssistanceRequest> getAssistanceRequestsByStatus(String status) {
+        return jdbcTemplate.query(
+                "SELECT * FROM ASSISTANCE_REQUEST WHERE status=? ORDER BY creationDate DESC",
+                new AssistanceRequestRowMapper(), status);
+    }
+
     public AssistanceRequest getAssistanceRequest(int requestID) {
-        return jdbcTemplate.queryForObject(
-                "SELECT * FROM ASSISTANCE_REQUEST WHERE requestID=?",
-                new AssistanceRequestRowMapper(), requestID);
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM ASSISTANCE_REQUEST WHERE requestID=?",
+                    new AssistanceRequestRowMapper(), requestID);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public void addAssistanceRequest(AssistanceRequest request) {
@@ -48,6 +61,12 @@ public class AssistanceRequestDao {
                         "status=? WHERE requestID=?",
                 request.getServiceLocation(), request.getRequiredAssistance(),
                 request.getStatus(), request.getRequestID());
+    }
+
+    public void updateStatus(int requestID, String status) {
+        jdbcTemplate.update(
+                "UPDATE ASSISTANCE_REQUEST SET status=? WHERE requestID=?",
+                status, requestID);
     }
 
     public void deleteAssistanceRequest(int requestID) {

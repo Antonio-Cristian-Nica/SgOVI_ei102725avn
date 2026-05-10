@@ -10,11 +10,12 @@
 
 <div layout:fragment="content">
 
-    <h2>Benvingut/da, <span th:text="${session.user.username}"></span></h2>
-    <p>Aquest és el teu espai personal. Selecciona una opció per a continuar.</p>
+    <h1 class="section-title">Benvingut/da, <span th:text="${session.user.username}"></span></h1>
+    <p class="section-subtitle">Aquest és el teu espai personal. Selecciona una opció per a continuar.</p>
 
     <div th:if="${!teHoraris}" class="alert alert-info">
-        ⚠️ Encara no tens horaris registrats.
+        <span aria-hidden="true">⚠️</span>
+        Encara no tens horaris registrats.
         <a th:href="@{/papPati/horaris}">Afegeix la teua disponibilitat</a>
         per a poder ser assignat a sol·licituds d'assistència.
     </div>
@@ -22,27 +23,27 @@
     <div class="portal-grid">
 
         <a th:href="@{/papPati/edit}" class="portal-card">
-            <h3>📋 Les meues dades</h3>
+            <h2><span aria-hidden="true">📋</span> Les meues dades</h2>
             <p>Consulta i edita les teues dades personals i de contacte.</p>
         </a>
 
         <a th:href="@{/papPati/solicitudes}" class="portal-card">
-            <h3>📁 Les meues sol·licituds</h3>
+            <h2><span aria-hidden="true">📁</span> Les meues sol·licituds</h2>
             <p>Consulta les sol·licituds d'assistència que tens assignades i el seu estat.</p>
         </a>
 
         <a th:href="@{/papPati/horaris}" class="portal-card">
-            <h3>🗓️ Els meus horaris</h3>
+            <h2><span aria-hidden="true">🗓️</span> Els meus horaris</h2>
             <p>Administra la teua disponibilitat horària per a ser assignat a sol·licituds.</p>
         </a>
 
         <a th:href="@{/papPati/contractes}" class="portal-card">
-            <h3>📄 El meu historial</h3>
+            <h2><span aria-hidden="true">📄</span> El meu historial</h2>
             <p>Consulta el teu historial de contractes finalitzats.</p>
         </a>
 
         <a th:href="@{/papPati/canviarContrasenya}" class="portal-card">
-            <h3>🔒 Canviar contrasenya</h3>
+            <h2><span aria-hidden="true">🔒</span> Canviar contrasenya</h2>
             <p>Modifica la teua contrasenya d'accés a l'aplicació.</p>
         </a>
 

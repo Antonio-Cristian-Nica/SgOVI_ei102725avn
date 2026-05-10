@@ -16,14 +16,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin/solicitudes")
 public class AdminSolicitudController {
+
+    private static final String REDIRECT_LIST = "redirect:/admin/solicitudes";
 
     private AssistanceRequestDao assistanceRequestDao;
     private RequestScheduleDao requestScheduleDao;
@@ -74,49 +79,47 @@ public class AdminSolicitudController {
         this.negotiationDao = negotiationDao;
     }
 
-    // Mostra el llistat de totes les sol·licituds
+    // =====================================================================
+    // LLISTAT
+    // =====================================================================
+
     @RequestMapping
     public String list(Model model) {
         model.addAttribute("solicitudes", assistanceRequestDao.getAssistanceRequests());
         return "admin/solicitudes/list";
     }
 
-    // Mostra el detall d'una sol·licitud
+    // =====================================================================
+    // DETALL
+    // =====================================================================
+
     @RequestMapping("/{requestID}")
     public String detail(@PathVariable int requestID, Model model) {
+        AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(requestID);
+        if (solicitud == null) {
+            return REDIRECT_LIST;
+        }
         return carregarDetail(requestID, model, null);
     }
 
-    // Afig un PAP/PATI recomanat a una sol·licitud
-    @RequestMapping(value = "/{requestID}/recomanar", method = RequestMethod.POST)
-    public String recomanar(@PathVariable int requestID,
-                            @RequestParam("papID") String papIDStr,
-                            Model model) {
-        if (papIDStr == null || papIDStr.isEmpty()) {
-            return carregarDetail(requestID, model, "Has de seleccionar un PAP/PATI");
-        }
-        int papID = Integer.parseInt(papIDStr);
-        RecommendedPapPati rec = new RecommendedPapPati();
-        rec.setRequestID(requestID);
-        rec.setPapID(papID);
-        recommendedPapPatiDao.addRecommendedPapPati(rec);
-        return "redirect:/admin/solicitudes/" + requestID;
-    }
-
-    // Carrega tota la informació necessària per a la vista de detall
+    /**
+     * Carrega tota la informació necessària per a la vista de detall.
+     * Si errorPapID no és null, l'afegeix com a missatge d'error per al formulari de recomanació.
+     */
     private String carregarDetail(int requestID, Model model, String errorPapID) {
         AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(requestID);
         List<RequestSchedule> horaris = requestScheduleDao.getRequestSchedulesByRequest(requestID);
         List<RecommendedPapPati> recomanats = recommendedPapPatiDao.getRecommendedByRequest(requestID);
 
+        // Calcular candidats compatibles que encara no han estat recomanats
         List<Integer> papIDsCompatibles = scheduleDao.getPapPatiIDsCompatibles(requestID);
         List<Integer> papIDsRecomanats = recomanats.stream()
                 .map(RecommendedPapPati::getPapID)
-                .collect(java.util.stream.Collectors.toList());
+                .collect(Collectors.toList());
         papIDsCompatibles.removeAll(papIDsRecomanats);
 
         List<PapPati> totsPapPatis = papIDsCompatibles.isEmpty()
-                ? new java.util.ArrayList<>()
+                ? new ArrayList<>()
                 : papPatiDao.getPapPatisByIDs(papIDsCompatibles);
 
         OviUser oviUser = oviUserDao.getOviUser(solicitud.getOviID());
@@ -127,19 +130,14 @@ public class AdminSolicitudController {
         }
 
         Map<Integer, Boolean> teNegociacio = new HashMap<>();
+        Map<Integer, PapPati> infoPapPatiRecomanats = new HashMap<>();
+        Map<Integer, Contract> contractesPerPap = new HashMap<>();
+
         for (RecommendedPapPati rec : recomanats) {
             teNegociacio.put(rec.getPapID(),
                     recommendedPapPatiDao.hasNegotiation(requestID, rec.getPapID()));
-        }
+            infoPapPatiRecomanats.put(rec.getPapID(), papPatiDao.getPapPati(rec.getPapID()));
 
-        Map<Integer, PapPati> infoPapPatiRecomanats = new HashMap<>();
-        for (RecommendedPapPati rec : recomanats) {
-            PapPati pap = papPatiDao.getPapPati(rec.getPapID());
-            infoPapPatiRecomanats.put(rec.getPapID(), pap);
-        }
-
-        Map<Integer, Contract> contractesPerPap = new HashMap<>();
-        for (RecommendedPapPati rec : recomanats) {
             Negotiation neg = negotiationDao.getNegotiationByRequestAndPap(requestID, rec.getPapID());
             if (neg != null) {
                 Contract contract = contractDao.getContractByNegotiation(neg.getNegotiationID());
@@ -149,8 +147,6 @@ public class AdminSolicitudController {
             }
         }
 
-        model.addAttribute("contractesPerPap", contractesPerPap);
-        model.addAttribute("infoPapPatiRecomanats", infoPapPatiRecomanats);
         model.addAttribute("solicitud", solicitud);
         model.addAttribute("horaris", horaris);
         model.addAttribute("recomanats", recomanats);
@@ -158,35 +154,128 @@ public class AdminSolicitudController {
         model.addAttribute("oviUser", oviUser);
         model.addAttribute("teNegociacio", teNegociacio);
         model.addAttribute("horarisPapPati", horarisPapPati);
+        model.addAttribute("infoPapPatiRecomanats", infoPapPatiRecomanats);
+        model.addAttribute("contractesPerPap", contractesPerPap);
         if (errorPapID != null) {
             model.addAttribute("errorPapID", errorPapID);
         }
         return "admin/solicitudes/detail";
     }
 
-    // Accepta una sol·licitud
+    // =====================================================================
+    // ACCEPTAR / REBUTJAR
+    // =====================================================================
+
     @RequestMapping(value = "/{requestID}/acceptar", method = RequestMethod.POST)
-    public String acceptar(@PathVariable int requestID) {
+    public String acceptar(@PathVariable int requestID,
+                           RedirectAttributes redirectAttributes) {
         AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(requestID);
-        solicitud.setStatus("accepted");
-        assistanceRequestDao.updateAssistanceRequest(solicitud);
+        if (solicitud == null) {
+            return REDIRECT_LIST;
+        }
+
+        // Només permetre acceptar des de 'inProgress'
+        if (!"inProgress".equals(solicitud.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquesta sol·licitud ja no està pendent de revisió");
+            return "redirect:/admin/solicitudes/" + requestID;
+        }
+
+        assistanceRequestDao.updateStatus(requestID, "accepted");
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "La sol·licitud s'ha acceptat correctament");
         return "redirect:/admin/solicitudes/" + requestID;
     }
 
-    // Rebutja una sol·licitud
     @RequestMapping(value = "/{requestID}/rebutjar", method = RequestMethod.POST)
-    public String rebutjar(@PathVariable int requestID) {
+    public String rebutjar(@PathVariable int requestID,
+                           RedirectAttributes redirectAttributes) {
         AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(requestID);
-        solicitud.setStatus("rejected");
-        assistanceRequestDao.updateAssistanceRequest(solicitud);
+        if (solicitud == null) {
+            return REDIRECT_LIST;
+        }
+
+        if (!"inProgress".equals(solicitud.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquesta sol·licitud ja no està pendent de revisió");
+            return "redirect:/admin/solicitudes/" + requestID;
+        }
+
+        assistanceRequestDao.updateStatus(requestID, "rejected");
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "La sol·licitud s'ha rebutjat correctament");
         return "redirect:/admin/solicitudes/" + requestID;
     }
 
-    // Elimina un PAP/PATI recomanat d'una sol·licitud
+    // =====================================================================
+    // RECOMANAR PAP/PATI
+    // =====================================================================
+
+    @RequestMapping(value = "/{requestID}/recomanar", method = RequestMethod.POST)
+    public String recomanar(@PathVariable int requestID,
+                            @RequestParam(value = "papID", required = false) Integer papID,
+                            Model model,
+                            RedirectAttributes redirectAttributes) {
+
+        AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(requestID);
+        if (solicitud == null) {
+            return REDIRECT_LIST;
+        }
+
+        if (papID == null) {
+            return carregarDetail(requestID, model, "Has de seleccionar un PAP/PATI");
+        }
+
+        // Comprovar que la sol·licitud està en estat acceptat
+        if (!"accepted".equals(solicitud.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Només es pot recomanar PAP/PATIs en sol·licituds acceptades");
+            return "redirect:/admin/solicitudes/" + requestID;
+        }
+
+        // Comprovar que el PAP/PATI existeix i està actiu
+        PapPati pap = papPatiDao.getPapPati(papID);
+        if (pap == null || !"active".equals(pap.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "El PAP/PATI seleccionat no és vàlid");
+            return "redirect:/admin/solicitudes/" + requestID;
+        }
+
+        // Comprovar que no està ja recomanat
+        if (recommendedPapPatiDao.getRecommendedPapPati(requestID, papID) != null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest PAP/PATI ja està recomanat per a aquesta sol·licitud");
+            return "redirect:/admin/solicitudes/" + requestID;
+        }
+
+        RecommendedPapPati rec = new RecommendedPapPati();
+        rec.setRequestID(requestID);
+        rec.setPapID(papID);
+        recommendedPapPatiDao.addRecommendedPapPati(rec);
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "El PAP/PATI s'ha recomanat correctament");
+        return "redirect:/admin/solicitudes/" + requestID;
+    }
+
     @RequestMapping(value = "/{requestID}/recomanar/delete/{papID}", method = RequestMethod.POST)
     public String deleteRecomanat(@PathVariable int requestID,
-                                  @PathVariable int papID) {
+                                  @PathVariable int papID,
+                                  RedirectAttributes redirectAttributes) {
+
+        // Si ja té negociació, no es pot eliminar
+        if (recommendedPapPatiDao.hasNegotiation(requestID, papID)) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "No es pot eliminar la recomanació perquè ja té una negociació iniciada");
+            return "redirect:/admin/solicitudes/" + requestID;
+        }
+
         recommendedPapPatiDao.deleteRecommendedPapPati(requestID, papID);
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "La recomanació s'ha eliminat correctament");
         return "redirect:/admin/solicitudes/" + requestID;
     }
 }

@@ -2,6 +2,7 @@ package es.uji.ei1027.ovi.dao.pappatischedule;
 
 import es.uji.ei1027.ovi.model.Schedule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -19,19 +20,25 @@ public class ScheduleDao {
     }
 
     public List<Schedule> getSchedules() {
-        return jdbcTemplate.query("SELECT * FROM SCHEDULE", new ScheduleRowMapper());
+        return jdbcTemplate.query(
+                "SELECT * FROM SCHEDULE ORDER BY papID, dayOfWeek, startHour",
+                new ScheduleRowMapper());
     }
 
     public List<Schedule> getSchedulesByPap(int papID) {
         return jdbcTemplate.query(
-                "SELECT * FROM SCHEDULE WHERE papID=?",
+                "SELECT * FROM SCHEDULE WHERE papID=? ORDER BY dayOfWeek, startHour",
                 new ScheduleRowMapper(), papID);
     }
 
     public Schedule getSchedule(int scheduleID) {
-        return jdbcTemplate.queryForObject(
-                "SELECT * FROM SCHEDULE WHERE scheduleID=?",
-                new ScheduleRowMapper(), scheduleID);
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM SCHEDULE WHERE scheduleID=?",
+                    new ScheduleRowMapper(), scheduleID);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public void addSchedule(Schedule schedule) {
@@ -59,25 +66,29 @@ public class ScheduleDao {
         return count != null && count > 0;
     }
 
-    // Elimina TODOS los horarios de un PAP/PATI
     public void deleteAllSchedulesByPap(int papID) {
         jdbcTemplate.update("DELETE FROM SCHEDULE WHERE papID=?", papID);
     }
 
-    // Elimina los horarios de un día concreto de un PAP/PATI
     public void deleteSchedulesByDay(int papID, int dayOfWeek) {
         jdbcTemplate.update(
                 "DELETE FROM SCHEDULE WHERE papID=? AND dayOfWeek=?",
                 papID, dayOfWeek);
     }
 
+    /*
+     * Devuelve los IDs de PAP/PATI cuyos horarios cubren al menos un horario solicitado.
+     * Solo se consideran PAP/PATI activos.
+     */
     public List<Integer> getPapPatiIDsCompatibles(int requestID) {
         return jdbcTemplate.queryForList(
                 "SELECT DISTINCT s.papID FROM SCHEDULE s " +
                         "INNER JOIN REQUEST_SCHEDULE rs ON s.dayOfWeek = rs.dayOfWeek " +
+                        "INNER JOIN PAP_PATI p ON s.papID = p.papID " +
                         "WHERE rs.requestID = ? " +
                         "AND s.startHour <= rs.startHour " +
-                        "AND s.endHour >= rs.endHour",
+                        "AND s.endHour >= rs.endHour " +
+                        "AND p.status = 'active'",
                 Integer.class, requestID);
     }
 }

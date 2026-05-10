@@ -9,68 +9,97 @@
 <body>
 
 <div layout:fragment="content">
+    <div class="form-section">
 
-    <h2 class="section-title" th:text="${oviuser.nameAndSurname}"></h2>
-    <p class="section-subtitle" th:text="'Usuari: ' + ${oviuser.username}"></p>
+        <h1 class="section-title" th:text="${oviuser.nameAndSurname}"></h1>
+        <p class="section-subtitle">
+            Usuari: <strong th:text="${oviuser.username}"></strong>
+            ·
+            Estat:
+            <span th:if="${oviuser.status == 'active'}" class="estat-actiu">Actiu</span>
+            <span th:if="${oviuser.status == 'inactive'}" class="estat-inactiu">Rebutjat</span>
+        </p>
 
-    <div class="filosofia-grid">
+        <div class="filosofia-grid">
 
-        <div>
-            <h3 class="section-title">Dades personals</h3>
+            <div>
+                <h2 class="form-section-title">Dades personals</h2>
 
-            <table class="data-table">
-                <tr>
-                    <th>Correu</th>
-                    <td th:text="${oviuser.emailAddress}"></td>
-                </tr>
-                <tr>
-                    <th>Telèfon</th>
-                    <td th:text="${oviuser.phoneNumber}"></td>
-                </tr>
-                <tr>
-                    <th>Data de naixement</th>
-                    <td th:text="${oviuser.birthDate}"></td>
-                </tr>
-                <tr>
-                    <th>Adreça</th>
-                    <td th:text="${oviuser.homeAddress}"></td>
-                </tr>
-                <tr>
-                    <th>Diversitat funcional</th>
-                    <td th:text="${oviuser.functionalDiversity}"></td>
-                </tr>
-                <tr>
-                    <th>Estat</th>
-                    <td>
-                        <span th:if="${oviuser.status == 'active'}" class="estat-actiu">Actiu</span>
-                        <span th:if="${oviuser.status == 'inactive'}" class="estat-inactiu">Rebutjat</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
+                <dl class="tutor-info">
+                    <dt>Correu</dt>
+                    <dd th:text="${oviuser.emailAddress}"></dd>
 
-        <div>
-            <!-- MOTIU DE REBUIG -->
-            <div th:if="${credentials.rejected}">
-                <h3 class="section-title">Motiu del rebuig</h3>
-                <div class="alert alert-error" th:text="${credentials.rejectionReason}"></div>
+                    <dt>Telèfon</dt>
+                    <dd th:text="${oviuser.phoneNumber}"></dd>
+
+                    <dt>Data de naixement</dt>
+                    <dd th:text="${#temporals.format(oviuser.birthDate, 'dd/MM/yyyy')}"></dd>
+
+                    <dt>Adreça</dt>
+                    <dd th:text="${oviuser.homeAddress}"></dd>
+
+                    <dt>Diversitat funcional</dt>
+                    <dd th:text="${oviuser.functionalDiversity != null ? oviuser.functionalDiversity : '—'}"></dd>
+                </dl>
             </div>
 
-            <!-- CONTRACTES -->
-            <div th:if="${!credentials.rejected}">
-                <h3 class="section-title">Contractes</h3>
-                <div class="alert alert-info">
-                    La gestió de contractes s'implementarà próximament.
+            <div>
+                <!-- MOTIU DE REBUIG -->
+                <div th:if="${credentials.rejected}">
+                    <h2 class="form-section-title">Motiu del rebuig</h2>
+                    <div class="alert alert-error" th:text="${credentials.rejectionReason}"></div>
+                </div>
+
+                <!-- CONTRACTES DE L'USUARI -->
+                <div th:unless="${credentials.rejected}">
+                    <h2 class="form-section-title">Contractes</h2>
+                    <p>Consulta l'historial de contractes signats per aquest usuari.</p>
+                    <a th:href="@{/admin/contractes/oviUser/{oviID}(oviID=${oviuser.oviID})}"
+                       class="btn btn-primary">
+                        Veure contractes
+                    </a>
                 </div>
             </div>
+
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- ACCIONS DEL TÈCNIC -->
+        <h2 class="form-section-title">Accions</h2>
+
+        <div class="table-actions">
+
+            <!-- Si està actiu, opció de desactivar -->
+            <form th:if="${oviuser.status == 'active'}"
+                  th:action="@{/admin/gestionarOviUsers/{username}/desactivar(username=${oviuser.username})}"
+                  method="post" class="rebutjar-form"
+                  onsubmit="return confirm('Estàs segur/a que vols desactivar aquest usuari?');">
+                <label th:for="'rejectionReason-' + ${oviuser.username}" class="sr-only">
+                    Motiu de la desactivació
+                </label>
+                <textarea th:id="'rejectionReason-' + ${oviuser.username}"
+                          name="rejectionReason"
+                          class="rebutjar-textarea"
+                          placeholder="Motiu de la desactivació (opcional)"></textarea>
+                <button type="submit" class="btn btn-rebutjar">Desactivar usuari</button>
+            </form>
+
+            <!-- Si està rebutjat, opció de reactivar -->
+            <form th:if="${oviuser.status == 'inactive'}"
+                  th:action="@{/admin/gestionarOviUsers/{username}/activar(username=${oviuser.username})}"
+                  method="post"
+                  onsubmit="return confirm('Vols reactivar aquest usuari?');">
+                <button type="submit" class="btn btn-primary">Reactivar usuari</button>
+            </form>
+
+        </div>
+
+        <div class="form-actions">
+            <a th:href="@{/admin/gestionarOviUsers}" class="btn btn-secondary">Tornar al llistat</a>
         </div>
 
     </div>
-
-    <div class="form-actions">
-        <a th:href="@{/admin/gestionarOviUsers}" class="btn btn-secondary">Tornar al llistat</a>
-    </div>
-
 </div>
 
 </body>

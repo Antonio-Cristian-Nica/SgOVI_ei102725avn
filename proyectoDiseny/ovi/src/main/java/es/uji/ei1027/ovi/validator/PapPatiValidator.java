@@ -67,14 +67,20 @@ public class PapPatiValidator implements Validator {
 
         if (papPati.getAcademicBackground() == null || papPati.getAcademicBackground().trim().isEmpty()) {
             errors.rejectValue("academicBackground", ERROR_OBLIGATORI, "La formació acadèmica és obligatòria");
+        } else if (papPati.getAcademicBackground().length() > 1000) {
+            errors.rejectValue("academicBackground", ERROR_LONGITUD, "La formació acadèmica no pot superar els 1000 caràcters");
         }
 
         if (papPati.getProfessionalExperience() == null || papPati.getProfessionalExperience().trim().isEmpty()) {
             errors.rejectValue("professionalExperience", ERROR_OBLIGATORI, "L'experiència professional és obligatòria");
+        } else if (papPati.getProfessionalExperience().length() > 1000) {
+            errors.rejectValue("professionalExperience", ERROR_LONGITUD, "L'experiència professional no pot superar els 1000 caràcters");
         }
 
         if (papPati.getSpecializationAreas() == null || papPati.getSpecializationAreas().trim().isEmpty()) {
             errors.rejectValue("specializationAreas", ERROR_OBLIGATORI, "Les àrees d'especialització són obligatòries");
+        } else if (papPati.getSpecializationAreas().length() > 1000) {
+            errors.rejectValue("specializationAreas", ERROR_LONGITUD, "Les àrees d'especialització no pot superar els 1000 caràcters");
         }
 
         if (papPati.getDocuments() == null || papPati.getDocuments().trim().isEmpty()) {
@@ -102,6 +108,13 @@ public class PapPatiValidator implements Validator {
                 errors.rejectValue("password", ERROR_FORMAT, "La contrasenya ha de tindre almenys 6 caràcters");
             } else if (registration.getPassword().length() > 100) {
                 errors.rejectValue("password", ERROR_LONGITUD, "La contrasenya no pot superar els 100 caràcters");
+            }
+
+            if (registration.getConfirmPassword() == null || registration.getConfirmPassword().trim().isEmpty()) {
+                errors.rejectValue("confirmPassword", ERROR_OBLIGATORI, "Has de confirmar la contrasenya");
+            } else if (registration.getPassword() != null
+                    && !registration.getPassword().equals(registration.getConfirmPassword())) {
+                errors.rejectValue("confirmPassword", "noCoincideix", "Les contrasenyes no coincideixen");
             }
         }
     }

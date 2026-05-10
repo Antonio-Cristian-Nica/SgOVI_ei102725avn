@@ -10,7 +10,7 @@
 
 <div layout:fragment="content">
 
-    <h2 class="section-title">Les meues sol·licituds d'assistència</h2>
+    <h1 class="section-title">Les meues sol·licituds d'assistència</h1>
     <p class="section-subtitle">Consulta l'estat de les teues sol·licituds d'assistència personal.</p>
 
     <div th:if="${solicitudes.isEmpty()}" class="alert alert-info">
@@ -31,7 +31,7 @@
             <tbody>
             <tr th:each="sol : ${solicitudes}">
                 <td th:text="${sol.serviceLocation}"></td>
-                <td th:text="${sol.requiredAssistance}"></td>
+                <td th:text="${#strings.abbreviate(sol.requiredAssistance, 80)}"></td>
                 <td th:text="${#temporals.format(sol.creationDate, 'dd/MM/yyyy')}"></td>
                 <td>
                     <span th:if="${sol.status == 'inProgress'}" class="estat-pending">En revisió</span>
@@ -42,11 +42,12 @@
                 </td>
                 <td class="table-actions">
                     <a th:href="@{/oviUser/solicitudes/{id}(id=${sol.requestID})}"
-                       class="btn btn-secondary">Veure</a>
+                       class="btn btn-secondary btn-small">Veure</a>
                     <form th:if="${sol.status == 'inProgress'}"
                           th:action="@{/oviUser/solicitudes/delete/{id}(id=${sol.requestID})}"
-                          method="post">
-                        <button type="submit" class="btn btn-rebutjar">Eliminar</button>
+                          method="post"
+                          onsubmit="return confirm('Estàs segur/a que vols eliminar aquesta sol·licitud?');">
+                        <button type="submit" class="btn btn-rebutjar btn-small">Eliminar</button>
                     </form>
                 </td>
             </tr>

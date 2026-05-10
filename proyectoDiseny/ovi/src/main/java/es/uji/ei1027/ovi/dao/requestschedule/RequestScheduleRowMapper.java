@@ -4,17 +4,19 @@ import es.uji.ei1027.ovi.model.RequestSchedule;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class RequestScheduleRowMapper implements RowMapper<RequestSchedule> {
     @Override
     public RequestSchedule mapRow(ResultSet rs, int rowNum) throws SQLException {
-        RequestSchedule rs2 = new RequestSchedule();
-        rs2.setReqScheduleID(rs.getInt("reqScheduleID"));
-        rs2.setDate(rs.getDate("date").toLocalDate());
-        rs2.setDayOfWeek(rs.getInt("dayOfWeek"));
-        rs2.setStartHour(rs.getTime("startHour").toLocalTime());
-        rs2.setEndHour(rs.getTime("endHour").toLocalTime());
-        rs2.setRequestID(rs.getInt("requestID"));
-        return rs2;
+        RequestSchedule schedule = new RequestSchedule();
+        schedule.setReqScheduleID(rs.getInt("reqScheduleID"));
+        schedule.setDate(rs.getObject("date", LocalDate.class));
+        schedule.setDayOfWeek(rs.getInt("dayOfWeek"));
+        schedule.setStartHour(rs.getObject("startHour", LocalTime.class));
+        schedule.setEndHour(rs.getObject("endHour", LocalTime.class));
+        schedule.setRequestID(rs.getInt("requestID"));
+        return schedule;
     }
 }

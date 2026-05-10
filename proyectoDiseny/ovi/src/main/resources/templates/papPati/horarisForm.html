@@ -11,15 +11,21 @@
 <div layout:fragment="content">
     <div class="form-section">
 
-        <h2 class="section-title">Afegir horari</h2>
-        <p class="section-subtitle">Indica el dia i les hores en què estàs disponible.</p>
+        <h1 class="section-title">Afegir horari</h1>
+        <p class="section-subtitle">
+            Indica el dia i les hores en què estàs disponible. Tots els camps marcats amb
+            <span aria-hidden="true">*</span><span class="sr-only">asterisc</span>
+            són obligatoris.
+        </p>
 
-        <form th:action="@{/papPati/horaris/add}" th:object="${schedule}" method="post">
+        <form th:action="@{/papPati/horaris/add}" th:object="${schedule}" method="post" novalidate>
 
             <div class="form-group">
-                <label for="dayOfWeek">Dia de la setmana</label>
-                <select id="dayOfWeek" name="dayOfWeek">
-                    <option value="">Selecciona un dia...</option>
+                <label for="dayOfWeek">Dia de la setmana <span aria-hidden="true">*</span></label>
+                <select id="dayOfWeek" th:field="*{dayOfWeek}"
+                        th:class="${errorDia} ? 'input-error' : ''"
+                        required>
+                    <option value="0">Selecciona un dia...</option>
                     <option value="1">Dilluns</option>
                     <option value="2">Dimarts</option>
                     <option value="3">Dimecres</option>
@@ -33,14 +39,18 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="startHour">Hora d'inici</label>
-                    <input type="time" id="startHour" name="startHour" />
+                    <label for="startHour">Hora d'inici <span aria-hidden="true">*</span></label>
+                    <input type="time" id="startHour" th:field="*{startHour}"
+                           th:class="${errorInici} ? 'input-error' : ''"
+                           required />
                     <span class="error-text" th:if="${errorInici}" th:text="${errorInici}"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="endHour">Hora de fi</label>
-                    <input type="time" id="endHour" name="endHour" />
+                    <label for="endHour">Hora de fi <span aria-hidden="true">*</span></label>
+                    <input type="time" id="endHour" th:field="*{endHour}"
+                           th:class="${errorFi} ? 'input-error' : ''"
+                           required />
                     <span class="error-text" th:if="${errorFi}" th:text="${errorFi}"></span>
                 </div>
             </div>

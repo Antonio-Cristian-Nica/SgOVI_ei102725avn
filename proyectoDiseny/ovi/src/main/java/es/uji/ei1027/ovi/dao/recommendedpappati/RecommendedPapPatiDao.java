@@ -2,6 +2,7 @@ package es.uji.ei1027.ovi.dao.recommendedpappati;
 
 import es.uji.ei1027.ovi.model.RecommendedPapPati;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -24,14 +25,18 @@ public class RecommendedPapPatiDao {
 
     public List<RecommendedPapPati> getRecommendedByRequest(int requestID) {
         return jdbcTemplate.query(
-                "SELECT * FROM RECOMMENDED_PAP_PATI WHERE requestID=?",
+                "SELECT * FROM RECOMMENDED_PAP_PATI WHERE requestID=? ORDER BY dateOfRecommendation DESC",
                 new RecommendedPapPatiRowMapper(), requestID);
     }
 
     public RecommendedPapPati getRecommendedPapPati(int requestID, int papID) {
-        return jdbcTemplate.queryForObject(
-                "SELECT * FROM RECOMMENDED_PAP_PATI WHERE requestID=? AND papID=?",
-                new RecommendedPapPatiRowMapper(), requestID, papID);
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM RECOMMENDED_PAP_PATI WHERE requestID=? AND papID=?",
+                    new RecommendedPapPatiRowMapper(), requestID, papID);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public void addRecommendedPapPati(RecommendedPapPati recommended) {
@@ -55,7 +60,7 @@ public class RecommendedPapPatiDao {
 
     public List<RecommendedPapPati> getRecommendedByPap(int papID) {
         return jdbcTemplate.query(
-                "SELECT * FROM RECOMMENDED_PAP_PATI WHERE papID=?",
+                "SELECT * FROM RECOMMENDED_PAP_PATI WHERE papID=? ORDER BY dateOfRecommendation DESC",
                 new RecommendedPapPatiRowMapper(), papID);
     }
 }

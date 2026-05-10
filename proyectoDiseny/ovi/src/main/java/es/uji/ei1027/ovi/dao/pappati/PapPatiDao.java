@@ -112,8 +112,19 @@ public class PapPatiDao {
     }
 
     public PapPati getPapPati(int papID) {
-        return jdbcTemplate.queryForObject(
-                "SELECT * FROM PAP_PATI WHERE papID=?",
-                new PapPatiRowMapper(), papID);
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM PAP_PATI WHERE papID=?",
+                    new PapPatiRowMapper(), papID);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public boolean existsEmail(String email) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM PAP_PATI WHERE emailAddress=?",
+                Integer.class, email);
+        return count != null && count > 0;
     }
 }

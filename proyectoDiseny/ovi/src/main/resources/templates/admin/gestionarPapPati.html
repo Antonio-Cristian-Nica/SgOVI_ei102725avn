@@ -10,7 +10,7 @@
 
 <div layout:fragment="content">
 
-    <h2 class="section-title">Gestió de PAP/PATI</h2>
+    <h1 class="section-title">Gestió de PAP/PATI</h1>
     <p class="section-subtitle">Llistat de candidats acceptats i rebutjats.</p>
 
     <div th:if="${pappatis.isEmpty()}" class="alert alert-info">
@@ -43,7 +43,7 @@
                 </td>
                 <td>
                     <a th:href="@{/admin/gestionarPapPati/{username}(username=${pappati.username})}"
-                       class="btn btn-secondary">Veure</a>
+                       class="btn btn-secondary btn-small">Veure</a>
                 </td>
             </tr>
             </tbody>

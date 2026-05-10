@@ -10,7 +10,11 @@
 
 <div layout:fragment="content">
 
-    <h2 class="section-title">Candidats PAP/PATI pendents de validació</h2>
+    <h1 class="section-title">Candidats PAP/PATI pendents de validació</h1>
+    <p class="section-subtitle">
+        Revisa les sol·licituds de registre. En activar un compte, el PAP/PATI podrà accedir
+        al portal. En rebutjar-la, el candidat veurà el motiu en intentar iniciar sessió.
+    </p>
 
     <div th:if="${pappatis.isEmpty()}" class="alert alert-info">
         No hi ha candidats pendents de validació en aquest moment.
@@ -34,20 +38,27 @@
                 <td th:text="${pappati.nameAndSurname}"></td>
                 <td th:text="${pappati.emailAddress}"></td>
                 <td th:text="${pappati.phoneNumber}"></td>
-                <td th:text="${pappati.birthDate}"></td>
+                <td th:text="${#temporals.format(pappati.birthDate, 'dd/MM/yyyy')}"></td>
                 <td th:text="${pappati.specializationAreas}"></td>
                 <td th:text="${pappati.username}"></td>
                 <td class="table-actions">
                     <form th:action="@{/admin/validarPapPati/{username}/activar(username=${pappati.username})}"
-                          method="post">
+                          method="post"
+                          onsubmit="return confirm('Vols activar aquest compte?');">
                         <button type="submit" class="btn btn-primary">Activar</button>
                     </form>
                     <form th:action="@{/admin/validarPapPati/{username}/rebutjar(username=${pappati.username})}"
-                          method="post" class="rebutjar-form">
-                            <textarea name="rejectionReason"
-                                      class="rebutjar-textarea"
-                                      placeholder="Motiu del rebuig..."
-                                      required></textarea>
+                          method="post"
+                          class="rebutjar-form"
+                          onsubmit="return confirm('Vols rebutjar aquest compte? Aquesta acció no es pot desfer fàcilment.');">
+                        <label th:for="'rejectionReason-' + ${pappati.username}" class="sr-only">
+                            Motiu del rebuig per a <span th:text="${pappati.username}"></span>
+                        </label>
+                        <textarea th:id="'rejectionReason-' + ${pappati.username}"
+                                  name="rejectionReason"
+                                  class="rebutjar-textarea"
+                                  placeholder="Motiu del rebuig..."
+                                  required></textarea>
                         <button type="submit" class="btn btn-rebutjar">Rebutjar</button>
                     </form>
                 </td>

@@ -10,7 +10,7 @@
 
 <div layout:fragment="content">
 
-    <h2 class="section-title">Gestió d'Usuaris OVI</h2>
+    <h1 class="section-title">Gestió d'Usuaris OVI</h1>
     <p class="section-subtitle">Llistat d'usuaris acceptats i rebutjats.</p>
 
     <div th:if="${oviusers.isEmpty()}" class="alert alert-info">
@@ -35,7 +35,7 @@
                 <td th:text="${oviuser.nameAndSurname}"></td>
                 <td th:text="${oviuser.emailAddress}"></td>
                 <td th:text="${oviuser.phoneNumber}"></td>
-                <td th:text="${oviuser.functionalDiversity}"></td>
+                <td th:text="${oviuser.functionalDiversity != null ? oviuser.functionalDiversity : '—'}"></td>
                 <td th:text="${oviuser.username}"></td>
                 <td>
                     <span th:if="${oviuser.status == 'active'}" class="estat-actiu">Actiu</span>
@@ -43,7 +43,7 @@
                 </td>
                 <td>
                     <a th:href="@{/admin/gestionarOviUsers/{username}(username=${oviuser.username})}"
-                       class="btn btn-secondary">Veure</a>
+                       class="btn btn-secondary btn-small">Veure</a>
                 </td>
             </tr>
             </tbody>

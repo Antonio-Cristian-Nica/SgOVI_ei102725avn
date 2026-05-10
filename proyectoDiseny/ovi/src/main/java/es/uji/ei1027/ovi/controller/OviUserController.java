@@ -256,6 +256,13 @@ public class OviUserController {
         TutorValidator validator = new TutorValidator();
         validator.validate(tutor, bindingResult);
 
+        // Comprovació de duplicats abans d'inserir
+        if (tutor.getEmailAddress() != null
+                && tutorDao.existsEmail(tutor.getEmailAddress())) {
+            bindingResult.rejectValue("emailAddress", "duplicat",
+                    "Aquest correu electrònic ja està registrat com a tutor");
+        }
+
         if (bindingResult.hasErrors()) {
             return "oviuser/tutorForm";
         }
@@ -294,15 +301,22 @@ public class OviUserController {
         TutorValidator validator = new TutorValidator();
         validator.validate(tutor, bindingResult);
 
-        if (bindingResult.hasErrors()) {
-            return "oviuser/tutorForm";
-        }
-
         Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
         OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
 
         if (oviUser.getTutorID() == null) {
             return "redirect:/oviUser/tutor";
+        }
+
+        // Comprovació de correu duplicat (excloent el tutor actual)
+        if (tutor.getEmailAddress() != null
+                && tutorDao.existsEmailExcluding(tutor.getEmailAddress(), oviUser.getTutorID())) {
+            bindingResult.rejectValue("emailAddress", "duplicat",
+                    "Aquest correu electrònic ja està registrat com a tutor");
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "oviuser/tutorForm";
         }
 
         tutor.setTutorID(oviUser.getTutorID());

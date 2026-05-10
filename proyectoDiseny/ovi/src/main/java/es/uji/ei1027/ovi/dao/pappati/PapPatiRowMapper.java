@@ -4,6 +4,7 @@ import es.uji.ei1027.ovi.model.PapPati;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class PapPatiRowMapper implements RowMapper<PapPati> {
     @Override
@@ -12,7 +13,7 @@ public class PapPatiRowMapper implements RowMapper<PapPati> {
         pap.setPapID(rs.getInt("papID"));
         pap.setNameAndSurname(rs.getString("nameAndSurname"));
         pap.setPhoneNumber(rs.getString("phoneNumber"));
-        pap.setBirthDate(rs.getDate("birthDate").toLocalDate());
+        pap.setBirthDate(rs.getObject("birthDate", LocalDate.class));
         pap.setHomeAddress(rs.getString("homeAddress"));
         pap.setLocality(rs.getString("locality"));
         pap.setEmailAddress(rs.getString("emailAddress"));

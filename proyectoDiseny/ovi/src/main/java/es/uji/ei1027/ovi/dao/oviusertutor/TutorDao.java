@@ -62,4 +62,20 @@ public class TutorDao {
                 "SELECT MAX(tutorID) FROM TUTOR", Integer.class);
         return id != null ? id : 0;
     }
+
+    // Comprova si ja existeix un tutor amb aquest correu electrònic
+    public boolean existsEmail(String email) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM TUTOR WHERE emailAddress=?",
+                Integer.class, email);
+        return count != null && count > 0;
+    }
+
+    // Comprova si existeix un altre tutor amb aquest correu (excloent l'actual)
+    public boolean existsEmailExcluding(String email, int currentTutorID) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM TUTOR WHERE emailAddress=? AND tutorID != ?",
+                Integer.class, email, currentTutorID);
+        return count != null && count > 0;
+    }
 }

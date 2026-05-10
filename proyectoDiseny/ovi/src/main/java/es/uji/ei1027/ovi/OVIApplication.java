@@ -1,15 +1,10 @@
 package es.uji.ei1027.ovi;
 
-import java.util.logging.Logger;
-
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@EnableTransactionManagement
 public class OVIApplication {
-	private static final Logger log = Logger.getLogger(OVIApplication.class.getName());
 
 	public static void main(String[] args) {
 		// Auto-configura l'aplicació

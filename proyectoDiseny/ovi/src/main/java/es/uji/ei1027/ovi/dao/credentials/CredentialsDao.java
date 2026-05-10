@@ -71,4 +71,10 @@ public class CredentialsDao {
                 "UPDATE CREDENTIALS SET rejected=true, rejectionReason=? WHERE username=?",
                 rejectionReason, username);
     }
+
+    public void unrejectCredentials(String username) {
+        jdbcTemplate.update(
+                "UPDATE CREDENTIALS SET rejected=false, rejectionReason=NULL WHERE username=?",
+                username);
+    }
 }

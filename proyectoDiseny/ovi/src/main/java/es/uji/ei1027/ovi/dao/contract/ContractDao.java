@@ -2,6 +2,7 @@ package es.uji.ei1027.ovi.dao.contract;
 
 import es.uji.ei1027.ovi.model.Contract;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -23,9 +24,13 @@ public class ContractDao {
     }
 
     public Contract getContract(int contractID) {
-        return jdbcTemplate.queryForObject(
-                "SELECT * FROM CONTRACT WHERE contractID=?",
-                new ContractRowMapper(), contractID);
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM CONTRACT WHERE contractID=?",
+                    new ContractRowMapper(), contractID);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public void addContract(Contract contract) {
@@ -75,5 +80,11 @@ public class ContractDao {
                         "INNER JOIN NEGOTIATION n ON c.negotiationID = n.negotiationID " +
                         "WHERE n.papID = ?",
                 new ContractRowMapper(), papID);
+    }
+
+    public int getLastInsertedId() {
+        Integer id = jdbcTemplate.queryForObject(
+                "SELECT MAX(contractID) FROM CONTRACT", Integer.class);
+        return id != null ? id : 0;
     }
 }

@@ -9,80 +9,113 @@
 <body>
 
 <div layout:fragment="content">
+    <div class="form-section">
 
-    <h2 class="section-title" th:text="${pappati.nameAndSurname}"></h2>
-    <p class="section-subtitle" th:text="'Usuari: ' + ${pappati.username}"></p>
+        <h1 class="section-title" th:text="${pappati.nameAndSurname}"></h1>
+        <p class="section-subtitle">
+            Usuari: <strong th:text="${pappati.username}"></strong>
+            ·
+            Estat:
+            <span th:if="${pappati.status == 'active'}" class="estat-actiu">Actiu</span>
+            <span th:if="${pappati.status == 'inactive'}" class="estat-inactiu">Rebutjat</span>
+        </p>
 
-    <div class="filosofia-grid">
+        <div class="filosofia-grid">
 
-        <div>
-            <h3 class="section-title">Dades personals</h3>
+            <div>
+                <h2 class="form-section-title">Dades personals</h2>
 
-            <table class="data-table">
-                <tr>
-                    <th>Correu</th>
-                    <td th:text="${pappati.emailAddress}"></td>
-                </tr>
-                <tr>
-                    <th>Telèfon</th>
-                    <td th:text="${pappati.phoneNumber}"></td>
-                </tr>
-                <tr>
-                    <th>Data de naixement</th>
-                    <td th:text="${pappati.birthDate}"></td>
-                </tr>
-                <tr>
-                    <th>Adreça</th>
-                    <td th:text="${pappati.homeAddress}"></td>
-                </tr>
-                <tr>
-                    <th>Àrees d'especialització</th>
-                    <td th:text="${pappati.specializationAreas}"></td>
-                </tr>
-                <tr>
-                    <th>Formació acadèmica</th>
-                    <td th:text="${pappati.academicBackground}"></td>
-                </tr>
-                <tr>
-                    <th>Experiència professional</th>
-                    <td th:text="${pappati.professionalExperience}"></td>
-                </tr>
-                <tr>
-                    <th>Documents</th>
-                    <td th:text="${pappati.documents}"></td>
-                </tr>
-                <tr>
-                    <th>Estat</th>
-                    <td>
-                        <span th:if="${pappati.status == 'active'}" class="estat-actiu">Actiu</span>
-                        <span th:if="${pappati.status == 'inactive'}" class="estat-inactiu">Rebutjat</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
+                <dl class="tutor-info">
+                    <dt>Correu</dt>
+                    <dd th:text="${pappati.emailAddress}"></dd>
 
-        <div>
-            <!-- MOTIU DE REBUIG -->
-            <div th:if="${credentials.rejected}">
-                <h3 class="section-title">Motiu del rebuig</h3>
-                <div class="alert alert-error" th:text="${credentials.rejectionReason}"></div>
+                    <dt>Telèfon</dt>
+                    <dd th:text="${pappati.phoneNumber}"></dd>
+
+                    <dt>Data de naixement</dt>
+                    <dd th:text="${#temporals.format(pappati.birthDate, 'dd/MM/yyyy')}"></dd>
+
+                    <dt>Adreça</dt>
+                    <dd th:text="${pappati.homeAddress}"></dd>
+
+                    <dt>Localitat</dt>
+                    <dd th:text="${pappati.locality}"></dd>
+                </dl>
+
+                <h2 class="form-section-title">Perfil professional</h2>
+
+                <dl class="tutor-info">
+                    <dt>Àrees d'especialització</dt>
+                    <dd th:text="${pappati.specializationAreas}"></dd>
+
+                    <dt>Formació acadèmica</dt>
+                    <dd th:text="${pappati.academicBackground}"></dd>
+
+                    <dt>Experiència professional</dt>
+                    <dd th:text="${pappati.professionalExperience}"></dd>
+
+                    <dt>Documents</dt>
+                    <dd th:text="${pappati.documents}"></dd>
+                </dl>
             </div>
 
-            <!-- CONTRACTES (placeholder fins que implementem contractes) -->
-            <div th:if="${!credentials.rejected}">
-                <h3 class="section-title">Contractes</h3>
-                <div class="alert alert-info">
-                    La gestió de contractes s'implementarà próximament.
+            <div>
+                <!-- MOTIU DE REBUIG -->
+                <div th:if="${credentials.rejected}">
+                    <h2 class="form-section-title">Motiu del rebuig</h2>
+                    <div class="alert alert-error" th:text="${credentials.rejectionReason}"></div>
+                </div>
+
+                <!-- CONTRACTES DEL PAP/PATI -->
+                <div th:unless="${credentials.rejected}">
+                    <h2 class="form-section-title">Contractes</h2>
+                    <p>Consulta l'historial de contractes signats per aquest PAP/PATI.</p>
+                    <a th:href="@{/admin/contractes/papPati/{papID}(papID=${pappati.papID})}"
+                       class="btn btn-primary">
+                        Veure contractes
+                    </a>
                 </div>
             </div>
+
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- ACCIONS DEL TÈCNIC -->
+        <h2 class="form-section-title">Accions</h2>
+
+        <div class="table-actions">
+
+            <!-- Si està actiu, opció de desactivar -->
+            <form th:if="${pappati.status == 'active'}"
+                  th:action="@{/admin/gestionarPapPati/{username}/desactivar(username=${pappati.username})}"
+                  method="post" class="rebutjar-form"
+                  onsubmit="return confirm('Estàs segur/a que vols desactivar aquest PAP/PATI?');">
+                <label th:for="'rejectionReason-' + ${pappati.username}" class="sr-only">
+                    Motiu de la desactivació
+                </label>
+                <textarea th:id="'rejectionReason-' + ${pappati.username}"
+                          name="rejectionReason"
+                          class="rebutjar-textarea"
+                          placeholder="Motiu de la desactivació (opcional)"></textarea>
+                <button type="submit" class="btn btn-rebutjar">Desactivar PAP/PATI</button>
+            </form>
+
+            <!-- Si està rebutjat, opció de reactivar -->
+            <form th:if="${pappati.status == 'inactive'}"
+                  th:action="@{/admin/gestionarPapPati/{username}/activar(username=${pappati.username})}"
+                  method="post"
+                  onsubmit="return confirm('Vols reactivar aquest PAP/PATI?');">
+                <button type="submit" class="btn btn-primary">Reactivar PAP/PATI</button>
+            </form>
+
+        </div>
+
+        <div class="form-actions">
+            <a th:href="@{/admin/gestionarPapPati}" class="btn btn-secondary">Tornar al llistat</a>
         </div>
 
     </div>
-
-    <div class="form-actions">
-        <a href="javascript:history.back()" class="btn btn-secondary">Tornar enrere</a>
-    </div>
-
 </div>
 
 </body>

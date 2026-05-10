@@ -12,20 +12,21 @@
     <div class="login-wrapper">
         <div class="form-section">
 
-            <h2 class="section-title">Canviar contrasenya</h2>
+            <h1 class="section-title">Canviar contrasenya</h1>
             <p class="section-subtitle">Introdueix la teua contrasenya actual i la nova que vols utilitzar.</p>
 
-            <div th:if="${errorActual}" class="alert alert-error">
+            <div th:if="${errorActual}" class="alert alert-error" role="alert">
                 <span th:text="${errorActual}"></span>
             </div>
 
-            <form th:action="@{/papPati/canviarContrasenya}" th:object="${changePasswordForm}" method="post">
+            <form th:action="@{/papPati/canviarContrasenya}" th:object="${changePasswordForm}" method="post" novalidate>
 
                 <div class="form-group">
                     <label for="currentPassword">Contrasenya actual</label>
                     <input type="password" id="currentPassword" th:field="*{currentPassword}"
                            th:class="${#fields.hasErrors('currentPassword')} ? 'input-error' : ''"
-                           placeholder="La teua contrasenya actual" />
+                           placeholder="La teua contrasenya actual"
+                           autocomplete="current-password" required />
                     <span class="error-text" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></span>
                 </div>
 
@@ -33,7 +34,8 @@
                     <label for="newPassword">Nova contrasenya</label>
                     <input type="password" id="newPassword" th:field="*{newPassword}"
                            th:class="${#fields.hasErrors('newPassword')} ? 'input-error' : ''"
-                           placeholder="Mínim 6 caràcters" />
+                           placeholder="Mínim 6 caràcters"
+                           autocomplete="new-password" required />
                     <span class="error-text" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></span>
                 </div>
 
@@ -41,7 +43,8 @@
                     <label for="confirmPassword">Confirma la nova contrasenya</label>
                     <input type="password" id="confirmPassword" th:field="*{confirmPassword}"
                            th:class="${#fields.hasErrors('confirmPassword')} ? 'input-error' : ''"
-                           placeholder="Repeteix la nova contrasenya" />
+                           placeholder="Repeteix la nova contrasenya"
+                           autocomplete="new-password" required />
                     <span class="error-text" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
                 </div>
 

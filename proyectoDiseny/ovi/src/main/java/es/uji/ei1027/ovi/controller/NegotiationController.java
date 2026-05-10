@@ -6,20 +6,25 @@ import es.uji.ei1027.ovi.dao.oviuser.OviUserDao;
 import es.uji.ei1027.ovi.dao.pappati.PapPatiDao;
 import es.uji.ei1027.ovi.dao.requestschedule.RequestScheduleDao;
 import es.uji.ei1027.ovi.model.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import jakarta.servlet.http.HttpSession;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
 @Controller
 public class NegotiationController {
+
+    private static final String USER_ATTR = "user";
+    private static final String ROL_OVI = "oviUser";
+    private static final String ROL_PAP = "papPati";
 
     private NegotiationDao negotiationDao;
     private OviUserDao oviUserDao;
@@ -52,12 +57,57 @@ public class NegotiationController {
         this.requestScheduleDao = requestScheduleDao;
     }
 
-    // Mostra el detall d'una negociació per a l'usuari OVI
+    // =====================================================================
+    // HELPERS
+    // =====================================================================
+
+    /*
+     * Comprova que la negociació pertany a l'OviUser logat. Retorna la
+     * negociació si tot és correcte, o null si no existeix o no és seua.
+     */
+    private Negotiation getOwnedNegotiationOvi(int negotiationID, HttpSession session) {
+        Negotiation neg = negotiationDao.getNegotiation(negotiationID);
+        if (neg == null) return null;
+
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
+        OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
+
+        AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
+        if (sol == null || sol.getOviID() != oviUser.getOviID()) {
+            return null;
+        }
+        return neg;
+    }
+
+    /*
+     * Comprova que la negociació pertany al PAP/PATI logat.
+     */
+    private Negotiation getOwnedNegotiationPap(int negotiationID, HttpSession session) {
+        Negotiation neg = negotiationDao.getNegotiation(negotiationID);
+        if (neg == null) return null;
+
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
+        PapPati papPati = papPatiDao.getPapPatiByUsername(credentials.getUsername());
+
+        if (papPati == null || neg.getPapID() != papPati.getPapID()) {
+            return null;
+        }
+        return neg;
+    }
+
+    // =====================================================================
+    // DETALL DE LA NEGOCIACIÓ
+    // =====================================================================
+
     @RequestMapping("/oviUser/negociacio/{negociacioID}")
     public String detallOviUser(@PathVariable int negociacioID,
                                 HttpSession session, Model model) {
-        Negotiation neg = negotiationDao.getNegotiation(negociacioID);
-        Credentials credentials = (Credentials) session.getAttribute("user");
+        Negotiation neg = getOwnedNegotiationOvi(negociacioID, session);
+        if (neg == null) {
+            return "redirect:/oviUser/solicitudes";
+        }
+
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
         OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
         PapPati papPati = papPatiDao.getPapPati(neg.getPapID());
         AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
@@ -68,16 +118,19 @@ public class NegotiationController {
         model.addAttribute("papPati", papPati);
         model.addAttribute("solicitud", solicitud);
         model.addAttribute("horaris", horaris);
-        model.addAttribute("rol", "oviUser");
+        model.addAttribute("rol", ROL_OVI);
         return "negociacio/detail";
     }
 
-    // Mostra el detall d'una negociació per al PAP/PATI
     @RequestMapping("/papPati/negociacio/{negociacioID}")
     public String detallPapPati(@PathVariable int negociacioID,
                                 HttpSession session, Model model) {
-        Negotiation neg = negotiationDao.getNegotiation(negociacioID);
-        Credentials credentials = (Credentials) session.getAttribute("user");
+        Negotiation neg = getOwnedNegotiationPap(negociacioID, session);
+        if (neg == null) {
+            return "redirect:/papPati/portal";
+        }
+
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
         PapPati papPati = papPatiDao.getPapPatiByUsername(credentials.getUsername());
         AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
         OviUser oviUser = oviUserDao.getOviUser(solicitud.getOviID());
@@ -88,87 +141,196 @@ public class NegotiationController {
         model.addAttribute("oviUser", oviUser);
         model.addAttribute("solicitud", solicitud);
         model.addAttribute("horaris", horaris);
-        model.addAttribute("rol", "papPati");
+        model.addAttribute("rol", ROL_PAP);
         return "negociacio/detail";
     }
 
-    // Afig un missatge nou a la conversa de la negociació
-    @RequestMapping(value = "/negociacio/{negociacioID}/missatge", method = RequestMethod.POST)
-    public String afegirMissatge(@PathVariable int negociacioID,
-                                 @RequestParam("missatge") String missatge,
-                                 @RequestParam("rol") String rol,
-                                 HttpSession session) {
-        Negotiation neg = negotiationDao.getNegotiation(negociacioID);
-        Credentials credentials = (Credentials) session.getAttribute("user");
+    // =====================================================================
+    // AFEGIR MISSATGE A LA CONVERSA
+    // =====================================================================
 
-        String prefix = rol.equals("oviUser") ?
-                "[" + credentials.getUsername() + "] " :
-                "[" + credentials.getUsername() + " - PAP/PATI] ";
+    @RequestMapping(value = "/oviUser/negociacio/{negociacioID}/missatge", method = RequestMethod.POST)
+    public String afegirMissatgeOvi(@PathVariable int negociacioID,
+                                    @RequestParam("missatge") String missatge,
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
+        Negotiation neg = getOwnedNegotiationOvi(negociacioID, session);
+        if (neg == null) {
+            return "redirect:/oviUser/solicitudes";
+        }
+        return afegirMissatgeIntern(neg, missatge, ROL_OVI, session, redirectAttributes);
+    }
+
+    @RequestMapping(value = "/papPati/negociacio/{negociacioID}/missatge", method = RequestMethod.POST)
+    public String afegirMissatgePap(@PathVariable int negociacioID,
+                                    @RequestParam("missatge") String missatge,
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
+        Negotiation neg = getOwnedNegotiationPap(negociacioID, session);
+        if (neg == null) {
+            return "redirect:/papPati/portal";
+        }
+        return afegirMissatgeIntern(neg, missatge, ROL_PAP, session, redirectAttributes);
+    }
+
+    private String afegirMissatgeIntern(Negotiation neg, String missatge, String rol,
+                                        HttpSession session, RedirectAttributes redirectAttributes) {
+        // Només es poden afegir missatges si la negociació està en curs
+        if (!"inProgress".equals(neg.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquesta negociació ja està tancada");
+            return "redirect:/" + rol + "/negociacio/" + neg.getNegotiationID();
+        }
+
+        // Validar missatge no buit
+        if (missatge == null || missatge.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "El missatge no pot estar buit");
+            return "redirect:/" + rol + "/negociacio/" + neg.getNegotiationID();
+        }
+
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
+        String prefix = rol.equals(ROL_OVI)
+                ? "[" + credentials.getUsername() + " - OVI User] "
+                : "[" + credentials.getUsername() + " - PAP/PATI] ";
 
         String conversacioActual = neg.getConversation() == null ? "" : neg.getConversation();
-        String novaConversacio = conversacioActual.isEmpty() ?
-                prefix + missatge :
-                conversacioActual + "\n" + prefix + missatge;
+        String novaConversacio = conversacioActual.isEmpty()
+                ? prefix + missatge
+                : conversacioActual + "\n" + prefix + missatge;
 
         neg.setConversation(novaConversacio);
         negotiationDao.updateNegotiation(neg);
 
-        return "redirect:/" + rol + "/negociacio/" + negociacioID;
+        return "redirect:/" + rol + "/negociacio/" + neg.getNegotiationID();
     }
 
-    // Confirma l'acord des de la part de l'usuari OVI
+    // =====================================================================
+    // CONFIRMAR ACORD
+    // =====================================================================
+
+    @Transactional
     @RequestMapping(value = "/oviUser/negociacio/{negociacioID}/confirmar", method = RequestMethod.POST)
-    public String confirmarOviUser(@PathVariable int negociacioID) {
-        Negotiation neg = negotiationDao.getNegotiation(negociacioID);
+    public String confirmarOviUser(@PathVariable int negociacioID,
+                                   HttpSession session,
+                                   RedirectAttributes redirectAttributes) {
+        Negotiation neg = getOwnedNegotiationOvi(negociacioID, session);
+        if (neg == null) {
+            return "redirect:/oviUser/solicitudes";
+        }
+
+        if (!"inProgress".equals(neg.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquesta negociació ja està tancada");
+            return "redirect:/oviUser/negociacio/" + negociacioID;
+        }
+
         neg.setOviUserConfirmed(true);
         if (neg.isPapPatiConfirmed()) {
             neg.setStatus("finished");
             tancarAltresNegociacions(neg.getRequestID(), negociacioID);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Acord confirmat. La negociació s'ha tancat amb èxit.");
+        } else {
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Has confirmat l'acord. Esperant la confirmació del PAP/PATI.");
         }
         negotiationDao.updateNegotiation(neg);
         return "redirect:/oviUser/negociacio/" + negociacioID;
     }
 
-    // Confirma l'acord des de la part del PAP/PATI
+    @Transactional
     @RequestMapping(value = "/papPati/negociacio/{negociacioID}/confirmar", method = RequestMethod.POST)
-    public String confirmarPapPati(@PathVariable int negociacioID) {
-        Negotiation neg = negotiationDao.getNegotiation(negociacioID);
+    public String confirmarPapPati(@PathVariable int negociacioID,
+                                   HttpSession session,
+                                   RedirectAttributes redirectAttributes) {
+        Negotiation neg = getOwnedNegotiationPap(negociacioID, session);
+        if (neg == null) {
+            return "redirect:/papPati/portal";
+        }
+
+        if (!"inProgress".equals(neg.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquesta negociació ja està tancada");
+            return "redirect:/papPati/negociacio/" + negociacioID;
+        }
+
         neg.setPapPatiConfirmed(true);
         if (neg.isOviUserConfirmed()) {
             neg.setStatus("finished");
             tancarAltresNegociacions(neg.getRequestID(), negociacioID);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Acord confirmat. La negociació s'ha tancat amb èxit.");
+        } else {
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Has confirmat l'acord. Esperant la confirmació de l'usuari OVI.");
         }
         negotiationDao.updateNegotiation(neg);
         return "redirect:/papPati/negociacio/" + negociacioID;
     }
 
-    // Tanca la resta de negociacions actives de la mateixa sol·licitud
+    /*
+     * Quan una negociació es tanca amb acord, es marquen com 'noAgreement' la
+     * resta de negociacions de la mateixa sol·licitud que encara estan en curs.
+     */
     private void tancarAltresNegociacions(int requestID, int negociacioID) {
         List<Negotiation> altres = negotiationDao.getNegotiationsByRequest(requestID);
         for (Negotiation altra : altres) {
             if (altra.getNegotiationID() != negociacioID
-                    && altra.getStatus().equals("inProgress")) {
+                    && "inProgress".equals(altra.getStatus())) {
                 altra.setStatus("noAgreement");
                 negotiationDao.updateNegotiation(altra);
             }
         }
     }
 
-    // Marca la negociació com a no acord des de la part de l'usuari OVI
+    // =====================================================================
+    // NO ACORD
+    // =====================================================================
+
     @RequestMapping(value = "/oviUser/negociacio/{negociacioID}/noAcord", method = RequestMethod.POST)
-    public String noAcordOviUser(@PathVariable int negociacioID) {
-        Negotiation neg = negotiationDao.getNegotiation(negociacioID);
+    public String noAcordOviUser(@PathVariable int negociacioID,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
+        Negotiation neg = getOwnedNegotiationOvi(negociacioID, session);
+        if (neg == null) {
+            return "redirect:/oviUser/solicitudes";
+        }
+
+        if (!"inProgress".equals(neg.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquesta negociació ja està tancada");
+            return "redirect:/oviUser/negociacio/" + negociacioID;
+        }
+
         neg.setStatus("noAgreement");
         negotiationDao.updateNegotiation(neg);
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Has marcat la negociació com 'sense acord'");
         return "redirect:/oviUser/negociacio/" + negociacioID;
     }
 
-    // Marca la negociació com a no acord des de la part del PAP/PATI
     @RequestMapping(value = "/papPati/negociacio/{negociacioID}/noAcord", method = RequestMethod.POST)
-    public String noAcordPapPati(@PathVariable int negociacioID) {
-        Negotiation neg = negotiationDao.getNegotiation(negociacioID);
+    public String noAcordPapPati(@PathVariable int negociacioID,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
+        Negotiation neg = getOwnedNegotiationPap(negociacioID, session);
+        if (neg == null) {
+            return "redirect:/papPati/portal";
+        }
+
+        if (!"inProgress".equals(neg.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquesta negociació ja està tancada");
+            return "redirect:/papPati/negociacio/" + negociacioID;
+        }
+
         neg.setStatus("noAgreement");
         negotiationDao.updateNegotiation(neg);
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Has marcat la negociació com 'sense acord'");
         return "redirect:/papPati/negociacio/" + negociacioID;
     }
 }

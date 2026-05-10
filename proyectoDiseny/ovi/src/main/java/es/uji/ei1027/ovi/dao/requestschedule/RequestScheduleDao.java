@@ -2,6 +2,7 @@ package es.uji.ei1027.ovi.dao.requestschedule;
 
 import es.uji.ei1027.ovi.model.RequestSchedule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -24,14 +25,18 @@ public class RequestScheduleDao {
 
     public List<RequestSchedule> getRequestSchedulesByRequest(int requestID) {
         return jdbcTemplate.query(
-                "SELECT * FROM REQUEST_SCHEDULE WHERE requestID=?",
+                "SELECT * FROM REQUEST_SCHEDULE WHERE requestID=? ORDER BY date, startHour",
                 new RequestScheduleRowMapper(), requestID);
     }
 
     public RequestSchedule getRequestSchedule(int reqScheduleID) {
-        return jdbcTemplate.queryForObject(
-                "SELECT * FROM REQUEST_SCHEDULE WHERE reqScheduleID=?",
-                new RequestScheduleRowMapper(), reqScheduleID);
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM REQUEST_SCHEDULE WHERE reqScheduleID=?",
+                    new RequestScheduleRowMapper(), reqScheduleID);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public void addRequestSchedule(RequestSchedule requestSchedule) {

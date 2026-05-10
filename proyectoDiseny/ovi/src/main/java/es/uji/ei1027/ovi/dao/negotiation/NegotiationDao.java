@@ -2,6 +2,7 @@ package es.uji.ei1027.ovi.dao.negotiation;
 
 import es.uji.ei1027.ovi.model.Negotiation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -19,13 +20,17 @@ public class NegotiationDao {
     }
 
     public List<Negotiation> getNegotiations() {
-        return jdbcTemplate.query("SELECT * FROM NEGOTIATION", new NegotiationRowMapper());
+        return jdbcTemplate.query("SELECT * FROM NEGOTIATION ORDER BY dateAndTime DESC", new NegotiationRowMapper());
     }
 
     public Negotiation getNegotiation(int negotiationID) {
-        return jdbcTemplate.queryForObject(
-                "SELECT * FROM NEGOTIATION WHERE negotiationID=?",
-                new NegotiationRowMapper(), negotiationID);
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM NEGOTIATION WHERE negotiationID=?",
+                    new NegotiationRowMapper(), negotiationID);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public void addNegotiation(Negotiation negotiation) {
@@ -56,7 +61,7 @@ public class NegotiationDao {
 
     public List<Negotiation> getNegotiationsByRequest(int requestID) {
         return jdbcTemplate.query(
-                "SELECT * FROM NEGOTIATION WHERE requestID=?",
+                "SELECT * FROM NEGOTIATION WHERE requestID=? ORDER BY dateAndTime DESC",
                 new NegotiationRowMapper(), requestID);
     }
 
@@ -65,14 +70,14 @@ public class NegotiationDao {
             return jdbcTemplate.queryForObject(
                     "SELECT * FROM NEGOTIATION WHERE requestID=? AND papID=?",
                     new NegotiationRowMapper(), requestID, papID);
-        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
     public List<Negotiation> getNegotiationsFinished() {
         return jdbcTemplate.query(
-                "SELECT * FROM NEGOTIATION WHERE status='finished'",
+                "SELECT * FROM NEGOTIATION WHERE status='finished' ORDER BY dateAndTime DESC",
                 new NegotiationRowMapper());
     }
 
@@ -84,7 +89,7 @@ public class NegotiationDao {
 
     public List<Negotiation> getNegotiationsByPap(int papID) {
         return jdbcTemplate.query(
-                "SELECT * FROM NEGOTIATION WHERE papID=?",
+                "SELECT * FROM NEGOTIATION WHERE papID=? ORDER BY dateAndTime DESC",
                 new NegotiationRowMapper(), papID);
     }
 }
