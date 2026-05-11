@@ -71,14 +71,15 @@ Compte del Tècnic --> admin0 (1234)
 ### OVI Users
 - **willy.rex**: conta rebutjada amb motiu
 - **dani.villar**: conta pendent de aprovaciò
-- **toni.nica**: 
-- **edgar.adell**: 
+- **edgar.adell**: sol·licitud acceptada amb doble negociaciò, sol·licitud acceptada esperant a la creaciò del contracte per part del tècnic i sol·licitud amb contracte actiu
+- - **toni.nica**: res de moment
+ 
 
 ### PAP/PATIs
 - **andres.iniesta**: conta pendent de aprovaciò
 - **xavi.hernandez**: conta rebutjada amb motiu
-- **leo.messi**: 
-- **joan.garcia**: 
+- **leo.messi**: amb horaris, negociacions pendents i contracte actiu
+- **joan.garcia**: amb horaris participa en una negociacio
 
 ## ------------------------
 
