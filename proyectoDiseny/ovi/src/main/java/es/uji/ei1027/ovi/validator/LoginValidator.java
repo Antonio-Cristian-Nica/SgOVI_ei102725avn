@@ -14,7 +14,6 @@ y la vista login.html mostrará el mensaje en el div th:errors.
  */
 
 public class LoginValidator implements Validator {
-
     @Override
     public boolean supports(@NonNull Class<?> clazz) {
         return Credentials.class.isAssignableFrom(clazz);

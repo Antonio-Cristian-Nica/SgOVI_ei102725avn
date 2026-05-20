@@ -110,13 +110,15 @@
             <button type="submit" class="btn btn-rebutjar">Cancel·lar sol·licitud</button>
         </form>
 
-        <a th:if="${!horaris.isEmpty() and esNova}"
-           th:href="@{/oviUser/solicitudes}"
-           class="btn btn-secondary">Finalitzar i tornar</a>
-    </div>
+        <form th:if="${!horaris.isEmpty() and esNova}"
+              th:action="@{/oviUser/solicitudes/{id}/finalizar(id=${requestID})}"
+              method="post">
+            <button type="submit" class="btn btn-secondary">Finalitzar i tornar</button>
+        </form>
+        <div th:if="${horaris.isEmpty() and esNova}" class="alert alert-error">
+            Has d'afegir almenys un horari per a finalitzar la sol·licitud.
+        </div>
 
-    <div th:if="${horaris.isEmpty() and esNova}" class="alert alert-error" role="alert">
-        Has d'afegir almenys un horari per a finalitzar la sol·licitud.
     </div>
 
 </div>

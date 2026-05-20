@@ -349,4 +349,13 @@ public class OviUserSolicitudController {
         }
         return "redirect:/oviUser/negociacio/" + neg.getNegotiationID();
     }
+
+
+    @RequestMapping(value = "/{requestID}/finalizar", method = RequestMethod.POST)
+    public String finalizarSolicitud(@PathVariable int requestID,
+                                     RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("successMessage",
+                "La sol·licitud s'ha creat correctament");
+        return "redirect:/oviUser/solicitudes";
+    }
 }

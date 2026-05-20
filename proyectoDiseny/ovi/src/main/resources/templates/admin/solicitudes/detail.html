@@ -137,7 +137,7 @@
                               th:action="@{/admin/solicitudes/{rid}/recomanar/delete/{pid}(rid=${solicitud.requestID},pid=${rec.papID})}"
                               method="post"
                               onsubmit="return confirm('Estàs segur/a que vols eliminar aquesta recomanació?');">
-                            <button type="submit" class="btn btn-rebutjar btn-small">Eliminar</button>
+                            <button type="submit" class="btn btn-rebutjar btn-small">Eliminar recomanació</button>
                         </form>
                         <span th:if="${teNegociacio[rec.papID]}" class="estat-pending">Té negociació activa</span>
                     </div>
