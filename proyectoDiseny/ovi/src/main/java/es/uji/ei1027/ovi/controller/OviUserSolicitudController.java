@@ -209,7 +209,7 @@ public class OviUserSolicitudController {
     // =====================================================================
 
     @RequestMapping("/{requestID}")
-    public String detail(@PathVariable int requestID, HttpSession session, Model model) {
+    public String detail(@PathVariable int requestID, @RequestParam(value = "from", required = false) String from, HttpSession session, Model model) {
         AssistanceRequest solicitud = getOwnedRequest(requestID, session);
         if (solicitud == null) {
             return REDIRECT_LIST;
@@ -218,6 +218,7 @@ public class OviUserSolicitudController {
         List<RequestSchedule> horaris = requestScheduleDao.getRequestSchedulesByRequest(requestID);
         model.addAttribute("solicitud", solicitud);
         model.addAttribute("horaris", horaris);
+        model.addAttribute("from", from);
 
         if (solicitud.getStatus().equals("accepted") ||
                 solicitud.getStatus().equals("closedWithContract") ||
@@ -297,8 +298,6 @@ public class OviUserSolicitudController {
         horari.setDayOfWeek(horari.getDate().getDayOfWeek().getValue());
         requestScheduleDao.addRequestSchedule(horari);
 
-        redirectAttributes.addFlashAttribute("successMessage",
-                "L'horari s'ha afegit correctament");
         return "redirect:/oviUser/solicitudes/" + requestID + "/horaris?nova=true";
     }
 

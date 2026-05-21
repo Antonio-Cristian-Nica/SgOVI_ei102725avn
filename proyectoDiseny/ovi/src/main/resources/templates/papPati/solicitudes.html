@@ -82,7 +82,7 @@
                 <div th:if="${negotiations[rec.requestID] != null and negotiations[rec.requestID].status == 'finished'}">
                     <span class="estat-actiu">Acord assolit</span>
                     <a th:if="${contractesPerSolicitud[rec.requestID] != null}"
-                       th:href="@{/papPati/contractes}"
+                       th:href="@{/papPati/contractes/{id}(id=${contractesPerSolicitud[rec.requestID].contractID},from='/papPati/solicitudes')}"
                        class="btn btn-secondary btn-small">Veure contracte</a>
                     <span th:if="${contractesPerSolicitud[rec.requestID] == null}"
                           class="estat-pending">Esperant la creació del contracte pel tècnic</span>

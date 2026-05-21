@@ -125,6 +125,7 @@ public class AdminContractController {
         model.addAttribute("negotiations", negotiations);
         model.addAttribute("titol", "Contractes de " + oviUser.getNameAndSurname());
         model.addAttribute("backUrl", "/admin/gestionarOviUsers/" + oviUser.getUsername());
+        model.addAttribute("ownUrl", "/admin/contractes/oviUser/" + oviID);
         return "admin/contractes/listByUser";
     }
 
@@ -159,6 +160,7 @@ public class AdminContractController {
         model.addAttribute("negotiations", negotiations);
         model.addAttribute("titol", "Contractes de " + papPati.getNameAndSurname());
         model.addAttribute("backUrl", "/admin/gestionarPapPati/" + papPati.getUsername());
+        model.addAttribute("ownUrl", "/admin/contractes/papPati/" + papID);
         return "admin/contractes/listByUser";
     }
 
@@ -258,7 +260,9 @@ public class AdminContractController {
     // =====================================================================
 
     @RequestMapping("/{contractID}")
-    public String detail(@PathVariable int contractID, Model model,
+    public String detail(@PathVariable int contractID,
+                         @RequestParam(value = "from", required = false) String from,
+                         Model model,
                          RedirectAttributes redirectAttributes) {
         Contract contract = contractDao.getContract(contractID);
         if (contract == null) {
@@ -279,6 +283,7 @@ public class AdminContractController {
         model.addAttribute("oviUser", oviUser);
         model.addAttribute("papPati", papPati);
         model.addAttribute("horaris", horaris);
+        model.addAttribute("from", from);
         return "admin/contractes/detail";
     }
 

@@ -1,11 +1,13 @@
 package es.uji.ei1027.ovi.controller;
 
+import es.uji.ei1027.ovi.dao.assistancerequest.AssistanceRequestDao;
 import es.uji.ei1027.ovi.dao.contract.ContractDao;
 import es.uji.ei1027.ovi.dao.credentials.CredentialsDao;
 import es.uji.ei1027.ovi.dao.negotiation.NegotiationDao;
 import es.uji.ei1027.ovi.dao.oviuser.OviUserDao;
 import es.uji.ei1027.ovi.dao.oviusertutor.TutorDao;
 import es.uji.ei1027.ovi.dao.pappati.PapPatiDao;
+import es.uji.ei1027.ovi.dao.requestschedule.RequestScheduleDao;
 import es.uji.ei1027.ovi.model.*;
 import es.uji.ei1027.ovi.utils.PasswordUtils;
 import es.uji.ei1027.ovi.validator.ChangePasswordValidator;
@@ -16,9 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
@@ -40,6 +40,8 @@ public class OviUserController {
     private ContractDao contractDao;
     private NegotiationDao negotiationDao;
     private PapPatiDao papPatiDao;
+    private AssistanceRequestDao assistanceRequestDao;
+    private RequestScheduleDao requestScheduleDao;
 
     @Autowired
     public void setOviUserDao(OviUserDao oviUserDao) {
@@ -69,6 +71,16 @@ public class OviUserController {
     @Autowired
     public void setPapPatiDao(PapPatiDao papPatiDao) {
         this.papPatiDao = papPatiDao;
+    }
+
+    @Autowired
+    public void setAssistanceRequestDao(AssistanceRequestDao assistanceRequestDao) {
+        this.assistanceRequestDao = assistanceRequestDao;
+    }
+
+    @Autowired
+    public void setRequestScheduleDao(RequestScheduleDao requestScheduleDao) {
+        this.requestScheduleDao = requestScheduleDao;
     }
 
     // =====================================================================
@@ -371,4 +383,45 @@ public class OviUserController {
         model.addAttribute("papPatis", papPatis);
         return "oviuser/contractes";
     }
+
+    // Mostra el detall d'un contracte concret de l'usuari OVI
+    @RequestMapping("/contractes/{contractID}")
+    public String contracteDetail(@PathVariable int contractID,
+                                  @RequestParam(value = "from", required = false) String from,
+                                  HttpSession session,
+                                  Model model,
+                                  RedirectAttributes redirectAttributes) {
+
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
+        OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
+
+        Contract contract = contractDao.getContract(contractID);
+        if (contract == null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest contracte no existeix");
+            return "redirect:/oviUser/contractes";
+        }
+
+        // Verificar que el contracte pertany a aquest usuari OVI
+        Negotiation neg = negotiationDao.getNegotiation(contract.getNegotiationID());
+        AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
+        if (sol.getOviID() != oviUser.getOviID()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "No tens permís per a veure aquest contracte");
+            return "redirect:/oviUser/contractes";
+        }
+
+        PapPati papPati = papPatiDao.getPapPati(neg.getPapID());
+        List<RequestSchedule> horaris = requestScheduleDao.getRequestSchedulesByRequest(neg.getRequestID());
+
+        model.addAttribute("contract", contract);
+        model.addAttribute("neg", neg);
+        model.addAttribute("sol", sol);
+        model.addAttribute("papPati", papPati);
+        model.addAttribute("horaris", horaris);
+        model.addAttribute("from", from);
+
+        return "oviuser/contracteDetail";
+    }
+
 }

@@ -65,7 +65,9 @@
                 </div>
 
                 <div class="form-actions">
-                    <a th:href="@{/oviUser/solicitudes/{id}(id=${neg.requestID})}"
+                    <a th:href="@{/oviUser/contractes/{id}(id=${c.contractID})}"
+                       class="btn btn-primary btn-small">Veure detalls del contracte</a>
+                    <a th:href="@{/oviUser/solicitudes/{id}(id=${neg.requestID},from='/oviUser/contractes')}"
                        class="btn btn-secondary btn-small">Veure sol·licitud associada</a>
                 </div>
 

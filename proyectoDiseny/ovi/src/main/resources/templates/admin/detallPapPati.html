@@ -18,6 +18,7 @@
             Estat:
             <span th:if="${pappati.status == 'active'}" class="estat-actiu">Actiu</span>
             <span th:if="${pappati.status == 'inactive'}" class="estat-inactiu">Rebutjat</span>
+            <span th:if="${pappati.status == 'approvalPending'}" class="estat-pending">Pendent de validació</span>
         </p>
 
         <div class="filosofia-grid">
@@ -66,14 +67,20 @@
                     <div class="alert alert-error" th:text="${credentials.rejectionReason}"></div>
                 </div>
 
-                <!-- CONTRACTES DEL PAP/PATI -->
-                <div th:unless="${credentials.rejected}">
+                <!-- CONTRACTES DEL PAP/PATI (només si està actiu) -->
+                <div th:if="${pappati.status == 'active'}">
                     <h2 class="form-section-title">Contractes</h2>
                     <p>Consulta l'historial de contractes signats per aquest PAP/PATI.</p>
                     <a th:href="@{/admin/contractes/papPati/{papID}(papID=${pappati.papID})}"
                        class="btn btn-primary">
                         Veure contractes
                     </a>
+                </div>
+
+                <!-- AVÍS SI ESTÀ PENDENT DE VALIDACIÓ -->
+                <div th:if="${pappati.status == 'approvalPending'}" class="alert alert-info" role="status">
+                    Aquest candidat encara no ha estat validat. Revisa la informació i decideix si activar
+                    o rebutjar el seu compte mitjançant els botons inferiors.
                 </div>
             </div>
 
@@ -86,7 +93,30 @@
 
         <div class="table-actions">
 
-            <!-- Si està actiu, opció de desactivar -->
+            <!-- Si està pendent de validació: activar o rebutjar -->
+            <form th:if="${pappati.status == 'approvalPending'}"
+                  th:action="@{/admin/validarPapPati/{username}/activar(username=${pappati.username})}"
+                  method="post"
+                  onsubmit="return confirm('Vols activar aquest compte?');">
+                <button type="submit" class="btn btn-primary">Activar compte</button>
+            </form>
+
+            <form th:if="${pappati.status == 'approvalPending'}"
+                  th:action="@{/admin/validarPapPati/{username}/rebutjar(username=${pappati.username})}"
+                  method="post" class="rebutjar-form"
+                  onsubmit="return confirm('Vols rebutjar aquest compte? El candidat veurà el motiu en intentar iniciar sessió.');">
+                <label th:for="'rejectionReason-' + ${pappati.username}" class="sr-only">
+                    Motiu del rebuig
+                </label>
+                <textarea th:id="'rejectionReason-' + ${pappati.username}"
+                          name="rejectionReason"
+                          class="rebutjar-textarea"
+                          placeholder="Motiu del rebuig..."
+                          required></textarea>
+                <button type="submit" class="btn btn-rebutjar">Rebutjar compte</button>
+            </form>
+
+            <!-- Si està actiu: opció de desactivar -->
             <form th:if="${pappati.status == 'active'}"
                   th:action="@{/admin/gestionarPapPati/{username}/desactivar(username=${pappati.username})}"
                   method="post" class="rebutjar-form"
@@ -101,7 +131,7 @@
                 <button type="submit" class="btn btn-rebutjar">Desactivar PAP/PATI</button>
             </form>
 
-            <!-- Si està rebutjat, opció de reactivar -->
+            <!-- Si està rebutjat/inactiu: opció de reactivar -->
             <form th:if="${pappati.status == 'inactive'}"
                   th:action="@{/admin/gestionarPapPati/{username}/activar(username=${pappati.username})}"
                   method="post"
@@ -112,7 +142,9 @@
         </div>
 
         <div class="form-actions">
-            <a th:href="@{/admin/gestionarPapPati}" class="btn btn-secondary">Tornar al llistat</a>
+            <a th:href="${from != null ? from : '/admin/gestionarPapPati'}"
+               th:text="${from != null ? 'Tornar arrere' : 'Tornar al llistat'}"
+               class="btn btn-secondary"></a>
         </div>
 
     </div>

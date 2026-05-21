@@ -8,6 +8,7 @@ import es.uji.ei1027.ovi.dao.oviuser.OviUserDao;
 import es.uji.ei1027.ovi.dao.pappati.PapPatiDao;
 import es.uji.ei1027.ovi.dao.pappatischedule.ScheduleDao;
 import es.uji.ei1027.ovi.dao.recommendedpappati.RecommendedPapPatiDao;
+import es.uji.ei1027.ovi.dao.requestschedule.RequestScheduleDao;
 import es.uji.ei1027.ovi.model.*;
 import es.uji.ei1027.ovi.utils.PasswordUtils;
 import es.uji.ei1027.ovi.validator.ChangePasswordValidator;
@@ -18,10 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
@@ -43,6 +41,7 @@ public class PapPatiController {
     private RecommendedPapPatiDao recommendedPapPatiDao;
     private OviUserDao oviUserDao;
     private ContractDao contractDao;
+    private RequestScheduleDao requestScheduleDao;
 
     @Autowired
     public void setPapPatiDao(PapPatiDao papPatiDao) {
@@ -80,6 +79,11 @@ public class PapPatiController {
     @Autowired
     public void setContractDao(ContractDao contractDao) {
         this.contractDao = contractDao;
+    }
+
+    @Autowired
+    public void setRequestScheduleDao(RequestScheduleDao requestScheduleDao) {
+        this.requestScheduleDao = requestScheduleDao;
     }
 
     // =====================================================================
@@ -363,5 +367,45 @@ public class PapPatiController {
         model.addAttribute("negotiations", negotiations);
         model.addAttribute("oviUsers", oviUsers);
         return "papPati/contractes";
+    }
+
+    // Mostra el detall d'un contracte concret del PAP/PATI
+    @RequestMapping("/contractes/{contractID}")
+    public String contracteDetail(@PathVariable int contractID,
+                                  @RequestParam(value = "from", required = false) String from,
+                                  HttpSession session,
+                                  Model model,
+                                  RedirectAttributes redirectAttributes) {
+
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
+        PapPati papPati = papPatiDao.getPapPatiByUsername(credentials.getUsername());
+
+        Contract contract = contractDao.getContract(contractID);
+        if (contract == null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest contracte no existeix");
+            return "redirect:/papPati/contractes";
+        }
+
+        // Verificar que el contracte pertany a aquest PAP/PATI
+        Negotiation neg = negotiationDao.getNegotiation(contract.getNegotiationID());
+        if (neg.getPapID() != papPati.getPapID()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "No tens permís per a veure aquest contracte");
+            return "redirect:/papPati/contractes";
+        }
+
+        AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
+        OviUser oviUser = oviUserDao.getOviUser(sol.getOviID());
+        List<RequestSchedule> horaris = requestScheduleDao.getRequestSchedulesByRequest(neg.getRequestID());
+
+        model.addAttribute("contract", contract);
+        model.addAttribute("neg", neg);
+        model.addAttribute("sol", sol);
+        model.addAttribute("oviUser", oviUser);
+        model.addAttribute("horaris", horaris);
+        model.addAttribute("from", from);
+
+        return "papPati/contracteDetail";
     }
 }

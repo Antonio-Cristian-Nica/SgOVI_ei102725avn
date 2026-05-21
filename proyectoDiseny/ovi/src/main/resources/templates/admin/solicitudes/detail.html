@@ -145,7 +145,7 @@
                     <!-- Estats closedWithContract o closedContractEnded: enllaç al contracte -->
                     <div th:if="${solicitud.status == 'closedWithContract' or solicitud.status == 'closedContractEnded'}">
                         <a th:if="${contractesPerPap[rec.papID] != null}"
-                           th:href="@{/admin/contractes/{id}(id=${contractesPerPap[rec.papID].contractID})}"
+                           th:href="@{/admin/contractes/{id}(id=${contractesPerPap[rec.papID].contractID},from='/admin/solicitudes/' + ${solicitud.requestID})}"
                            class="btn btn-secondary btn-small">Veure contracte</a>
                     </div>
                 </article>

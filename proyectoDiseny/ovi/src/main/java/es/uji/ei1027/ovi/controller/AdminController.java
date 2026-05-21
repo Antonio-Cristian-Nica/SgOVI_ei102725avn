@@ -102,9 +102,12 @@ public class AdminController {
     }
 
     @RequestMapping("/gestionarPapPati/{username}")
-    public String detallPapPati(@PathVariable("username") String username, Model model) {
+    public String detallPapPati(@PathVariable("username") String username,
+                                @RequestParam(value = "from", required = false) String from,
+                                Model model) {
         model.addAttribute("pappati", papPatiDao.getPapPatiByUsername(username));
         model.addAttribute("credentials", credentialsDao.getCredentials(username));
+        model.addAttribute("from", from);
         return "admin/detallPapPati";
     }
 

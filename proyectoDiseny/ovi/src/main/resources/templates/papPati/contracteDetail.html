@@ -4,7 +4,7 @@
       layout:decorate="~{fragments/base}"
       lang="ca">
 <head>
-    <title>SgOVI - Detall contracte</title>
+    <title>SgOVI - Detall del contracte</title>
 </head>
 <body>
 
@@ -56,32 +56,26 @@
 
                 <dt>Telèfon</dt>
                 <dd th:text="${oviUser.phoneNumber}"></dd>
-            </dl>
 
-            <h2 class="form-section-title">PAP/PATI</h2>
-            <dl class="tutor-info">
-                <dt>Nom</dt>
-                <dd th:text="${papPati.nameAndSurname}"></dd>
-
-                <dt>Especialització</dt>
-                <dd th:text="${papPati.specializationAreas}"></dd>
-
-                <dt>Localitat</dt>
-                <dd th:text="${papPati.locality}"></dd>
+                <dt>Diversitat funcional</dt>
+                <dd th:text="${oviUser.functionalDiversity != null ? oviUser.functionalDiversity : '—'}"></dd>
             </dl>
         </div>
 
         <div>
-            <h2 class="form-section-title">Sol·licitud d'assistència</h2>
+            <h2 class="form-section-title">Sol·licitud associada</h2>
             <dl class="tutor-info">
-                <dt>Localització</dt>
+                <dt>Localització del servei</dt>
                 <dd th:text="${sol.serviceLocation}"></dd>
 
                 <dt>Assistència requerida</dt>
                 <dd style="white-space: pre-wrap;" th:text="${sol.requiredAssistance}"></dd>
+
+                <dt>Data creació de la sol·licitud</dt>
+                <dd th:text="${#temporals.format(sol.creationDate, 'dd/MM/yyyy')}"></dd>
             </dl>
 
-            <h2 class="form-section-title">Horaris sol·licitats</h2>
+            <h2 class="form-section-title">Horaris del servei</h2>
             <div th:if="${horaris == null or horaris.isEmpty()}" class="alert alert-info">
                 No hi ha horaris registrats.
             </div>
@@ -111,68 +105,45 @@
                 </tr>
                 </tbody>
             </table>
-
-            <h2 class="form-section-title">Conversa de la negociació</h2>
-
-            <div th:if="${neg.conversation == null or #strings.isEmpty(neg.conversation)}"
-                 class="chat-empty">
-                Aquesta negociació no té missatges registrats.
-            </div>
-
-            <ol th:if="${neg.conversation != null and !#strings.isEmpty(neg.conversation)}"
-                class="chat-messages"
-                aria-label="Missatges de la negociació">
-
-                <li th:each="linia : ${neg.conversation.split('\n')}"
-                    th:with="
-                        esOvi=${#strings.contains(linia, '- OVI User]')},
-                        tancamentClau=${#strings.indexOf(linia, ']')},
-                        emissor=${tancamentClau >= 0 ? #strings.substring(linia, 1, tancamentClau) : 'Desconegut'},
-                        contingut=${tancamentClau >= 0 ? #strings.substring(linia, tancamentClau + 2) : linia}
-                    "
-                    th:class="${esOvi} ? 'chat-message chat-message-other' : 'chat-message chat-message-other-pap'">
-
-                    <article>
-                        <header class="chat-meta">
-                            <span class="chat-author" th:text="${emissor}"></span>
-                        </header>
-                        <p class="chat-content" th:text="${contingut}"></p>
-                    </article>
-                </li>
-            </ol>
         </div>
 
     </div>
 
-    <!-- ACCIONS DEL TÈCNIC -->
-    <hr class="section-divider">
-    <h2 class="form-section-title">Accions</h2>
+    <!-- CONVERSA DE LA NEGOCIACIÓ -->
+    <section class="chat-container" aria-label="Conversa de la negociació">
+        <h2 class="form-section-title">Conversa de la negociació</h2>
 
-    <div th:if="${contract.status == 'active'}" class="form-actions">
-        <form th:action="@{/admin/contractes/{id}/finalitzar(id=${contract.contractID})}"
-              method="post"
-              onsubmit="return confirm('Confirmes que el servei ha finalitzat? La sol·licitud quedarà marcada com a contracte finalitzat.');">
-            <button type="submit" class="btn btn-primary">Marcar com a finalitzat</button>
-        </form>
+        <div th:if="${neg.conversation == null or #strings.isEmpty(neg.conversation)}"
+             class="chat-empty">
+            Aquesta negociació no té missatges registrats.
+        </div>
 
-        <form th:action="@{/admin/contractes/{id}/cancellar(id=${contract.contractID})}"
-              method="post"
-              onsubmit="return confirm('Estàs segur/a que vols cancel·lar aquest contracte?');">
-            <button type="submit" class="btn btn-rebutjar">Cancel·lar contracte</button>
-        </form>
-    </div>
+        <ol th:if="${neg.conversation != null and !#strings.isEmpty(neg.conversation)}"
+            class="chat-messages"
+            aria-label="Missatges intercanviats">
 
-    <div th:if="${contract.status == 'ended'}" class="alert alert-info" role="status">
-        Aquest contracte ja ha estat marcat com a finalitzat. No es poden fer més accions.
-    </div>
+            <li th:each="linia : ${neg.conversation.split('\n')}"
+                th:with="
+                    esMeu=${#strings.contains(linia, '- PAP/PATI]')},
+                    tancamentClau=${#strings.indexOf(linia, ']')},
+                    emissor=${tancamentClau >= 0 ? #strings.substring(linia, 1, tancamentClau) : 'Desconegut'},
+                    contingut=${tancamentClau >= 0 ? #strings.substring(linia, tancamentClau + 2) : linia}
+                "
+                th:class="${esMeu} ? 'chat-message chat-message-own' : 'chat-message chat-message-other'">
 
-    <div th:if="${contract.status == 'cancelled'}" class="alert alert-info" role="status">
-        Aquest contracte ha estat cancel·lat. No es poden fer més accions.
-    </div>
+                <article>
+                    <header class="chat-meta">
+                        <span class="chat-author" th:text="${emissor}"></span>
+                    </header>
+                    <p class="chat-content" th:text="${contingut}"></p>
+                </article>
+            </li>
+        </ol>
+    </section>
 
     <div class="form-actions">
-        <a th:href="${from != null} ? @{${from}} : @{/admin/contractes}"
-           th:text="${from != null ? 'Tornar arrere' : 'Tornar al llistat'}"
+        <a th:href="${from != null ? from : '/papPati/contractes'}"
+           th:text="${from != null ? 'Tornar arrere' : 'Tornar al llistat de contractes'}"
            class="btn btn-secondary"></a>
     </div>
 

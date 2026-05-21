@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-/**
+/*
  * Comprova que l'usuari té sessió i el seu compte està actiu abans
  * d'accedir a les zones privades. Es registra en OVIConfiguration.
  */

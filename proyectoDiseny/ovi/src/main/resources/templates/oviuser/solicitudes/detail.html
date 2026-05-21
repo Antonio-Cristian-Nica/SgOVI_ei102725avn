@@ -122,7 +122,7 @@
                      class="solicitud-rec-actions">
                     <span class="estat-actiu">Acord assolit</span>
                     <a th:if="${contractesPerPap != null and contractesPerPap[rec.papID] != null}"
-                       th:href="@{/oviUser/contractes}"
+                       th:href="@{/oviUser/contractes/{id}(id=${contractesPerPap[rec.papID].contractID},from='/oviUser/solicitudes/' + ${solicitud.requestID})}"
                        class="btn btn-secondary btn-small">Veure contracte</a>
                     <span th:if="${contractesPerPap == null or contractesPerPap[rec.papID] == null}"
                           class="estat-pending">Esperant la creació del contracte pel tècnic</span>
@@ -139,7 +139,9 @@
     </div>
 
     <div class="form-actions">
-        <a th:href="@{/oviUser/solicitudes}" class="btn btn-secondary">Tornar al llistat</a>
+        <a th:href="${from != null ? from : '/oviUser/solicitudes'}"
+           th:text="${from != null ? 'Tornar arrere' : 'Tornar al llistat'}"
+           class="btn btn-secondary"></a>
     </div>
 
 </div>

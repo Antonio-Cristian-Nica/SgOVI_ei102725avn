@@ -50,7 +50,7 @@
                     <span th:if="${contracte.status == 'cancelled'}" class="estat-inactiu">Cancel·lat</span>
                 </td>
                 <td>
-                    <a th:href="@{/admin/contractes/{id}(id=${contracte.contractID})}"
+                    <a th:href="@{/admin/contractes/{id}(id=${contracte.contractID},from=${ownUrl})}"
                        class="btn btn-secondary btn-small">Veure</a>
                 </td>
             </tr>
@@ -59,7 +59,7 @@
     </div>
 
     <div class="form-actions">
-        <a th:href="@{${backUrl}}" class="btn btn-secondary">Tornar</a>
+        <a th:href="@{${backUrl}}" class="btn btn-secondary">Tornar arrere</a>
         <a th:href="@{/admin/contractes}" class="btn btn-secondary">Veure tots els contractes</a>
     </div>
 
