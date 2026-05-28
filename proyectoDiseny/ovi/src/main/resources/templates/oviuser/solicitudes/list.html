@@ -13,10 +13,6 @@
     <h1 class="section-title">Les meues sol·licituds d'assistència</h1>
     <p class="section-subtitle">Consulta l'estat de les teues sol·licituds d'assistència personal.</p>
 
-    <div th:if="${successMessage}" class="alert alert-success" role="alert">
-        <span th:text="${successMessage}"></span>
-    </div>
-
     <div th:if="${solicitudes.isEmpty()}" class="alert alert-info">
         No tens cap sol·licitud registrada. Crea la teua primera sol·licitud d'assistència.
     </div>

@@ -27,7 +27,9 @@ public class ChangePasswordValidator implements Validator {
             errors.rejectValue("newPassword", "format", "La nova contrasenya ha de tindre almenys 6 caràcters");
         } else if (form.getNewPassword().length() > 100) {
             errors.rejectValue("newPassword", "longitud", "La contrasenya no pot superar els 100 caràcters");
-        }
+        } else if (form.getCurrentPassword() != null && form.getNewPassword().equals(form.getCurrentPassword())) {
+            errors.rejectValue("newPassword", "igual", "La nova contrasenya ha de ser diferent de l'actual");
+    }
 
         if (form.getConfirmPassword() == null || form.getConfirmPassword().trim().isEmpty()) {
             errors.rejectValue("confirmPassword", ERROR_OBLIGATORI, "Has de confirmar la nova contrasenya");

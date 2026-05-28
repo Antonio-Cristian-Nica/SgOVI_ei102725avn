@@ -256,6 +256,119 @@ public class AdminContractController {
     }
 
     // =====================================================================
+    // MODIFICACIÓ DE CONTRACTE
+    // =====================================================================
+
+    @RequestMapping("/{contractID}/edit")
+    public String edit(@PathVariable int contractID,
+                       @RequestParam(value = "from", required = false) String from,
+                       Model model,
+                       RedirectAttributes redirectAttributes) {
+        Contract contract = contractDao.getContract(contractID);
+        if (contract == null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest contracte no existeix");
+            return REDIRECT_LIST;
+        }
+
+        // Només es poden modificar contractes actius
+        if (!"active".equals(contract.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Només es poden modificar contractes actius");
+            return "redirect:/admin/contractes/" + contractID;
+        }
+
+        Negotiation neg = negotiationDao.getNegotiation(contract.getNegotiationID());
+        AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
+        OviUser oviUser = oviUserDao.getOviUser(sol.getOviID());
+        PapPati papPati = papPatiDao.getPapPati(neg.getPapID());
+
+        model.addAttribute("contract", contract);
+        model.addAttribute("neg", neg);
+        model.addAttribute("sol", sol);
+        model.addAttribute("oviUser", oviUser);
+        model.addAttribute("papPati", papPati);
+        model.addAttribute("from", from);
+        return "admin/contractes/edit";
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{contractID}/edit", method = RequestMethod.POST)
+    public String processEdit(@PathVariable int contractID,
+                              @ModelAttribute("contract") Contract contract,
+                              BindingResult bindingResult,
+                              @RequestParam(value = "from", required = false) String from,
+                              Model model,
+                              RedirectAttributes redirectAttributes) {
+
+        Contract existent = contractDao.getContract(contractID);
+        if (existent == null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest contracte no existeix");
+            return REDIRECT_LIST;
+        }
+
+        if (!"active".equals(existent.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Només es poden modificar contractes actius");
+            return "redirect:/admin/contractes/" + contractID;
+        }
+
+        // Validació específica de l'edició:
+        // - la data d'inici és obligatòria i no pot ser anterior a la del contracte original
+        // - la data de fi és obligatòria i ha de ser posterior o igual a la d'inici
+        // - l'URL del document és obligatòria i no pot superar els 255 caràcters
+        if (contract.getStartServiceDate() == null) {
+            bindingResult.rejectValue("startServiceDate", "obligatori",
+                    "La data d'inici del servei és obligatòria");
+        } else if (contract.getStartServiceDate().isBefore(existent.getStartServiceDate())) {
+            bindingResult.rejectValue("startServiceDate", "anterior",
+                    "La data d'inici no pot ser anterior a la del contracte original");
+        }
+
+        if (contract.getEndServiceDate() == null) {
+            bindingResult.rejectValue("endServiceDate", "obligatori",
+                    "La data de fi del servei és obligatòria");
+        } else if (contract.getStartServiceDate() != null
+                && contract.getEndServiceDate().isBefore(contract.getStartServiceDate())) {
+            bindingResult.rejectValue("endServiceDate", "ordre",
+                    "La data de fi ha de ser posterior o igual a la data d'inici");
+        }
+
+        if (contract.getDocumentURL() == null || contract.getDocumentURL().trim().isEmpty()) {
+            bindingResult.rejectValue("documentURL", "obligatori",
+                    "L'URL del document del contracte és obligatòria");
+        } else if (contract.getDocumentURL().length() > 255) {
+            bindingResult.rejectValue("documentURL", "longitud",
+                    "L'URL no pot superar els 255 caràcters");
+        }
+
+        if (bindingResult.hasErrors()) {
+            Negotiation neg = negotiationDao.getNegotiation(existent.getNegotiationID());
+            AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
+            model.addAttribute("neg", neg);
+            model.addAttribute("sol", sol);
+            model.addAttribute("oviUser", oviUserDao.getOviUser(sol.getOviID()));
+            model.addAttribute("papPati", papPatiDao.getPapPati(neg.getPapID()));
+            model.addAttribute("from", from);
+            return "admin/contractes/edit";
+        }
+
+        // Forçar identitat i estat des de BBDD; només es modifiquen dates i URL.
+        // La versió s'incrementa per deixar constància de la modificació.
+        contract.setContractID(existent.getContractID());
+        contract.setNegotiationID(existent.getNegotiationID());
+        contract.setCreationDate(existent.getCreationDate());
+        contract.setStatus(existent.getStatus());
+        contract.setVersion(existent.getVersion() + 1);
+        contractDao.updateContract(contract);
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "El contracte s'ha modificat correctament (versió " + contract.getVersion() + ")");
+        return "redirect:/admin/contractes/" + contractID;
+    }
+
+    // =====================================================================
     // DETALL DE CONTRACTE
     // =====================================================================
 
@@ -349,6 +462,11 @@ public class AdminContractController {
 
         contract.setStatus("cancelled");
         contractDao.updateContract(contract);
+
+        // Actualitzar el status de la sol·licitud associada perquè no quede
+        // marcada com a "contracte actiu" tenint el contracte cancel·lat
+        Negotiation neg = negotiationDao.getNegotiation(contract.getNegotiationID());
+        assistanceRequestDao.updateStatus(neg.getRequestID(), "closedContractEnded");
 
         redirectAttributes.addFlashAttribute("successMessage",
                 "El contracte s'ha cancel·lat correctament");

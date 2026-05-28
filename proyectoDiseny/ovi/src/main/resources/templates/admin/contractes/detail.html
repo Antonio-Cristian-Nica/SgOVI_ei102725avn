@@ -149,6 +149,10 @@
     <h2 class="form-section-title">Accions</h2>
 
     <div th:if="${contract.status == 'active'}" class="form-actions">
+
+        <a th:href="@{/admin/contractes/{id}/edit(id=${contract.contractID})}"
+           class="btn btn-secondary">Modificar contracte</a>
+
         <form th:action="@{/admin/contractes/{id}/finalitzar(id=${contract.contractID})}"
               method="post"
               onsubmit="return confirm('Confirmes que el servei ha finalitzat? La sol·licitud quedarà marcada com a contracte finalitzat.');">
