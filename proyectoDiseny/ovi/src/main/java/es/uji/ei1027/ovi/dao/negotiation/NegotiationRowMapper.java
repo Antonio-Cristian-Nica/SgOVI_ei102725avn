@@ -11,8 +11,6 @@ public class NegotiationRowMapper implements RowMapper<Negotiation> {
     public Negotiation mapRow(ResultSet rs, int rowNum) throws SQLException {
         Negotiation negotiation = new Negotiation();
         negotiation.setNegotiationID(rs.getInt("negotiationID"));
-        negotiation.setDuration(rs.getString("duration"));
-        negotiation.setLocation(rs.getString("location"));
         negotiation.setStatus(rs.getString("status"));
         negotiation.setDateAndTime(rs.getObject("dateAndTime", LocalDateTime.class));
         negotiation.setConversation(rs.getString("conversation"));

@@ -35,10 +35,9 @@ public class NegotiationDao {
 
     public void addNegotiation(Negotiation negotiation) {
         jdbcTemplate.update(
-                "INSERT INTO NEGOTIATION (duration, location, status, dateAndTime, " +
+                "INSERT INTO NEGOTIATION (status, dateAndTime, " +
                         "conversation, oviUserConfirmed, papPatiConfirmed, requestID, papID) " +
-                        "VALUES (?,?,?,?,?,?,?,?,?)",
-                negotiation.getDuration(), negotiation.getLocation(),
+                        "VALUES (?,?,?,?,?,?,?)",
                 negotiation.getStatus(), negotiation.getDateAndTime(),
                 negotiation.getConversation(), negotiation.isOviUserConfirmed(),
                 negotiation.isPapPatiConfirmed(), negotiation.getRequestID(),
@@ -47,9 +46,8 @@ public class NegotiationDao {
 
     public void updateNegotiation(Negotiation negotiation) {
         jdbcTemplate.update(
-                "UPDATE NEGOTIATION SET duration=?, location=?, status=?, dateAndTime=?, " +
+                "UPDATE NEGOTIATION SET status=?, dateAndTime=?, " +
                         "conversation=?, oviUserConfirmed=?, papPatiConfirmed=? WHERE negotiationID=?",
-                negotiation.getDuration(), negotiation.getLocation(),
                 negotiation.getStatus(), negotiation.getDateAndTime(),
                 negotiation.getConversation(), negotiation.isOviUserConfirmed(),
                 negotiation.isPapPatiConfirmed(), negotiation.getNegotiationID());

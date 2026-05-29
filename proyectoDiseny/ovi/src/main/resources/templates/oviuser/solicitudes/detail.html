@@ -20,6 +20,12 @@
                 <dt>Localització</dt>
                 <dd th:text="${solicitud.serviceLocation}"></dd>
 
+                <dt>Tipus</dt>
+                <dd>
+                    <span th:if="${solicitud.type == 'rigid'}">Puntual</span>
+                    <span th:if="${solicitud.type == 'flexible'}">Flexible</span>
+                </dd>
+
                 <dt>Assistència requerida</dt>
                 <dd style="white-space: pre-wrap;" th:text="${solicitud.requiredAssistance}"></dd>
 
@@ -43,41 +49,60 @@
         </div>
 
         <div>
-            <h2 class="form-section-title">Horaris sol·licitats</h2>
-            <div th:if="${horaris.isEmpty()}" class="alert alert-info">
-                No hi ha horaris registrats per a aquesta sol·licitud.
-            </div>
-            <table th:if="${!horaris.isEmpty()}" class="data-table">
-                <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Dia</th>
-                    <th>Inici</th>
-                    <th>Fi</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="horari : ${horaris}">
-                    <td th:text="${#temporals.format(horari.date, 'dd/MM/yyyy')}"></td>
-                    <td th:switch="${horari.dayOfWeek}">
-                        <span th:case="1">Dilluns</span>
-                        <span th:case="2">Dimarts</span>
-                        <span th:case="3">Dimecres</span>
-                        <span th:case="4">Dijous</span>
-                        <span th:case="5">Divendres</span>
-                        <span th:case="6">Dissabte</span>
-                        <span th:case="7">Diumenge</span>
-                    </td>
-                    <td th:text="${#temporals.format(horari.startHour, 'HH:mm')}"></td>
-                    <td th:text="${#temporals.format(horari.endHour, 'HH:mm')}"></td>
-                </tr>
-                </tbody>
-            </table>
+            <!-- Si és FLEXIBLE: mostrar període -->
+            <div th:if="${solicitud.type == 'flexible'}">
+                <h2 class="form-section-title">Període del servei</h2>
+                <dl class="tutor-info">
+                    <dt>Data d'inici</dt>
+                    <dd th:text="${#temporals.format(solicitud.startServiceDate, 'dd/MM/yyyy')}"></dd>
 
-            <div th:if="${solicitud.status == 'inProgress'}" class="form-actions">
-                <a th:href="@{/oviUser/solicitudes/{id}/horaris(id=${solicitud.requestID},nova=false)}"
-                   class="btn btn-primary">Editar horaris</a>
+                    <dt>Data de fi</dt>
+                    <dd th:text="${#temporals.format(solicitud.endServiceDate, 'dd/MM/yyyy')}"></dd>
+                </dl>
+                <p class="section-subtitle">
+                    Els horaris concrets dins d'aquest període s'acordaran amb el PAP/PATI durant la negociació.
+                </p>
             </div>
+
+            <!-- Si és RÍGIDA: mostrar taula d'horaris -->
+            <div th:if="${solicitud.type == 'rigid'}">
+                <h2 class="form-section-title">Horaris sol·licitats</h2>
+                <div th:if="${horaris.isEmpty()}" class="alert alert-info">
+                    No hi ha horaris registrats per a aquesta sol·licitud.
+                </div>
+                <table th:if="${!horaris.isEmpty()}" class="data-table">
+                    <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Dia</th>
+                        <th>Inici</th>
+                        <th>Fi</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="horari : ${horaris}">
+                        <td th:text="${#temporals.format(horari.date, 'dd/MM/yyyy')}"></td>
+                        <td th:switch="${horari.dayOfWeek}">
+                            <span th:case="1">Dilluns</span>
+                            <span th:case="2">Dimarts</span>
+                            <span th:case="3">Dimecres</span>
+                            <span th:case="4">Dijous</span>
+                            <span th:case="5">Divendres</span>
+                            <span th:case="6">Dissabte</span>
+                            <span th:case="7">Diumenge</span>
+                        </td>
+                        <td th:text="${#temporals.format(horari.startHour, 'HH:mm')}"></td>
+                        <td th:text="${#temporals.format(horari.endHour, 'HH:mm')}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div th:if="${solicitud.status == 'inProgress'}" class="form-actions">
+                    <a th:href="@{/oviUser/solicitudes/{id}/horaris(id=${solicitud.requestID},nova=false)}"
+                       class="btn btn-primary">Editar horaris</a>
+                </div>
+            </div>
+
         </div>
 
     </div>

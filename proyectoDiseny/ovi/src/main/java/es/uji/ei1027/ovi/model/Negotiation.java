@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 
 public class Negotiation {
     private int negotiationID;
-    private String duration;
-    private String location;
     private String status; // // 'inProgress', 'finished', 'noAgreement'
     private LocalDateTime dateAndTime;
     private String conversation;
@@ -16,12 +14,6 @@ public class Negotiation {
 
     public int getNegotiationID() { return negotiationID; }
     public void setNegotiationID(int negotiationID) { this.negotiationID = negotiationID; }
-
-    public String getDuration() { return duration; }
-    public void setDuration(String duration) { this.duration = duration; }
-
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }

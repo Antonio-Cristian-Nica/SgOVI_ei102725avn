@@ -1,5 +1,8 @@
 package es.uji.ei1027.ovi.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class AssistanceRequest {
@@ -7,6 +10,11 @@ public class AssistanceRequest {
     private String serviceLocation;
     private String requiredAssistance;
     private LocalDateTime creationDate;
+    private String type;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate startServiceDate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate endServiceDate;
     private String status; // 'inProgress', 'accepted', 'rejected', 'closedWithContract', 'closedContractEnded'
     private int oviID; // FK → OviUser
 
@@ -27,4 +35,13 @@ public class AssistanceRequest {
 
     public int getOviID() { return oviID; }
     public void setOviID(int oviID) { this.oviID = oviID; }
+
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+
+    public LocalDate getStartServiceDate() { return startServiceDate; }
+    public void setStartServiceDate(LocalDate startServiceDate) { this.startServiceDate = startServiceDate; }
+
+    public LocalDate getEndServiceDate() { return endServiceDate; }
+    public void setEndServiceDate(LocalDate endServiceDate) { this.endServiceDate = endServiceDate; }
 }

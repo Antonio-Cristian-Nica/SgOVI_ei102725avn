@@ -108,6 +108,11 @@ public class OviUserSolicitudController {
     // ALTA
     // =====================================================================
 
+    @RequestMapping("/nova")
+    public String triarTipus() {
+        return "oviuser/solicitudes/tipus";
+    }
+
     @RequestMapping("/add")
     public String add(Model model) {
         model.addAttribute("solicitud", new AssistanceRequest());
@@ -130,10 +135,47 @@ public class OviUserSolicitudController {
         OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
         solicitud.setOviID(oviUser.getOviID());
         solicitud.setStatus("inProgress");
+        solicitud.setType("rigid");
         assistanceRequestDao.addAssistanceRequest(solicitud);
 
         int requestID = assistanceRequestDao.getLastInsertedId();
         return "redirect:/oviUser/solicitudes/" + requestID + "/horaris?nova=true";
+    }
+
+    @RequestMapping("/addFlexible")
+    public String addFlexible(Model model) {
+        AssistanceRequest solicitud = new AssistanceRequest();
+        solicitud.setType("flexible");
+        model.addAttribute("solicitud", solicitud);
+        return "oviuser/solicitudes/addFlexible";
+    }
+
+    @RequestMapping(value = "/addFlexible", method = RequestMethod.POST)
+    public String processAddFlexible(@ModelAttribute("solicitud") AssistanceRequest solicitud,
+                                     BindingResult bindingResult,
+                                     HttpSession session,
+                                     RedirectAttributes redirectAttributes) {
+
+        // Marquem el tipus abans de validar perquè el validator aplique
+        // les comprovacions específiques de les sol·licituds flexibles.
+        solicitud.setType("flexible");
+
+        AssistanceRequestValidator validator = new AssistanceRequestValidator();
+        validator.validate(solicitud, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return "oviuser/solicitudes/addFlexible";
+        }
+
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
+        OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
+        solicitud.setOviID(oviUser.getOviID());
+        solicitud.setStatus("inProgress");
+        assistanceRequestDao.addAssistanceRequest(solicitud);
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "La sol·licitud flexible s'ha creat correctament");
+        return REDIRECT_LIST;
     }
 
     // =====================================================================
@@ -174,6 +216,13 @@ public class OviUserSolicitudController {
         solicitud.setOviID(existent.getOviID());
         solicitud.setStatus(existent.getStatus());
         solicitud.setCreationDate(existent.getCreationDate());
+        solicitud.setType(existent.getType());
+        // En rígides forcem dates a null des de BBDD; en flexibles conservem
+        // les que ha editat l'usuari (ja validades pel validator).
+        if (!"flexible".equals(existent.getType())) {
+            solicitud.setStartServiceDate(existent.getStartServiceDate());
+            solicitud.setEndServiceDate(existent.getEndServiceDate());
+        }
 
         assistanceRequestDao.updateAssistanceRequest(solicitud);
 

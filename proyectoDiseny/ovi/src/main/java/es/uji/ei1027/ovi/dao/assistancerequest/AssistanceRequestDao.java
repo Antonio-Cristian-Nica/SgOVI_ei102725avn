@@ -49,18 +49,23 @@ public class AssistanceRequestDao {
 
     public void addAssistanceRequest(AssistanceRequest request) {
         jdbcTemplate.update(
-                "INSERT INTO ASSISTANCE_REQUEST (serviceLocation, requiredAssistance, status, oviID) " +
-                        "VALUES (?,?,?,?)",
+                "INSERT INTO ASSISTANCE_REQUEST (serviceLocation, requiredAssistance, status, " +
+                        "type, startServiceDate, endServiceDate, oviID) " +
+                        "VALUES (?,?,?,?,?,?,?)",
                 request.getServiceLocation(), request.getRequiredAssistance(),
-                request.getStatus(), request.getOviID());
+                request.getStatus(), request.getType(),
+                request.getStartServiceDate(), request.getEndServiceDate(),
+                request.getOviID());
     }
 
     public void updateAssistanceRequest(AssistanceRequest request) {
         jdbcTemplate.update(
                 "UPDATE ASSISTANCE_REQUEST SET serviceLocation=?, requiredAssistance=?, " +
-                        "status=? WHERE requestID=?",
+                        "status=?, type=?, startServiceDate=?, endServiceDate=? WHERE requestID=?",
                 request.getServiceLocation(), request.getRequiredAssistance(),
-                request.getStatus(), request.getRequestID());
+                request.getStatus(), request.getType(),
+                request.getStartServiceDate(), request.getEndServiceDate(),
+                request.getRequestID());
     }
 
     public void updateStatus(int requestID, String status) {

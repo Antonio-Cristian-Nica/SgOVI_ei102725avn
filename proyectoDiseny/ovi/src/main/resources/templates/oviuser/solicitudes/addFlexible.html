@@ -4,23 +4,24 @@
       layout:decorate="~{fragments/base}"
       lang="ca">
 <head>
-    <title>SgOVI - Nova sol·licitud</title>
+    <title>SgOVI - Nova sol·licitud flexible</title>
 </head>
 <body>
 
 <div layout:fragment="content">
     <div class="form-section">
 
-        <h1 class="section-title">Nova sol·licitud puntual</h1>
+        <h1 class="section-title">Nova sol·licitud flexible</h1>
         <p class="section-subtitle">
-            Indica on necessites el servei i quin tipus d'assistència requeixes.
-            Després podràs afegir els horaris concrets en què el necessites.
+            Indica on necessites el servei, quin tipus d'assistència requeixes
+            i el període de temps durant el qual es prestarà. Els detalls d'horaris
+            concrets s'acordaran amb el PAP/PATI durant la negociació.
             Els camps marcats amb
             <span aria-hidden="true">*</span><span class="sr-only">asterisc</span>
             són obligatoris.
         </p>
 
-        <form th:action="@{/oviUser/solicitudes/add}" th:object="${solicitud}" method="post" novalidate>
+        <form th:action="@{/oviUser/solicitudes/addFlexible}" th:object="${solicitud}" method="post" novalidate>
 
             <div class="form-group">
                 <label for="serviceLocation">Localització del servei <span aria-hidden="true">*</span></label>
@@ -42,9 +43,31 @@
                       th:errors="*{requiredAssistance}"></span>
             </div>
 
+            <h2 class="form-section-title">Període del servei</h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="startServiceDate">Data d'inici del servei <span aria-hidden="true">*</span></label>
+                    <input type="date" id="startServiceDate" th:field="*{startServiceDate}"
+                           th:class="${#fields.hasErrors('startServiceDate')} ? 'input-error' : ''"
+                           required />
+                    <span class="error-text" th:if="${#fields.hasErrors('startServiceDate')}"
+                          th:errors="*{startServiceDate}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="endServiceDate">Data de fi del servei <span aria-hidden="true">*</span></label>
+                    <input type="date" id="endServiceDate" th:field="*{endServiceDate}"
+                           th:class="${#fields.hasErrors('endServiceDate')} ? 'input-error' : ''"
+                           required />
+                    <span class="error-text" th:if="${#fields.hasErrors('endServiceDate')}"
+                          th:errors="*{endServiceDate}"></span>
+                </div>
+            </div>
+
             <div class="form-actions">
                 <a th:href="@{/oviUser/solicitudes/nova}" class="btn btn-secondary">Cancel·lar</a>
-                <button type="submit" class="btn btn-primary">Continuar amb els horaris</button>
+                <button type="submit" class="btn btn-primary">Crear sol·licitud</button>
             </div>
 
         </form>

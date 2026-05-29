@@ -94,6 +94,12 @@ public class PapPatiDao {
                 new PapPatiRowMapper());
     }
 
+    public List<PapPati> getActivePapPatis() {
+        return jdbcTemplate.query(
+                "SELECT * FROM PAP_PATI WHERE status='active' ORDER BY nameAndSurname",
+                new PapPatiRowMapper());
+    }
+
     public int countByStatus(String status) {
         Integer count = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM PAP_PATI WHERE status=?",

@@ -88,7 +88,18 @@ public class ScheduleDao {
                         "WHERE rs.requestID = ? " +
                         "AND s.startHour <= rs.startHour " +
                         "AND s.endHour >= rs.endHour " +
-                        "AND p.status = 'active'",
-                Integer.class, requestID);
+                        "AND p.status = 'active' " +
+                        "AND NOT EXISTS ( " +
+                        "  SELECT 1 FROM CONTRACT c " +
+                        "  INNER JOIN NEGOTIATION n ON c.negotiationID = n.negotiationID " +
+                        "  INNER JOIN REQUEST_SCHEDULE ocupat ON ocupat.requestID = n.requestID " +
+                        "  INNER JOIN REQUEST_SCHEDULE peticio ON peticio.requestID = ? " +
+                        "  WHERE n.papID = s.papID " +
+                        "  AND c.status = 'active' " +
+                        "  AND ocupat.date = peticio.date " +
+                        "  AND ocupat.startHour < peticio.endHour " +
+                        "  AND ocupat.endHour > peticio.startHour " +
+                        ")",
+                Integer.class, requestID, requestID);
     }
 }

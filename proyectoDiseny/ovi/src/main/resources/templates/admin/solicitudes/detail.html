@@ -38,6 +38,13 @@
 
             <h2 class="form-section-title">Informació de la sol·licitud</h2>
             <dl class="tutor-info">
+
+                <dt>Tipus</dt>
+                <dd>
+                    <span th:if="${solicitud.type == 'rigid'}">Puntual</span>
+                    <span th:if="${solicitud.type == 'flexible'}">Flexible</span>
+                </dd>
+
                 <dt>Localització</dt>
                 <dd th:text="${solicitud.serviceLocation}"></dd>
 
@@ -57,36 +64,51 @@
                 </dd>
             </dl>
 
-            <h2 class="form-section-title solicitud-horaris-title">Horaris sol·licitats</h2>
-            <div th:if="${horaris.isEmpty()}" class="alert alert-info">
-                No hi ha horaris registrats.
+            <!-- Si és FLEXIBLE: mostrar període -->
+            <div th:if="${solicitud.type == 'flexible'}">
+                <h2 class="form-section-title solicitud-horaris-title">Període del servei</h2>
+                <dl class="tutor-info">
+                    <dt>Data d'inici</dt>
+                    <dd th:text="${#temporals.format(solicitud.startServiceDate, 'dd/MM/yyyy')}"></dd>
+
+                    <dt>Data de fi</dt>
+                    <dd th:text="${#temporals.format(solicitud.endServiceDate, 'dd/MM/yyyy')}"></dd>
+                </dl>
             </div>
-            <table th:if="${!horaris.isEmpty()}" class="data-table">
-                <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Dia</th>
-                    <th>Inici</th>
-                    <th>Fi</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="horari : ${horaris}">
-                    <td th:text="${#temporals.format(horari.date, 'dd/MM/yyyy')}"></td>
-                    <td th:switch="${horari.dayOfWeek}">
-                        <span th:case="1">Dilluns</span>
-                        <span th:case="2">Dimarts</span>
-                        <span th:case="3">Dimecres</span>
-                        <span th:case="4">Dijous</span>
-                        <span th:case="5">Divendres</span>
-                        <span th:case="6">Dissabte</span>
-                        <span th:case="7">Diumenge</span>
-                    </td>
-                    <td th:text="${#temporals.format(horari.startHour, 'HH:mm')}"></td>
-                    <td th:text="${#temporals.format(horari.endHour, 'HH:mm')}"></td>
-                </tr>
-                </tbody>
-            </table>
+
+            <!-- Si és RÍGIDA: mostrar taula d'horaris -->
+            <div th:if="${solicitud.type == 'rigid'}">
+                <h2 class="form-section-title solicitud-horaris-title">Horaris sol·licitats</h2>
+                <div th:if="${horaris.isEmpty()}" class="alert alert-info">
+                    No hi ha horaris registrats.
+                </div>
+                <table th:if="${!horaris.isEmpty()}" class="data-table">
+                    <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Dia</th>
+                        <th>Inici</th>
+                        <th>Fi</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="horari : ${horaris}">
+                        <td th:text="${#temporals.format(horari.date, 'dd/MM/yyyy')}"></td>
+                        <td th:switch="${horari.dayOfWeek}">
+                            <span th:case="1">Dilluns</span>
+                            <span th:case="2">Dimarts</span>
+                            <span th:case="3">Dimecres</span>
+                            <span th:case="4">Dijous</span>
+                            <span th:case="5">Divendres</span>
+                            <span th:case="6">Dissabte</span>
+                            <span th:case="7">Diumenge</span>
+                        </td>
+                        <td th:text="${#temporals.format(horari.startHour, 'HH:mm')}"></td>
+                        <td th:text="${#temporals.format(horari.endHour, 'HH:mm')}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <!-- Accions del tècnic, només si la sol·licitud està en revisió -->
             <div th:if="${solicitud.status == 'inProgress'}">
@@ -159,15 +181,20 @@
             <!-- PAP/PATIs compatibles per a recomanar (només en revisió) -->
             <div th:if="${solicitud.status == 'inProgress'}" class="solicitud-add-rec">
                 <h2 class="form-section-title">PAP/PATIs compatibles</h2>
-                <p class="section-subtitle">
+                <p class="section-subtitle" th:if="${solicitud.type == 'rigid'}">
                     Aquests són els PAP/PATIs amb disponibilitat compatible amb els horaris demanats. Pots afegir-los com a recomanats.
+                </p>
+                <p class="section-subtitle" th:if="${solicitud.type == 'flexible'}">
+                    En una sol·licitud flexible els horaris concrets s'acorden en la negociació, per la qual cosa es mostren tots els PAP/PATIs actius. Consulta la fitxa de cada candidat per valorar-lo i afig com a recomanats els que consideres adients.
                 </p>
 
                 <div th:if="${totsPapPatis.isEmpty()}" class="alert alert-info">
-                    No hi ha PAP/PATIs amb disponibilitat compatible amb els horaris d'aquesta sol·licitud.
+                    <span th:if="${solicitud.type == 'rigid'}">No hi ha PAP/PATIs amb disponibilitat compatible amb els horaris d'aquesta sol·licitud.</span>
+                    <span th:if="${solicitud.type == 'flexible'}">No hi ha cap PAP/PATI actiu disponible per recomanar.</span>
                 </div>
 
-                <div th:if="${!totsPapPatis.isEmpty()}">
+                <!-- RÍGIDA: targetes amb taula d'horaris (comportament original) -->
+                <div th:if="${!totsPapPatis.isEmpty() and solicitud.type == 'rigid'}">
                     <article th:each="pap : ${totsPapPatis}" class="pappati-compatible-card">
 
                         <div class="pappati-compatible-info">
@@ -213,6 +240,27 @@
                             </form>
                         </div>
 
+                    </article>
+                </div>
+
+                <!-- FLEXIBLE: targetes compactes amb scroll, sense horaris -->
+                <div th:if="${!totsPapPatis.isEmpty() and solicitud.type == 'flexible'}"
+                     class="pappati-flexible-scroll">
+                    <article th:each="pap : ${totsPapPatis}" class="pappati-flexible-card">
+                        <div class="pappati-flexible-info">
+                            <h3 th:text="${pap.nameAndSurname}"></h3>
+                            <p th:text="'Localitat: ' + ${pap.locality}"></p>
+                            <p th:text="'Especialització: ' + ${pap.specializationAreas}"></p>
+                        </div>
+                        <div class="pappati-flexible-actions">
+                            <a th:href="@{/admin/gestionarPapPati/{username}(username=${pap.username})}"
+                               class="btn btn-secondary btn-small">Veure fitxa</a>
+                            <form th:action="@{/admin/solicitudes/{id}/recomanar(id=${solicitud.requestID})}"
+                                  method="post">
+                                <input type="hidden" name="papID" th:value="${pap.papID}" />
+                                <button type="submit" class="btn btn-primary btn-small">Afegir recomanació</button>
+                            </form>
+                        </div>
                     </article>
                 </div>
             </div>

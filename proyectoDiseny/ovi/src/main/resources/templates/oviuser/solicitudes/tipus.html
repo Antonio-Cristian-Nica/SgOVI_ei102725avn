@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Nova sol·licitud</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <h1 class="section-title">Nova sol·licitud d'assistència</h1>
+    <p class="section-subtitle">Quin tipus de sol·licitud vols crear?</p>
+
+    <div class="portal-grid">
+
+        <a th:href="@{/oviUser/solicitudes/add}" class="portal-card">
+            <h2><span aria-hidden="true">📅</span> Sol·licitud puntual</h2>
+            <p>
+                Per a serveis concrets en dies i hores específics. Hauràs d'indicar
+                cada franja horària que necessites (per exemple: dilluns 14 d'octubre de 9:00 a 12:00).
+                Ideal per a cites puntuals o acompanyaments en moments determinats.
+            </p>
+        </a>
+
+        <a th:href="@{/oviUser/solicitudes/addFlexible}" class="portal-card">
+            <h2><span aria-hidden="true">🗓️</span> Sol·licitud flexible</h2>
+            <p>
+                Per a serveis continuats al llarg d'un període de temps. Només has d'indicar
+                la data d'inici i la data de fi del servei; els detalls d'horaris concrets
+                s'acordaran directament amb el PAP/PATI durant la negociació.
+            </p>
+        </a>
+
+    </div>
+
+    <div class="form-actions">
+        <a th:href="@{/oviUser/solicitudes}" class="btn btn-secondary">Cancel·lar</a>
+    </div>
+
+</div>
+
+</body>
+</html>

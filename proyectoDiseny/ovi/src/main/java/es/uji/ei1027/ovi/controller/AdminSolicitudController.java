@@ -111,16 +111,25 @@ public class AdminSolicitudController {
         List<RequestSchedule> horaris = requestScheduleDao.getRequestSchedulesByRequest(requestID);
         List<RecommendedPapPati> recomanats = recommendedPapPatiDao.getRecommendedByRequest(requestID);
 
-        // Calcular candidats compatibles que encara no han estat recomanats
-        List<Integer> papIDsCompatibles = scheduleDao.getPapPatiIDsCompatibles(requestID);
         List<Integer> papIDsRecomanats = recomanats.stream()
                 .map(RecommendedPapPati::getPapID)
                 .collect(Collectors.toList());
-        papIDsCompatibles.removeAll(papIDsRecomanats);
 
-        List<PapPati> totsPapPatis = papIDsCompatibles.isEmpty()
-                ? new ArrayList<>()
-                : papPatiDao.getPapPatisByIDs(papIDsCompatibles);
+        // Rígides: filtratge automàtic per disponibilitat i contractes solapats.
+        // Flexibles: es mostren tots els PAP/PATIs actius, ja que els horaris
+        // concrets s'acorden en negociació i no es poden creuar amb disponibilitat.
+        List<PapPati> totsPapPatis;
+        if ("flexible".equals(solicitud.getType())) {
+            totsPapPatis = papPatiDao.getActivePapPatis().stream()
+                    .filter(p -> !papIDsRecomanats.contains(p.getPapID()))
+                    .collect(Collectors.toList());
+        } else {
+            List<Integer> papIDsCompatibles = scheduleDao.getPapPatiIDsCompatibles(requestID);
+            papIDsCompatibles.removeAll(papIDsRecomanats);
+            totsPapPatis = papIDsCompatibles.isEmpty()
+                    ? new ArrayList<>()
+                    : papPatiDao.getPapPatisByIDs(papIDsCompatibles);
+        }
 
         OviUser oviUser = oviUserDao.getOviUser(solicitud.getOviID());
 

@@ -1,5 +1,6 @@
 package es.uji.ei1027.ovi;
 
+import es.uji.ei1027.ovi.utils.PasswordUtils;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
@@ -9,5 +10,11 @@ public class OVIApplication {
 	public static void main(String[] args) {
 		// Auto-configura l'aplicació
 		new SpringApplicationBuilder(OVIApplication.class).run(args);
+
+		// String hash = PasswordUtils.encrypt("1234");
+		// System.out.println("===========================================");
+		// System.out.println("HASH GENERAT: " + hash);
+		// System.out.println("===========================================");
+
 	}
 }

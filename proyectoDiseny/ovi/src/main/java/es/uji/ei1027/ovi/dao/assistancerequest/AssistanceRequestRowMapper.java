@@ -4,6 +4,7 @@ import es.uji.ei1027.ovi.model.AssistanceRequest;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class AssistanceRequestRowMapper implements RowMapper<AssistanceRequest> {
@@ -16,6 +17,9 @@ public class AssistanceRequestRowMapper implements RowMapper<AssistanceRequest> 
         request.setCreationDate(rs.getObject("creationDate", LocalDateTime.class));
         request.setStatus(rs.getString("status"));
         request.setOviID(rs.getInt("oviID"));
+        request.setType(rs.getString("type"));
+        request.setStartServiceDate(rs.getObject("startServiceDate", LocalDate.class));
+        request.setEndServiceDate(rs.getObject("endServiceDate", LocalDate.class));
         return request;
     }
 }
