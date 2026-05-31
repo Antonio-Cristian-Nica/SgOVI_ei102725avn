@@ -1,108 +1,202 @@
-Enlaces de interés:
-- https://ovicastello.org/
-- https://docs.google.com/forms/d/e/1FAIpQLSelYRAnQE9fS0C3xpDTZJlK2HaI8BtbXQ1x3g4GEI60EKAYrQ/viewform
-
-## Instrucciones de acceso a la BBDD
-Para el acceso a la base de datos de db-aules usamos el siguiente comando →  psql -h db-aules.uji.es -U ei102725avn ei102725avn
-
-El nombre del grupo es →  ei102725avn
-
-La contraseña para el acceso a la base de datos es → vivaMessi1010
-
 # SgOVI - Sistema de Gestió de l'Oficina Vida Independent
 
-Aplicació web desenvolupada amb Spring Boot MVC + Thymeleaf + PostgreSQL per a la gestió de l'Oficina Vida Independent de Castelló.
+Aplicació web desenvolupada amb Spring Boot MVC, Thymeleaf i PostgreSQL per a la gestió de l'**Oficina Vida Independent (OVI) Sole Arnau Ripollés** de Castelló de la Plana. El sistema digitalitza la gestió de l'assistència personal a persones amb diversitat funcional, des de la sol·licitud inicial fins a la formalització del contracte.
 
-Compte del Tècnic --> admin0 (1234)
+---
+
+## Accés a la base de dades
+
+Servidor: `db-aules.uji.es`
+Grup: `ei102725avn`
+Contrasenya BBDD: `vivaMessi1010`
+
+```bash
+psql -h db-aules.uji.es -U ei102725avn ei102725avn
+```
+
+---
 
 ## Tecnologies utilitzades
 
-- Java 21
-- Spring Boot 3.4.1
-- Thymeleaf 3.1 + Layout Dialect
-- PostgreSQL
-- JASYPT (encriptació de contrasenyes)
-- Bootstrap / CSS propi
+- **Java 21**
+- **Spring Boot 3.4.1** (Spring MVC, JdbcTemplate)
+- **Thymeleaf 3.1** amb Layout Dialect
+- **PostgreSQL**
+- **Jasypt** per a l'encriptació de contrasenyes
+- **CSS propi** centralitzat amb variables CSS
+
+---
+
+## Perfils del sistema
+
+L'aplicació distingeix quatre perfils amb àrees d'accés diferenciades:
+
+- **Públic** (sense sessió): pàgines informatives, registre i login.
+- **Usuari OVI**: persones demandants d'assistència personal.
+- **PAP/PATI**: personal d'assistència personal o terapèutica individual.
+- **Tècnic OVI (administrador)**: back-office de gestió.
+
+---
 
 ## Funcionalitats implementades
 
-### 1. Gestió d'OVI Users
-- Registre mitjançant formulari amb validació completa: format d'email, telèfon, edat mínima de 3 anys i acceptació LOPD
-- Les credencials es guarden amb el compte desactivat (`activated = false`) i estat `approvalPending` fins que el tècnic la valide
-- Les contrasenyes s'encripten amb JASYPT abans de guardar-se a la BD
-- El tècnic OVI pot veure el llistat d'usuaris pendents i activar el seu compte des del seu portal
-- Una vegada activat, l'usuari accedeix al seu portal complet. Si intenta accedir abans de ser validat, veu una pàgina informativa amb l'estat del seu compte i el motiu de rebuig si escau
-- Els usuaris poden modificar les seues dades personals i canviar la contrasenya des del seu portal
-- Gestió del tutor legal: l'OVI User pot afegir, editar i eliminar el seu tutor legal
+### 1. Gestió d'Usuaris OVI
+- Registre amb validació completa (format de correu, telèfon, edat mínima, acceptació LOPD).
+- Compte inicialment desactivat fins a la validació del tècnic.
+- Contrasenyes encriptades amb Jasypt.
+- Edició de dades personals i canvi de contrasenya.
+- **Gestió opcional del tutor legal** (millora addicional): alta, edició i eliminació.
 
 ### 2. Gestió de candidats PAP/PATI
-- Registre mitjançant formulari amb validació completa: formació acadèmica, experiència professional, àrees d'especialització, documents adjunts, edat mínima de 18 anys i acceptació LOPD
-- Al igual que els OVI Users, les credencials es guarden desactivades fins a la validació del tècnic
-- Les contrasenyes s'encripten amb JASYPT
-- El tècnic OVI pot veure el llistat de PAP/PATIs pendents i activar el seu compte
-- Una vegada activat, el PAP/PATI accedeix al seu portal complet
-- Els PAP/PATIs poden modificar les seues dades personals i canviar la contrasenya
-- Gestió d'horaris de disponibilitat: el PAP/PATI pot afegir i eliminar franges horàries per dia de la setmana. Si no té horaris registrats, apareix una alerta al portal indicant-ho
-- Consulta de sol·licituds assignades i accés a les negociacions actives
-- Consulta de l'historial de contractes
+- Registre amb perfil professional (formació, experiència, especialització, documents).
+- Compte inicialment desactivat fins a la validació del tècnic.
+- Edició de dades personals i canvi de contrasenya.
+- Gestió de la disponibilitat horària setmanal.
+- Consulta de sol·licituds assignades i contractes propis.
 
 ### 3. Sol·licituds d'Assistència Personal
-- Els OVI Users poden crear sol·licituds d'assistència indicant localització, tipus d'assistència i horaris específics
-- Les sol·licituds sense horaris no es poden finalitzar
-- Els horaris han de ser dates futures
-- El tècnic OVI gestiona totes les sol·licituds des del seu portal:
-  - Veu la informació completa de la persona sol·licitant i els horaris
-  - El sistema selecciona automàticament els PAP/PATIs compatibles segons disponibilitat horària
-  - El tècnic afegeix PAP/PATIs recomanats i accepta o rebutja la sol·licitud
-- Una vegada acceptada, l'OVI User veu els PAP/PATIs recomanats i pot iniciar negociacions
-- Les dues parts (OVI User i PAP/PATI) poden intercanviar missatges dins de la negociació
-- Quan ambdues parts confirmen l'acord, la negociació es tanca com a `finished` i les altres negociacions actives de la mateixa sol·licitud es tanquen automàticament com a `noAgreement`
-- El tècnic genera el contracte a partir de la negociació finalitzada, indicant dates d'inici i fi del servei i l'URL del document PDF
-- Els OVI Users i PAP/PATIs poden consultar els seus contractes des del seu portal
+- **Dues modalitats** de sol·licitud:
+  - **Flexible**: rang de dates; els detalls horaris s'acorden durant la negociació.
+  - **Puntual** (rígida): dies i franges horàries concretes, com a millora addicional.
+- Pantalla prèvia de selecció del tipus al crear una nova sol·licitud.
+- Filtratge automàtic de PAP/PATIs compatibles per disponibilitat horària (sol·licituds rígides).
+- **Exclusió automàtica de PAP/PATIs amb contractes actius solapats** (sol·licituds rígides).
+- Negociació amb conversa bidireccional i confirmació explícita d'ambdues parts.
+- Tancament automàtic de la resta de negociacions quan una arriba a acord.
 
-### 4. Activitats de Formació i Divulgació
-- En construcció
+### 4. Contractes
+- Generació pel tècnic a partir d'una negociació amb acord.
+- **Modificació posterior amb versionat**: el camp `version` s'incrementa cada vegada que s'edita.
+- Finalització natural o cancel·lació, amb actualització coherent de l'estat de la sol·licitud associada.
+- Consulta des dels portals d'Usuari OVI, PAP/PATI i tècnic.
 
-### 5. Gestió d'Instructors
-- En construcció
+### 5. Bloc d'Activitats de formació i divulgació
+*No implementat en aquesta entrega. Identificat com a treball futur (vegeu apartat 6 de la memòria).*
 
-## Casos de prova disponibles (psswd = patata)
+---
 
-### OVI Users
-- **willy.rex**: conta rebutjada amb motiu
-- **dani.villar**: conta pendent de aprovaciò
-- **edgar.adell**: sol·licitud acceptada amb doble negociaciò, sol·licitud acceptada esperant a la creaciò del contracte per part del tècnic i sol·licitud amb contracte actiu
-- - **toni.nica**: res de moment
- 
+## Comptes de prova
+
+Totes les contrasenyes són **`patata`** excepte la de l'administrador (`1234`).
+
+### Administrador
+
+| Usuari | Contrasenya | Què permet demostrar |
+|---|---|---|
+| `admin0` | `1234` | Back-office complet: validació d'usuaris, gestió de sol·licituds, generació de contractes, etc. |
+
+### Usuaris OVI
+
+| Usuari | Contrasenya | Estat | Què permet demostrar |
+|---|---|---|---|
+| `maria.rodriguez` | `patata` | Actiu | Té **2 sol·licituds puntuals**: una pendent de gestionar pel tècnic i una altra que demostra l'**exclusió automàtica de PAP/PATIs amb contractes solapats**. Diversitat auditiva, sense tutor. |
+| `pascual.beltran` | `patata` | Actiu | Sol·licitud puntual **acceptada amb 2 negociacions en curs** (amb Mireia i Empar). Demostra el flux de negociació en mitjà del procés. |
+| `adelaida.marco` | `patata` | Actiu | Sol·licitud puntual amb **acord assolit pendent de generar contracte** (negociació `finished` amb Ferran). Demostra l'estat intermedi entre acord i contracte. |
+| `sergi.orti` | `patata` | Actiu | Sol·licitud puntual amb **contracte actiu** (amb Núria). A més, té un **tutor legal associat** (Roser, la seua mare). Demostra el cicle complet fins a contracte + la millora del tutor legal. |
+| `carles.fabregat` | `patata` | Actiu | Sol·licitud **flexible** pendent de gestionar. Demostra la diferència visual entre puntuals i flexibles i la **vista compacta del tècnic** per a flexibles. |
+| `dani.villar` | `patata` | **Pendent d'aprovació** | Demostra la pàgina d'estat del compte quan encara no ha estat validat pel tècnic. |
+| `willy.rex` | `patata` | **Rebutjat amb motiu** | Demostra el cas de compte rebutjat i la visualització del motiu en intentar iniciar sessió. |
 
 ### PAP/PATIs
-- **andres.iniesta**: conta pendent de aprovaciò
-- **xavi.hernandez**: conta rebutjada amb motiu
-- **leo.messi**: amb horaris, negociacions pendents i contracte actiu
-- **joan.garcia**: amb horaris participa en una negociacio
 
-## ------------------------
+| Usuari | Contrasenya | Estat | Què permet demostrar |
+|---|---|---|---|
+| `lluis.sanchis` | `patata` | Actiu | Fisioterapeuta de Castelló. Disponibilitat dilluns/dimecres/divendres matí. Apareix com a compatible en diverses sol·licituds. |
+| `mireia.aparici` | `patata` | Actiu | Psicòloga de Vila-real amb coneixement de LSE. Participa en una negociació activa amb Pascual. |
+| `ferran.esteve` | `patata` | Actiu | Educador social de Borriana. Té un **acord tancat amb Adelaida** pendent de contracte. |
+| `nuria.castillo` | `patata` | Actiu | Cuidadora generalista de Castelló. Té un **contracte actiu amb Sergi** (dimecres 8/7/2026 09:00–13:00). Aquest contracte és el que provoca l'exclusió automàtica en la segona sol·licitud de María. |
+| `jordi.tena` | `patata` | Actiu | Enfermer d'Almassora. Apareix com a compatible en diverses sol·licituds. |
+| `empar.roig` | `patata` | Actiu | Pedagoga terapèutica de Vall d'Uixó. Participa en una negociació activa amb Pascual. |
+| `andres.iniesta` | `patata` | **Pendent d'aprovació** | Demostra el cas de candidat PAP/PATI pendent de validació pel tècnic. |
+| `joan.garcia` | `patata` | **Rebutjat amb motiu** | Demostra el cas de candidat rebutjat i la visualització del motiu. |
 
-4. Actividades de formación y divulgación --> El técnico OVI será el encargado de gestionar la creación de las distintas actividades. Esta gestión incluirá la creación de las actividades, la asignación de los instructores que impartan la actividad. Habrán dos tipos de actividades: actividades de formación con un número limitado de participantes, y luego actividades de divulgación en las que no se requerirá inscripción, pero también estará disponible. En el caso de las actividades de formación, la aplicación deberá proporcionar un proceso de inscripción a esa actividades con los datos personales de la persona que participe. Y una vez acabe la formación, el instructor definido deberá poder registrar la asistencia de cada participante a la actividad, para que luego la aplicación pueda emitir a esos asistentes un certificado de asistencia en formato PDF. En las actividades de divulgación, el aforo se controlará in situ, será el instructor el que compruebe la asistencia de los participantes inscritos y también el que registrará el nombre de las personas participantes, la aplicación debe permitir esto.
+---
 
-## Diseño del SiteMap
-A continuación se muestra el SiteMap del proyecto que sirve como guia para el flujo y diseño de la experiencia de usuario en nuestro sistema de información:
+## Flux de prova recomanat per a la demostració
 
-![Sitemap del Proyecto](./documentacion/SitemapSgOVI.png)
+Recomanem seguir aquest ordre per veure totes les funcionalitats del sistema en acció:
 
-A CORREGIR --> Está bien, pero falta funcionalidad.
-P.e. el PAP/PATI dónde puede ver el contrato, el OVIuser dónde puede enviar un mensaje, o registrar un contrato...
-Del técnico OVI, lo mismo: dónde acepta/rechaza la petición de un candidato a PAP/PATI, dónde acepta una solicitud de asistencia personal...
+### 1) Estructura general i àrea pública
+- Accedir a `/` (sense sessió) per veure la pàgina d'inici, les notícies i l'estructura comuna del portal.
+- Veure les opcions de registre (`/registro`).
 
-## Diseño Conceptual (Diagrama UML)
-A continuación se muestra el diagrama de clases UML que sirve como punto de partida para el diseño de nuestro sistema de información:
+### 2) Gestió de comptes pel tècnic OVI
+Entrar com `admin0` / `1234`:
+- **"Validar Usuaris OVI"** → veure Dani Villar pendent. Es pot activar o rebutjar amb motiu.
+- **"Validar PAP/PATIs"** → veure Andrés Iniesta pendent. Es pot activar o rebutjar amb motiu.
+- **"Gestionar Usuaris OVI"** → veure tots els actius i rebutjats. Entrar a la fitxa de Willy Rex per veure el motiu del rebuig.
+- **"Gestionar PAP/PATIs"** → idem per als PAP/PATIs.
 
-![Diagrama UML del Proyecto](./documentacion/DIAGRAMA_DE_CLASES.png)
+### 3) Estats especials dels comptes
+- Entrar com `dani.villar` / `patata` → veure la pàgina informativa de compte pendent.
+- Entrar com `willy.rex` / `patata` → veure la pàgina informativa de compte rebutjat amb el motiu.
 
-### Cambios realizados sobre el diseño
-- Cambios sobre atributos
-- Contract ahora está relacionada únicamente con Negotiation
-- Assistance Request puede tener 1 o muchos Resquest Schedule, igual que PAP/PATI con SCHEDULE
+### 4) Front-office: creació i seguiment de sol·licituds
+Entrar com `maria.rodriguez` / `patata`:
+- **"Les meues sol·licituds"** → veure les dues sol·licituds existents.
+- **"Nova sol·licitud"** → veure la pantalla prèvia de selecció del tipus (puntual / flexible).
+- Provar a crear una sol·licitud nova (puntual o flexible) per veure les diferències de flux.
 
+Entrar com `carles.fabregat` / `patata`:
+- Veure la sol·licitud flexible existent (rang de dates en lloc d'horaris).
 
+### 5) Gestió de la sol·licitud pel tècnic + filtratge automàtic
+Entrar com `admin0`:
+- **"Sol·licituds d'assistència"** → veure totes les sol·licituds del sistema.
+- Gestionar la **sol·licitud de María (dilluns 6/7/2026 09:30–11:30)**: veure els 3 PAP/PATIs compatibles automàtics (Lluís, Núria, Jordi).
+- Gestionar la **sol·licitud flexible de Carles**: veure la **vista compacta amb tots els PAP/PATIs actius** i el missatge informatiu corresponent.
+- Gestionar la **segona sol·licitud de María (dimecres 8/7/2026 10:00–12:00)**: veure que **Núria NO apareix com a compatible** tot i que el seu horari encaixaria, perquè té un contracte actiu solapat amb Sergi.
 
+### 6) Negociacions i contractes
+Entrar com `pascual.beltran` / `patata`:
+- Sol·licitud acceptada → entrar al detall → veure les dues negociacions en curs amb Mireia i Empar.
+- Obrir qualsevol de les dues per veure el sistema de xat amb missatges.
+
+Entrar com `adelaida.marco` / `patata`:
+- Sol·licitud acceptada amb **acord assolit** (etiqueta "Acord assolit" al costat de Ferran).
+
+Entrar com `sergi.orti` / `patata`:
+- Sol·licitud amb **contracte actiu** (amb Núria). Es pot consultar el contracte des de la sol·licitud o des de **"Els meus contractes"**.
+- Anar a **"El meu tutor legal"** per veure les dades de Roser Roca (la seua mare, com a millora del projecte).
+
+### 7) Gestió del contracte pel tècnic
+Entrar com `admin0`:
+- **"Contractes"** → veure el contracte actiu entre Sergi i Núria.
+- Provar a editar-lo per veure el **versionat** (cada modificació incrementa el `version`).
+- Provar la finalització natural o la cancel·lació per veure com l'estat de la sol·licitud canvia coherentment.
+- També es pot generar el contracte de la negociació pendent entre Adelaida i Ferran per demostrar el flux complet.
+
+### 8) PAP/PATI consultant les seues sol·licituds i contractes
+Entrar com `nuria.castillo` / `patata`:
+- **"Les meues sol·licituds"** → veure la sol·licitud de Sergi amb estat "Contracte actiu".
+- **"Els meus contractes"** → veure el contracte amb Sergi.
+
+---
+
+## Estats demostrables al sistema
+
+| Estat | Quina entitat el té |
+|---|---|
+| Compte pendent (OviUser) | dani.villar |
+| Compte rebutjat amb motiu (OviUser) | willy.rex |
+| Compte pendent (PAP/PATI) | andres.iniesta |
+| Compte rebutjat amb motiu (PAP/PATI) | joan.garcia |
+| Sol·licitud puntual en revisió | María #1, María #2 |
+| Sol·licitud flexible en revisió | Carles |
+| Sol·licitud acceptada amb negociacions actives | Pascual |
+| Sol·licitud acceptada amb acord pendent de contracte | Adelaida |
+| Sol·licitud amb contracte actiu | Sergi |
+| Negociació en curs | Pascual ↔ Mireia, Pascual ↔ Empar |
+| Negociació finalitzada amb acord | Adelaida ↔ Ferran, Sergi ↔ Núria |
+| Contracte actiu | Sergi ↔ Núria |
+| Tutor legal associat | Sergi (tutor: Roser Roca) |
+
+---
+
+## Equip de desenvolupament
+
+- **Edgar Adell Chabrera**
+- **Antonio Cristian Nica Dida**
+- **Daniel Villar Montón**
+
+Grup: `ei102725avn` · Curs 2025/2026 · EI1027 — Disseny i Implementació de Sistemes d'Informació · Universitat Jaume I.
