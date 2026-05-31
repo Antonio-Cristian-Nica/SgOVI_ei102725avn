@@ -54,7 +54,7 @@
                 <div th:unless="${credentials.rejected}">
                     <h2 class="form-section-title">Contractes</h2>
                     <p>Consulta l'historial de contractes signats per aquest usuari.</p>
-                    <a th:href="@{/admin/contractes/oviUser/{oviID}(oviID=${oviuser.oviID})}"
+                    <a th:href="@{/admin/contractes/oviUser/{oviID}(oviID=${oviuser.oviID},from=${from})}"
                        class="btn btn-primary">
                         Veure contractes
                     </a>

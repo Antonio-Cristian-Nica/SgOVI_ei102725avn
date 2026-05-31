@@ -71,7 +71,7 @@
                 <div th:if="${pappati.status == 'active'}">
                     <h2 class="form-section-title">Contractes</h2>
                     <p>Consulta l'historial de contractes signats per aquest PAP/PATI.</p>
-                    <a th:href="@{/admin/contractes/papPati/{papID}(papID=${pappati.papID})}"
+                    <a th:href="@{/admin/contractes/papPati/{papID}(papID=${pappati.papID},from=${from})}"
                        class="btn btn-primary">
                         Veure contractes
                     </a>

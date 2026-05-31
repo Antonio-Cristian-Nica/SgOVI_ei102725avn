@@ -231,7 +231,7 @@
                         </div>
 
                         <div class="pappati-compatible-actions">
-                            <a th:href="@{/admin/gestionarPapPati/{username}(username=${pap.username})}"
+                            <a th:href="@{/admin/gestionarPapPati/{username}(username=${pap.username},from='/admin/solicitudes/' + ${solicitud.requestID})}"
                                class="btn btn-secondary btn-small">Veure fitxa</a>
                             <form th:action="@{/admin/solicitudes/{id}/recomanar(id=${solicitud.requestID})}"
                                   method="post">
@@ -253,7 +253,7 @@
                             <p th:text="'Especialització: ' + ${pap.specializationAreas}"></p>
                         </div>
                         <div class="pappati-flexible-actions">
-                            <a th:href="@{/admin/gestionarPapPati/{username}(username=${pap.username})}"
+                            <a th:href="@{/admin/gestionarPapPati/{username}(username=${pap.username},from='/admin/solicitudes/' + ${solicitud.requestID})}"
                                class="btn btn-secondary btn-small">Veure fitxa</a>
                             <form th:action="@{/admin/solicitudes/{id}/recomanar(id=${solicitud.requestID})}"
                                   method="post">

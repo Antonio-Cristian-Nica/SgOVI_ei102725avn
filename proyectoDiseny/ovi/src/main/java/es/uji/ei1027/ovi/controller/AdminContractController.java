@@ -99,7 +99,9 @@ public class AdminContractController {
      * Llistat de contractes d'un OviUser concret. Accés des del detall de l'usuari.
      */
     @RequestMapping("/oviUser/{oviID}")
-    public String listByOviUser(@PathVariable int oviID, Model model,
+    public String listByOviUser(@PathVariable int oviID,
+                                @RequestParam(value = "from", required = false) String from,
+                                Model model,
                                 RedirectAttributes redirectAttributes) {
         OviUser oviUser = oviUserDao.getOviUser(oviID);
         if (oviUser == null) {
@@ -110,7 +112,6 @@ public class AdminContractController {
 
         List<Contract> contractes = contractDao.getContractsByOviUser(oviID);
 
-        // Cargar PAP/PATIs per a cada contracte (a través de la negociació)
         Map<Integer, PapPati> papPatis = new HashMap<>();
         Map<Integer, Negotiation> negotiations = new HashMap<>();
         for (Contract c : contractes) {
@@ -119,12 +120,16 @@ public class AdminContractController {
             papPatis.put(c.getContractID(), papPatiDao.getPapPati(neg.getPapID()));
         }
 
+        String backUrl = (from != null && !from.isEmpty())
+                ? from
+                : "/admin/gestionarOviUsers/" + oviUser.getUsername();
+
         model.addAttribute("contractes", contractes);
         model.addAttribute("oviUser", oviUser);
         model.addAttribute("papPatis", papPatis);
         model.addAttribute("negotiations", negotiations);
         model.addAttribute("titol", "Contractes de " + oviUser.getNameAndSurname());
-        model.addAttribute("backUrl", "/admin/gestionarOviUsers/" + oviUser.getUsername());
+        model.addAttribute("backUrl", backUrl);
         model.addAttribute("ownUrl", "/admin/contractes/oviUser/" + oviID);
         return "admin/contractes/listByUser";
     }
@@ -133,7 +138,9 @@ public class AdminContractController {
      * Llistat de contractes d'un PAP/PATI concret. Accés des del detall del PAP/PATI.
      */
     @RequestMapping("/papPati/{papID}")
-    public String listByPapPati(@PathVariable int papID, Model model,
+    public String listByPapPati(@PathVariable int papID,
+                                @RequestParam(value = "from", required = false) String from,
+                                Model model,
                                 RedirectAttributes redirectAttributes) {
         PapPati papPati = papPatiDao.getPapPati(papID);
         if (papPati == null) {
@@ -144,7 +151,6 @@ public class AdminContractController {
 
         List<Contract> contractes = contractDao.getContractsByPapPati(papID);
 
-        // Cargar OviUsers per a cada contracte (a través de la negociació i la sol·licitud)
         Map<Integer, OviUser> oviUsers = new HashMap<>();
         Map<Integer, Negotiation> negotiations = new HashMap<>();
         for (Contract c : contractes) {
@@ -154,12 +160,16 @@ public class AdminContractController {
             oviUsers.put(c.getContractID(), oviUserDao.getOviUser(sol.getOviID()));
         }
 
+        String backUrl = (from != null && !from.isEmpty())
+                ? from
+                : "/admin/gestionarPapPati/" + papPati.getUsername();
+
         model.addAttribute("contractes", contractes);
         model.addAttribute("papPati", papPati);
         model.addAttribute("oviUsers", oviUsers);
         model.addAttribute("negotiations", negotiations);
         model.addAttribute("titol", "Contractes de " + papPati.getNameAndSurname());
-        model.addAttribute("backUrl", "/admin/gestionarPapPati/" + papPati.getUsername());
+        model.addAttribute("backUrl", backUrl);
         model.addAttribute("ownUrl", "/admin/contractes/papPati/" + papID);
         return "admin/contractes/listByUser";
     }
