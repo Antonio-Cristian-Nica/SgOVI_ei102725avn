@@ -70,9 +70,6 @@ L'aplicació distingeix quatre perfils amb àrees d'accés diferenciades:
 - Finalització natural o cancel·lació, amb actualització coherent de l'estat de la sol·licitud associada.
 - Consulta des dels portals d'Usuari OVI, PAP/PATI i tècnic.
 
-### 5. Bloc d'Activitats de formació i divulgació
-*No implementat en aquesta entrega. Identificat com a treball futur (vegeu apartat 6 de la memòria).*
-
 ---
 
 ## Comptes de prova
@@ -99,16 +96,50 @@ Totes les contrasenyes són **`patata`** excepte la de l'administrador (`1234`).
 
 ### PAP/PATIs
 
+#### Actius amb participació activa al sistema (apareixen en negociacions o contractes existents)
+
+| Usuari | Contrasenya | Perfil professional · Localitat | Disponibilitat | Participació |
+|---|---|---|---|---|
+| `mireia.aparici` | `patata` | Psicòloga (LSE) · Vila-real | Dl/Dm/Dj vesprada (16–20) | Negociació activa amb Pascual |
+| `empar.roig` | `patata` | Pedagoga terapèutica · Vall d'Uixó | Dl/Dc/Dv vesprada (17–20) | Negociació activa amb Pascual |
+| `ferran.esteve` | `patata` | Educador social · Borriana | Dm/Dj matí (10–13) + Ds matí (09–14) | **Acord tancat amb Adelaida**, pendent de contracte |
+| `nuria.castillo` | `patata` | Cuidadora generalista · Castelló capital | Dl–Dv matí (09–13) | **Contracte actiu amb Sergi** (Dc 8/7/2026 09:00–13:00) |
+
+#### Actius disponibles per a recomanació en futures sol·licituds
+
+| Usuari | Contrasenya | Perfil professional · Localitat | Disponibilitat |
+|---|---|---|---|
+| `lluis.sanchis` | `patata` | Fisioterapeuta neurològic · Castelló capital | Dl/Dc/Dv matí (09–14) |
+| `jordi.tena` | `patata` | Enfermer · Almassora | Dl/Dc/Dv matí (08–12) + Ds matí (10–14) |
+| `lourdes.pitarch` | `patata` | Intèrpret de LSE · Castelló capital | Ds matí (09–14) + Dg matí (10–14) |
+| `vicent.solsona` | `patata` | Treballador social · Benicàssim | Dm/Dj vesprada-nit (18–22) + Dv vesprada-nit (19–23) |
+| `laia.bellmunt` | `patata` | Logopeda · Nules | Dc i Dv jornada partida (09–13 + 16–19) |
+| `salva.ortiz` | `patata` | Auxiliar de geriatria · Onda | Ds i Dg jornada partida (09–14 + 16–20) |
+| `carmen.valles` | `patata` | Cuidadora · Castelló capital | Dl/Dc/Dv matí (10–14) |
+| `joaquim.renau` | `patata` | Psicopedagog · Vila-real | Dl/Dm/Dc/Dj vesprada (17–20) |
+| `roser.tomas` | `patata` | Fisioterapeuta esportiva · Almassora | Dm/Dj matí (09–13) + Ds matí (09–12) |
+
+#### Comptes amb estats especials
+
 | Usuari | Contrasenya | Estat | Què permet demostrar |
 |---|---|---|---|
-| `lluis.sanchis` | `patata` | Actiu | Fisioterapeuta de Castelló. Disponibilitat dilluns/dimecres/divendres matí. Apareix com a compatible en diverses sol·licituds. |
-| `mireia.aparici` | `patata` | Actiu | Psicòloga de Vila-real amb coneixement de LSE. Participa en una negociació activa amb Pascual. |
-| `ferran.esteve` | `patata` | Actiu | Educador social de Borriana. Té un **acord tancat amb Adelaida** pendent de contracte. |
-| `nuria.castillo` | `patata` | Actiu | Cuidadora generalista de Castelló. Té un **contracte actiu amb Sergi** (dimecres 8/7/2026 09:00–13:00). Aquest contracte és el que provoca l'exclusió automàtica en la segona sol·licitud de María. |
-| `jordi.tena` | `patata` | Actiu | Enfermer d'Almassora. Apareix com a compatible en diverses sol·licituds. |
-| `empar.roig` | `patata` | Actiu | Pedagoga terapèutica de Vall d'Uixó. Participa en una negociació activa amb Pascual. |
-| `andres.iniesta` | `patata` | **Pendent d'aprovació** | Demostra el cas de candidat PAP/PATI pendent de validació pel tècnic. |
-| `joan.garcia` | `patata` | **Rebutjat amb motiu** | Demostra el cas de candidat rebutjat i la visualització del motiu. |
+| `andres.iniesta` | `patata` | **Pendent d'aprovació** | Cas de candidat PAP/PATI pendent de validació pel tècnic. |
+| `joan.garcia` | `patata` | **Rebutjat amb motiu** | Cas de candidat rebutjat i visualització del motiu. |
+
+---
+
+## Cobertura horària dels PAP/PATIs actius
+
+| Franja | Cobertura |
+|---|---|
+| Matí entre setmana (Dl–Dv) | 7 PAP/PATIs |
+| Vesprada entre setmana (Dl–Dv) | 3 PAP/PATIs |
+| Vesprada-nit (>18h) | 1 PAP/PATI (Vicent) |
+| Dissabte matí | 4 PAP/PATIs |
+| Dissabte vesprada | 1 PAP/PATI (Salvador) |
+| Diumenge matí | 2 PAP/PATIs (Lourdes, Salvador) |
+| Diumenge vesprada | 1 PAP/PATI (Salvador) |
+| Jornada partida en un mateix dia | 2 PAP/PATIs (Laia, Salvador) |
 
 ---
 
@@ -125,7 +156,7 @@ Entrar com `admin0` / `1234`:
 - **"Validar Usuaris OVI"** → veure Dani Villar pendent. Es pot activar o rebutjar amb motiu.
 - **"Validar PAP/PATIs"** → veure Andrés Iniesta pendent. Es pot activar o rebutjar amb motiu.
 - **"Gestionar Usuaris OVI"** → veure tots els actius i rebutjats. Entrar a la fitxa de Willy Rex per veure el motiu del rebuig.
-- **"Gestionar PAP/PATIs"** → idem per als PAP/PATIs.
+- **"Gestionar PAP/PATIs"** → idem per als PAP/PATIs. Veure Joan García com a candidat rebutjat.
 
 ### 3) Estats especials dels comptes
 - Entrar com `dani.villar` / `patata` → veure la pàgina informativa de compte pendent.
@@ -143,7 +174,7 @@ Entrar com `carles.fabregat` / `patata`:
 ### 5) Gestió de la sol·licitud pel tècnic + filtratge automàtic
 Entrar com `admin0`:
 - **"Sol·licituds d'assistència"** → veure totes les sol·licituds del sistema.
-- Gestionar la **sol·licitud de María (dilluns 6/7/2026 09:30–11:30)**: veure els 3 PAP/PATIs compatibles automàtics (Lluís, Núria, Jordi).
+- Gestionar la **sol·licitud de María (dilluns 6/7/2026 09:30–11:30)**: veure els PAP/PATIs compatibles automàtics.
 - Gestionar la **sol·licitud flexible de Carles**: veure la **vista compacta amb tots els PAP/PATIs actius** i el missatge informatiu corresponent.
 - Gestionar la **segona sol·licitud de María (dimecres 8/7/2026 10:00–12:00)**: veure que **Núria NO apareix com a compatible** tot i que el seu horari encaixaria, perquè té un contracte actiu solapat amb Sergi.
 
