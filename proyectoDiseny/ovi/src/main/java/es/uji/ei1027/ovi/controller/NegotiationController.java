@@ -333,4 +333,126 @@ public class NegotiationController {
                 "Has marcat la negociació com 'sense acord'");
         return "redirect:/papPati/negociacio/" + negociacioID;
     }
+
+    // =====================================================================
+// PÀGINES INTERMÈDIES DE CONFIRMACIÓ (acions destructives)
+// =====================================================================
+
+    @RequestMapping(value = "/oviUser/negociacio/{negociacioID}/confirmar/confirm", method = RequestMethod.GET)
+    public String confirmAcordOvi(@PathVariable int negociacioID,
+                                  HttpSession session,
+                                  Model model,
+                                  RedirectAttributes redirectAttributes) {
+        Negotiation neg = getOwnedNegotiationOvi(negociacioID, session);
+        if (neg == null) {
+            return "redirect:/oviUser/solicitudes";
+        }
+        if (!"inProgress".equals(neg.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquesta negociació ja està tancada");
+            return "redirect:/oviUser/negociacio/" + negociacioID;
+        }
+
+        PapPati papPati = papPatiDao.getPapPati(neg.getPapID());
+
+        model.addAttribute("titol", "Confirmar acord amb el PAP/PATI");
+        model.addAttribute("missatge",
+                "Estàs a punt de confirmar l'acord amb " + papPati.getNameAndSurname() + ".");
+        model.addAttribute("detall",
+                "Una vegada confirmat per ambdues parts, la negociació es tancarà i el tècnic OVI podrà formalitzar el contracte. La resta de negociacions actives d'aquesta sol·licitud es tancaran automàticament sense acord.");
+        model.addAttribute("actionUrl", "/oviUser/negociacio/" + negociacioID + "/confirmar");
+        model.addAttribute("cancelUrl", "/oviUser/negociacio/" + negociacioID);
+        model.addAttribute("confirmLabel", "Sí, confirmar acord");
+        model.addAttribute("tipusAccio", "normal");
+        return "fragments/confirm";
+    }
+
+    @RequestMapping(value = "/oviUser/negociacio/{negociacioID}/noAcord/confirm", method = RequestMethod.GET)
+    public String confirmNoAcordOvi(@PathVariable int negociacioID,
+                                    HttpSession session,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
+        Negotiation neg = getOwnedNegotiationOvi(negociacioID, session);
+        if (neg == null) {
+            return "redirect:/oviUser/solicitudes";
+        }
+        if (!"inProgress".equals(neg.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquesta negociació ja està tancada");
+            return "redirect:/oviUser/negociacio/" + negociacioID;
+        }
+
+        PapPati papPati = papPatiDao.getPapPati(neg.getPapID());
+
+        model.addAttribute("titol", "Confirmar finalització sense acord");
+        model.addAttribute("missatge",
+                "Estàs a punt de donar per finalitzada la negociació amb " + papPati.getNameAndSurname() + " sense acord.");
+        model.addAttribute("detall",
+                "La negociació quedarà marcada com a tancada sense acord. Aquesta acció no es pot desfer.");
+        model.addAttribute("actionUrl", "/oviUser/negociacio/" + negociacioID + "/noAcord");
+        model.addAttribute("cancelUrl", "/oviUser/negociacio/" + negociacioID);
+        model.addAttribute("confirmLabel", "Sí, finalitzar sense acord");
+        model.addAttribute("tipusAccio", "perillosa");
+        return "fragments/confirm";
+    }
+
+    @RequestMapping(value = "/papPati/negociacio/{negociacioID}/confirmar/confirm", method = RequestMethod.GET)
+    public String confirmAcordPap(@PathVariable int negociacioID,
+                                  HttpSession session,
+                                  Model model,
+                                  RedirectAttributes redirectAttributes) {
+        Negotiation neg = getOwnedNegotiationPap(negociacioID, session);
+        if (neg == null) {
+            return "redirect:/papPati/portal";
+        }
+        if (!"inProgress".equals(neg.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquesta negociació ja està tancada");
+            return "redirect:/papPati/negociacio/" + negociacioID;
+        }
+
+        AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
+        OviUser oviUser = oviUserDao.getOviUser(sol.getOviID());
+
+        model.addAttribute("titol", "Confirmar acord amb l'usuari OVI");
+        model.addAttribute("missatge",
+                "Estàs a punt de confirmar l'acord amb " + oviUser.getNameAndSurname() + ".");
+        model.addAttribute("detall",
+                "Una vegada confirmat per ambdues parts, la negociació es tancarà i el tècnic OVI podrà formalitzar el contracte.");
+        model.addAttribute("actionUrl", "/papPati/negociacio/" + negociacioID + "/confirmar");
+        model.addAttribute("cancelUrl", "/papPati/negociacio/" + negociacioID);
+        model.addAttribute("confirmLabel", "Sí, confirmar acord");
+        model.addAttribute("tipusAccio", "normal");
+        return "fragments/confirm";
+    }
+
+    @RequestMapping(value = "/papPati/negociacio/{negociacioID}/noAcord/confirm", method = RequestMethod.GET)
+    public String confirmNoAcordPap(@PathVariable int negociacioID,
+                                    HttpSession session,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
+        Negotiation neg = getOwnedNegotiationPap(negociacioID, session);
+        if (neg == null) {
+            return "redirect:/papPati/portal";
+        }
+        if (!"inProgress".equals(neg.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquesta negociació ja està tancada");
+            return "redirect:/papPati/negociacio/" + negociacioID;
+        }
+
+        AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
+        OviUser oviUser = oviUserDao.getOviUser(sol.getOviID());
+
+        model.addAttribute("titol", "Confirmar finalització sense acord");
+        model.addAttribute("missatge",
+                "Estàs a punt de donar per finalitzada la negociació amb " + oviUser.getNameAndSurname() + " sense acord.");
+        model.addAttribute("detall",
+                "La negociació quedarà marcada com a tancada sense acord. Aquesta acció no es pot desfer.");
+        model.addAttribute("actionUrl", "/papPati/negociacio/" + negociacioID + "/noAcord");
+        model.addAttribute("cancelUrl", "/papPati/negociacio/" + negociacioID);
+        model.addAttribute("confirmLabel", "Sí, finalitzar sense acord");
+        model.addAttribute("tipusAccio", "perillosa");
+        return "fragments/confirm";
+    }
 }

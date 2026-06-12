@@ -10,7 +10,9 @@
 
 <div layout:fragment="content">
 
-    <h1 class="section-title" th:text="'Contracte #' + ${contract.contractID}"></h1>
+    <h1 class="section-title"
+        th:text="'Contracte entre ' + ${oviUser.nameAndSurname} + ' i ' + ${papPati.nameAndSurname}"></h1>
+
     <p class="section-subtitle">
         Estat actual:
         <span th:if="${contract.status == 'active'}" class="estat-actiu">Actiu</span>
@@ -153,17 +155,11 @@
         <a th:href="@{/admin/contractes/{id}/edit(id=${contract.contractID})}"
            class="btn btn-secondary">Modificar contracte</a>
 
-        <form th:action="@{/admin/contractes/{id}/finalitzar(id=${contract.contractID})}"
-              method="post"
-              onsubmit="return confirm('Confirmes que el servei ha finalitzat? La sol·licitud quedarà marcada com a contracte finalitzat.');">
-            <button type="submit" class="btn btn-primary">Marcar com a finalitzat</button>
-        </form>
+        <a th:href="@{/admin/contractes/{id}/finalitzar/confirm(id=${contract.contractID})}"
+           class="btn btn-primary">Marcar com a finalitzat</a>
 
-        <form th:action="@{/admin/contractes/{id}/cancellar(id=${contract.contractID})}"
-              method="post"
-              onsubmit="return confirm('Estàs segur/a que vols cancel·lar aquest contracte?');">
-            <button type="submit" class="btn btn-rebutjar">Cancel·lar contracte</button>
-        </form>
+        <a th:href="@{/admin/contractes/{id}/cancellar/confirm(id=${contract.contractID})}"
+           class="btn btn-rebutjar">Cancel·lar contracte</a>
     </div>
 
     <div th:if="${contract.status == 'ended'}" class="alert alert-info" role="status">

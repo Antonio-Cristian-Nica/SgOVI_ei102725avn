@@ -1590,6 +1590,10 @@ footer {
     background-color: transparent !important;
 }
 
+.global-flash {
+    margin-bottom: 2rem;
+}
+
 @media (max-width: 600px) {
     .chat-message {
         max-width: 90%;

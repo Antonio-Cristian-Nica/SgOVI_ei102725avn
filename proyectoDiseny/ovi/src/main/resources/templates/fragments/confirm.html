@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/base}"
+      lang="ca">
+<head>
+    <title>SgOVI - Confirmar acció</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="form-section">
+
+        <h1 class="section-title" th:text="${titol}"></h1>
+
+        <div class="alert alert-info" role="status">
+            <p th:text="${missatge}"></p>
+            <p th:if="${detall}" th:text="${detall}"></p>
+        </div>
+
+        <form th:action="@{${actionUrl}}" method="post">
+
+            <!-- Textarea opcional (per a motius de rebuig o desactivació) -->
+            <div th:if="${textareaName}" class="form-group">
+                <label th:for="${textareaName}" th:text="${textareaLabel}"></label>
+                <textarea th:id="${textareaName}"
+                          th:name="${textareaName}"
+                          class="rebutjar-textarea"
+                          rows="4"
+                          th:placeholder="${textareaPlaceholder}"
+                          th:required="${textareaRequired}"></textarea>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{${cancelUrl}}" class="btn btn-secondary">Cancel·lar</a>
+                <button type="submit"
+                        th:class="${tipusAccio == 'perillosa'} ? 'btn btn-rebutjar' : 'btn btn-primary'"
+                        th:text="${confirmLabel}"></button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

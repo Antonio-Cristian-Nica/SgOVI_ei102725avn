@@ -119,18 +119,12 @@
                 </div>
 
                 <div class="form-actions">
-                    <form th:if="${!recomanats.isEmpty()}"
-                          th:action="@{/admin/solicitudes/{id}/acceptar(id=${solicitud.requestID})}"
-                          method="post"
-                          onsubmit="return confirm('Confirmes que vols acceptar aquesta sol·licitud? L\'usuari podrà començar a negociar amb els PAP/PATIs recomanats.');">
-                        <button type="submit" class="btn btn-primary">Acceptar sol·licitud</button>
-                    </form>
+                    <a th:if="${!recomanats.isEmpty()}"
+                       th:href="@{/admin/solicitudes/{id}/acceptar/confirm(id=${solicitud.requestID})}"
+                       class="btn btn-primary">Acceptar sol·licitud</a>
 
-                    <form th:action="@{/admin/solicitudes/{id}/rebutjar(id=${solicitud.requestID})}"
-                          method="post"
-                          onsubmit="return confirm('Estàs segur/a que vols rebutjar aquesta sol·licitud?');">
-                        <button type="submit" class="btn btn-rebutjar">Rebutjar sol·licitud</button>
-                    </form>
+                    <a th:href="@{/admin/solicitudes/{id}/rebutjar/confirm(id=${solicitud.requestID})}"
+                       class="btn btn-rebutjar">Rebutjar sol·licitud</a>
                 </div>
             </div>
         </div>
@@ -157,8 +151,7 @@
                     <div th:if="${solicitud.status == 'inProgress'}" class="solicitud-rec-actions">
                         <form th:if="${!teNegociacio[rec.papID]}"
                               th:action="@{/admin/solicitudes/{rid}/recomanar/delete/{pid}(rid=${solicitud.requestID},pid=${rec.papID})}"
-                              method="post"
-                              onsubmit="return confirm('Estàs segur/a que vols eliminar aquesta recomanació?');">
+                              method="post" style="display:inline;">
                             <button type="submit" class="btn btn-rebutjar btn-small">Eliminar recomanació</button>
                         </form>
                         <span th:if="${teNegociacio[rec.papID]}" class="estat-pending">Té negociació activa</span>

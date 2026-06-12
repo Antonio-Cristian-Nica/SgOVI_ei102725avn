@@ -94,50 +94,23 @@
         <div class="table-actions">
 
             <!-- Si està pendent de validació: activar o rebutjar -->
-            <form th:if="${pappati.status == 'approvalPending'}"
-                  th:action="@{/admin/validarPapPati/{username}/activar(username=${pappati.username})}"
-                  method="post"
-                  onsubmit="return confirm('Vols activar aquest compte?');">
-                <button type="submit" class="btn btn-primary">Activar compte</button>
-            </form>
+            <a th:if="${pappati.status == 'approvalPending'}"
+               th:href="@{/admin/validarPapPati/{username}/activar/confirm(username=${pappati.username})}"
+               class="btn btn-primary">Activar compte</a>
 
-            <form th:if="${pappati.status == 'approvalPending'}"
-                  th:action="@{/admin/validarPapPati/{username}/rebutjar(username=${pappati.username})}"
-                  method="post" class="rebutjar-form"
-                  onsubmit="return confirm('Vols rebutjar aquest compte? El candidat veurà el motiu en intentar iniciar sessió.');">
-                <label th:for="'rejectionReason-' + ${pappati.username}" class="sr-only">
-                    Motiu del rebuig
-                </label>
-                <textarea th:id="'rejectionReason-' + ${pappati.username}"
-                          name="rejectionReason"
-                          class="rebutjar-textarea"
-                          placeholder="Motiu del rebuig..."
-                          required></textarea>
-                <button type="submit" class="btn btn-rebutjar">Rebutjar compte</button>
-            </form>
+            <a th:if="${pappati.status == 'approvalPending'}"
+               th:href="@{/admin/validarPapPati/{username}/rebutjar/confirm(username=${pappati.username})}"
+               class="btn btn-rebutjar">Rebutjar compte</a>
 
             <!-- Si està actiu: opció de desactivar -->
-            <form th:if="${pappati.status == 'active'}"
-                  th:action="@{/admin/gestionarPapPati/{username}/desactivar(username=${pappati.username})}"
-                  method="post" class="rebutjar-form"
-                  onsubmit="return confirm('Estàs segur/a que vols desactivar aquest PAP/PATI?');">
-                <label th:for="'rejectionReason-' + ${pappati.username}" class="sr-only">
-                    Motiu de la desactivació
-                </label>
-                <textarea th:id="'rejectionReason-' + ${pappati.username}"
-                          name="rejectionReason"
-                          class="rebutjar-textarea"
-                          placeholder="Motiu de la desactivació (opcional)"></textarea>
-                <button type="submit" class="btn btn-rebutjar">Desactivar PAP/PATI</button>
-            </form>
+            <a th:if="${pappati.status == 'active'}"
+               th:href="@{/admin/gestionarPapPati/{username}/desactivar/confirm(username=${pappati.username})}"
+               class="btn btn-rebutjar">Desactivar PAP/PATI</a>
 
             <!-- Si està rebutjat/inactiu: opció de reactivar -->
-            <form th:if="${pappati.status == 'inactive'}"
-                  th:action="@{/admin/gestionarPapPati/{username}/activar(username=${pappati.username})}"
-                  method="post"
-                  onsubmit="return confirm('Vols reactivar aquest PAP/PATI?');">
-                <button type="submit" class="btn btn-primary">Reactivar PAP/PATI</button>
-            </form>
+            <a th:if="${pappati.status == 'inactive'}"
+               th:href="@{/admin/gestionarPapPati/{username}/activar/confirm(username=${pappati.username})}"
+               class="btn btn-primary">Reactivar PAP/PATI</a>
 
         </div>
 

@@ -21,7 +21,7 @@
         <table class="data-table">
             <thead>
             <tr>
-                <th>ID</th>
+                <th>Persona sol·licitant</th>
                 <th>Localització</th>
                 <th>Assistència requerida</th>
                 <th>Data creació</th>
@@ -31,7 +31,7 @@
             </thead>
             <tbody>
             <tr th:each="sol : ${solicitudes}">
-                <td th:text="${sol.requestID}"></td>
+                <td th:text="${oviUsers[sol.requestID].nameAndSurname}"></td>
                 <td th:text="${sol.serviceLocation}"></td>
                 <td th:text="${#strings.abbreviate(sol.requiredAssistance, 80)}"></td>
                 <td th:text="${#temporals.format(sol.creationDate, 'dd/MM/yyyy')}"></td>

@@ -42,25 +42,10 @@
                 <td th:text="${oviuser.functionalDiversity != null ? oviuser.functionalDiversity : '—'}"></td>
                 <td th:text="${oviuser.username}"></td>
                 <td class="table-actions">
-                    <form th:action="@{/admin/validarOviUsers/{username}/activar(username=${oviuser.username})}"
-                          method="post"
-                          onsubmit="return confirm('Vols activar aquest compte?');">
-                        <button type="submit" class="btn btn-primary">Activar</button>
-                    </form>
-                    <form th:action="@{/admin/validarOviUsers/{username}/rebutjar(username=${oviuser.username})}"
-                          method="post"
-                          class="rebutjar-form"
-                          onsubmit="return confirm('Vols rebutjar aquest compte? Aquesta acció no es pot desfer fàcilment.');">
-                        <label th:for="'rejectionReason-' + ${oviuser.username}" class="sr-only">
-                            Motiu del rebuig per a <span th:text="${oviuser.username}"></span>
-                        </label>
-                        <textarea th:id="'rejectionReason-' + ${oviuser.username}"
-                                  name="rejectionReason"
-                                  class="rebutjar-textarea"
-                                  placeholder="Motiu del rebuig..."
-                                  required></textarea>
-                        <button type="submit" class="btn btn-rebutjar">Rebutjar</button>
-                    </form>
+                    <a th:href="@{/admin/validarOviUsers/{username}/activar/confirm(username=${oviuser.username})}"
+                       class="btn btn-primary btn-small">Activar</a>
+                    <a th:href="@{/admin/validarOviUsers/{username}/rebutjar/confirm(username=${oviuser.username})}"
+                       class="btn btn-rebutjar btn-small">Rebutjar</a>
                 </td>
             </tr>
             </tbody>

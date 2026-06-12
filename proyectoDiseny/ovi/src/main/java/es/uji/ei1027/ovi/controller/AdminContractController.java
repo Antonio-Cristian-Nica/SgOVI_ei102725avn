@@ -482,4 +482,76 @@ public class AdminContractController {
                 "El contracte s'ha cancel·lat correctament");
         return "redirect:/admin/contractes/" + contractID;
     }
+
+    // =====================================================================
+    // PÀGINES INTERMÈDIES DE CONFIRMACIÓ (acions destructives)
+    // =====================================================================
+
+    @RequestMapping(value = "/{contractID}/finalitzar/confirm", method = RequestMethod.GET)
+    public String confirmFinalitzar(@PathVariable int contractID,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
+        Contract contract = contractDao.getContract(contractID);
+        if (contract == null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest contracte no existeix");
+            return REDIRECT_LIST;
+        }
+        if (!"active".equals(contract.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Només es poden finalitzar contractes actius");
+            return "redirect:/admin/contractes/" + contractID;
+        }
+
+        Negotiation neg = negotiationDao.getNegotiation(contract.getNegotiationID());
+        AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
+        OviUser oviUser = oviUserDao.getOviUser(sol.getOviID());
+        PapPati papPati = papPatiDao.getPapPati(neg.getPapID());
+
+        model.addAttribute("titol", "Confirmar finalització del contracte");
+        model.addAttribute("missatge",
+                "Estàs a punt de marcar com a finalitzat el contracte entre "
+                        + oviUser.getNameAndSurname() + " i " + papPati.getNameAndSurname() + ".");
+        model.addAttribute("detall",
+                "La sol·licitud associada quedarà marcada com a contracte finalitzat. Aquesta acció no es pot desfer.");
+        model.addAttribute("actionUrl", "/admin/contractes/" + contractID + "/finalitzar");
+        model.addAttribute("cancelUrl", "/admin/contractes/" + contractID);
+        model.addAttribute("confirmLabel", "Sí, marcar com a finalitzat");
+        model.addAttribute("tipusAccio", "normal");
+        return "fragments/confirm";
+    }
+
+    @RequestMapping(value = "/{contractID}/cancellar/confirm", method = RequestMethod.GET)
+    public String confirmCancellar(@PathVariable int contractID,
+                                   Model model,
+                                   RedirectAttributes redirectAttributes) {
+        Contract contract = contractDao.getContract(contractID);
+        if (contract == null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest contracte no existeix");
+            return REDIRECT_LIST;
+        }
+        if (!"active".equals(contract.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Només es poden cancel·lar contractes actius");
+            return "redirect:/admin/contractes/" + contractID;
+        }
+
+        Negotiation neg = negotiationDao.getNegotiation(contract.getNegotiationID());
+        AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
+        OviUser oviUser = oviUserDao.getOviUser(sol.getOviID());
+        PapPati papPati = papPatiDao.getPapPati(neg.getPapID());
+
+        model.addAttribute("titol", "Confirmar cancel·lació del contracte");
+        model.addAttribute("missatge",
+                "Estàs a punt de cancel·lar el contracte entre "
+                        + oviUser.getNameAndSurname() + " i " + papPati.getNameAndSurname() + ".");
+        model.addAttribute("detall",
+                "La sol·licitud associada quedarà marcada com a contracte finalitzat. Aquesta acció no es pot desfer.");
+        model.addAttribute("actionUrl", "/admin/contractes/" + contractID + "/cancellar");
+        model.addAttribute("cancelUrl", "/admin/contractes/" + contractID);
+        model.addAttribute("confirmLabel", "Sí, cancel·lar contracte");
+        model.addAttribute("tipusAccio", "perillosa");
+        return "fragments/confirm";
+    }
 }

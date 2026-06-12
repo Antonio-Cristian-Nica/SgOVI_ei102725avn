@@ -85,7 +85,15 @@ public class AdminSolicitudController {
 
     @RequestMapping
     public String list(Model model) {
-        model.addAttribute("solicitudes", assistanceRequestDao.getAssistanceRequests());
+        List<AssistanceRequest> solicituds = assistanceRequestDao.getAssistanceRequests();
+
+        Map<Integer, OviUser> oviUsers = new HashMap<>();
+        for (AssistanceRequest sol : solicituds) {
+            oviUsers.put(sol.getRequestID(), oviUserDao.getOviUser(sol.getOviID()));
+        }
+
+        model.addAttribute("solicitudes", solicituds);
+        model.addAttribute("oviUsers", oviUsers);
         return "admin/solicitudes/list";
     }
 
@@ -306,5 +314,72 @@ public class AdminSolicitudController {
         redirectAttributes.addFlashAttribute("successMessage",
                 "La recomanació s'ha eliminat correctament");
         return "redirect:/admin/solicitudes/" + requestID;
+    }
+
+    // =====================================================================
+    // PÀGINES INTERMÈDIES DE CONFIRMACIÓ (acions destructives)
+    // =====================================================================
+
+    @RequestMapping(value = "/{requestID}/acceptar/confirm", method = RequestMethod.GET)
+    public String confirmAcceptar(@PathVariable int requestID,
+                                  Model model,
+                                  RedirectAttributes redirectAttributes) {
+        AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(requestID);
+        if (solicitud == null) {
+            return REDIRECT_LIST;
+        }
+        if (!"inProgress".equals(solicitud.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquesta sol·licitud ja no està pendent de revisió");
+            return "redirect:/admin/solicitudes/" + requestID;
+        }
+
+        List<RecommendedPapPati> recomanats = recommendedPapPatiDao.getRecommendedByRequest(requestID);
+        if (recomanats.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Has d'afegir almenys un PAP/PATI recomanat abans d'acceptar la sol·licitud");
+            return "redirect:/admin/solicitudes/" + requestID;
+        }
+
+        OviUser oviUser = oviUserDao.getOviUser(solicitud.getOviID());
+
+        model.addAttribute("titol", "Confirmar acceptació de la sol·licitud");
+        model.addAttribute("missatge",
+                "Estàs a punt d'acceptar la sol·licitud de " + oviUser.getNameAndSurname() + ".");
+        model.addAttribute("detall",
+                "L'usuari podrà començar a negociar amb els PAP/PATIs recomanats. Aquesta acció no es pot desfer.");
+        model.addAttribute("actionUrl", "/admin/solicitudes/" + requestID + "/acceptar");
+        model.addAttribute("cancelUrl", "/admin/solicitudes/" + requestID);
+        model.addAttribute("confirmLabel", "Sí, acceptar sol·licitud");
+        model.addAttribute("tipusAccio", "normal");
+        return "fragments/confirm";
+    }
+
+    @RequestMapping(value = "/{requestID}/rebutjar/confirm", method = RequestMethod.GET)
+    public String confirmRebutjar(@PathVariable int requestID,
+                                  Model model,
+                                  RedirectAttributes redirectAttributes) {
+        AssistanceRequest solicitud = assistanceRequestDao.getAssistanceRequest(requestID);
+        if (solicitud == null) {
+            return REDIRECT_LIST;
+        }
+        if (!"inProgress".equals(solicitud.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquesta sol·licitud ja no està pendent de revisió");
+            return "redirect:/admin/solicitudes/" + requestID;
+        }
+
+        OviUser oviUser = oviUserDao.getOviUser(solicitud.getOviID());
+
+        model.addAttribute("titol", "Confirmar rebuig de la sol·licitud");
+        model.addAttribute("missatge",
+                "Estàs a punt de rebutjar la sol·licitud de " + oviUser.getNameAndSurname() + ".");
+        model.addAttribute("detall",
+                "La sol·licitud quedarà marcada com a rebutjada i l'usuari serà informat. Aquesta acció no es pot desfer.");
+        model.addAttribute("actionUrl", "/admin/solicitudes/" + requestID + "/rebutjar");
+        model.addAttribute("cancelUrl", "/admin/solicitudes/" + requestID);
+        model.addAttribute("confirmLabel", "Sí, rebutjar sol·licitud");
+        model.addAttribute("tipusAccio", "perillosa");
+        return "fragments/confirm";
     }
 }

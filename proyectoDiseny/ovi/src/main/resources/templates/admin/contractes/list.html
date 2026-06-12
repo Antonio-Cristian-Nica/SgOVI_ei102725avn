@@ -23,7 +23,6 @@
         <table class="data-table">
             <thead>
             <tr>
-                <th>Negociació</th>
                 <th>Usuari OVI</th>
                 <th>PAP/PATI</th>
                 <th>Data inici negociació</th>
@@ -34,7 +33,6 @@
             <tbody>
             <tr th:each="neg : ${negociacions}"
                 th:with="contracte=${contractes[neg.negotiationID]}">
-                <td th:text="'#' + ${neg.negotiationID}"></td>
                 <td th:text="${oviUsers[neg.negotiationID].nameAndSurname}"></td>
                 <td th:text="${papPatis[neg.negotiationID].nameAndSurname}"></td>
                 <td th:text="${#temporals.format(neg.dateAndTime, 'dd/MM/yyyy')}"></td>

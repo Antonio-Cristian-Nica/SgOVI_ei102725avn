@@ -21,7 +21,6 @@
         <table class="data-table">
             <thead>
             <tr>
-                <th>ID</th>
                 <!-- Si el llistat és per OviUser, mostrem el PAP/PATI -->
                 <th th:if="${papPatis != null}">PAP/PATI</th>
                 <!-- Si el llistat és per PAP/PATI, mostrem l'OviUser -->
@@ -34,8 +33,6 @@
             </thead>
             <tbody>
             <tr th:each="contracte : ${contractes}">
-                <td th:text="'#' + ${contracte.contractID}"></td>
-
                 <td th:if="${papPatis != null}"
                     th:text="${papPatis[contracte.contractID].nameAndSurname}"></td>
 

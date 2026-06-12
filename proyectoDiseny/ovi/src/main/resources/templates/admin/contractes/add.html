@@ -113,8 +113,7 @@
         <h2 class="form-section-title">Dades del contracte</h2>
 
         <form th:action="@{/admin/contractes/add/{id}(id=${neg.negotiationID})}"
-              th:object="${contract}" method="post" novalidate
-              onsubmit="return confirm('Confirmes la creació d\'aquest contracte? La sol·licitud associada quedarà marcada com a tancada amb contracte.');">
+              th:object="${contract}" method="post" novalidate>
 
             <div class="form-row">
                 <div class="form-group">
@@ -144,6 +143,10 @@
                        required />
                 <span class="error-text" th:if="${#fields.hasErrors('documentURL')}"
                       th:errors="*{documentURL}"></span>
+            </div>
+
+            <div class="alert alert-info" role="status">
+                En generar el contracte, la sol·licitud associada quedarà marcada com a tancada amb contracte.
             </div>
 
             <div class="form-actions">

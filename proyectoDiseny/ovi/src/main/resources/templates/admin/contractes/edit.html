@@ -11,7 +11,9 @@
 <div layout:fragment="content">
     <div class="form-section">
 
-        <h1 class="section-title" th:text="'Modificar contracte #' + ${contract.contractID}"></h1>
+        <h1 class="section-title"
+            th:text="'Modificar contracte entre ' + ${oviUser.nameAndSurname} + ' i ' + ${papPati.nameAndSurname}"></h1>
+
         <p class="section-subtitle">
             Modifica les dades del contracte. Els camps marcats amb
             <span aria-hidden="true">*</span><span class="sr-only">asterisc</span>
@@ -44,8 +46,7 @@
         <h2 class="form-section-title">Dades del contracte</h2>
 
         <form th:action="@{/admin/contractes/{id}/edit(id=${contract.contractID})}"
-              th:object="${contract}" method="post" novalidate
-              onsubmit="return confirm('Confirmes la modificació d\'aquest contracte?');">
+              th:object="${contract}" method="post" novalidate>
 
             <div class="form-row">
                 <div class="form-group">

@@ -71,27 +71,14 @@
         <div class="table-actions">
 
             <!-- Si està actiu, opció de desactivar -->
-            <form th:if="${oviuser.status == 'active'}"
-                  th:action="@{/admin/gestionarOviUsers/{username}/desactivar(username=${oviuser.username})}"
-                  method="post" class="rebutjar-form"
-                  onsubmit="return confirm('Estàs segur/a que vols desactivar aquest usuari?');">
-                <label th:for="'rejectionReason-' + ${oviuser.username}" class="sr-only">
-                    Motiu de la desactivació
-                </label>
-                <textarea th:id="'rejectionReason-' + ${oviuser.username}"
-                          name="rejectionReason"
-                          class="rebutjar-textarea"
-                          placeholder="Motiu de la desactivació (opcional)"></textarea>
-                <button type="submit" class="btn btn-rebutjar">Desactivar usuari</button>
-            </form>
+            <a th:if="${oviuser.status == 'active'}"
+               th:href="@{/admin/gestionarOviUsers/{username}/desactivar/confirm(username=${oviuser.username})}"
+               class="btn btn-rebutjar">Desactivar usuari</a>
 
             <!-- Si està rebutjat, opció de reactivar -->
-            <form th:if="${oviuser.status == 'inactive'}"
-                  th:action="@{/admin/gestionarOviUsers/{username}/activar(username=${oviuser.username})}"
-                  method="post"
-                  onsubmit="return confirm('Vols reactivar aquest usuari?');">
-                <button type="submit" class="btn btn-primary">Reactivar usuari</button>
-            </form>
+            <a th:if="${oviuser.status == 'inactive'}"
+               th:href="@{/admin/gestionarOviUsers/{username}/activar/confirm(username=${oviuser.username})}"
+               class="btn btn-primary">Reactivar usuari</a>
 
         </div>
 

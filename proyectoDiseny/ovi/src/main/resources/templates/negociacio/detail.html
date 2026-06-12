@@ -112,32 +112,20 @@
 
                 <!-- Botons OVI User -->
                 <div th:if="${rol == 'oviUser'}" class="form-actions">
-                    <form th:if="${!neg.oviUserConfirmed}"
-                          th:action="@{/oviUser/negociacio/{id}/confirmar(id=${neg.negotiationID})}"
-                          method="post"
-                          onsubmit="return confirm('Confirmes l\'acord amb aquest PAP/PATI? Una vegada confirmat per ambdues parts, la negociació es tancarà.');">
-                        <button type="submit" class="btn btn-primary">Confirmar acord</button>
-                    </form>
-                    <form th:action="@{/oviUser/negociacio/{id}/noAcord(id=${neg.negotiationID})}"
-                          method="post"
-                          onsubmit="return confirm('Estàs segur/a que vols donar la negociació per finalitzada sense acord?');">
-                        <button type="submit" class="btn btn-rebutjar">No hi ha acord</button>
-                    </form>
+                    <a th:if="${!neg.oviUserConfirmed}"
+                       th:href="@{/oviUser/negociacio/{id}/confirmar/confirm(id=${neg.negotiationID})}"
+                       class="btn btn-primary">Confirmar acord</a>
+                    <a th:href="@{/oviUser/negociacio/{id}/noAcord/confirm(id=${neg.negotiationID})}"
+                       class="btn btn-rebutjar">No hi ha acord</a>
                 </div>
 
                 <!-- Botons PAP/PATI -->
                 <div th:if="${rol == 'papPati'}" class="form-actions">
-                    <form th:if="${!neg.papPatiConfirmed}"
-                          th:action="@{/papPati/negociacio/{id}/confirmar(id=${neg.negotiationID})}"
-                          method="post"
-                          onsubmit="return confirm('Confirmes l\'acord amb aquest usuari? Una vegada confirmat per ambdues parts, la negociació es tancarà.');">
-                        <button type="submit" class="btn btn-primary">Confirmar acord</button>
-                    </form>
-                    <form th:action="@{/papPati/negociacio/{id}/noAcord(id=${neg.negotiationID})}"
-                          method="post"
-                          onsubmit="return confirm('Estàs segur/a que vols donar la negociació per finalitzada sense acord?');">
-                        <button type="submit" class="btn btn-rebutjar">No hi ha acord</button>
-                    </form>
+                    <a th:if="${!neg.papPatiConfirmed}"
+                       th:href="@{/papPati/negociacio/{id}/confirmar/confirm(id=${neg.negotiationID})}"
+                       class="btn btn-primary">Confirmar acord</a>
+                    <a th:href="@{/papPati/negociacio/{id}/noAcord/confirm(id=${neg.negotiationID})}"
+                       class="btn btn-rebutjar">No hi ha acord</a>
                 </div>
             </div>
 

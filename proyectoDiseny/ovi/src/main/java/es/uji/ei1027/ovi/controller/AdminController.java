@@ -5,6 +5,8 @@ import es.uji.ei1027.ovi.dao.contract.ContractDao;
 import es.uji.ei1027.ovi.dao.credentials.CredentialsDao;
 import es.uji.ei1027.ovi.dao.oviuser.OviUserDao;
 import es.uji.ei1027.ovi.dao.pappati.PapPatiDao;
+import es.uji.ei1027.ovi.model.OviUser;
+import es.uji.ei1027.ovi.model.PapPati;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,6 +93,56 @@ public class AdminController {
         return "redirect:/admin/validarPapPati";
     }
 
+    @RequestMapping(value = "/validarPapPati/{username}/activar/confirm", method = RequestMethod.GET)
+    public String confirmActivarPapPati(@PathVariable("username") String username,
+                                        Model model,
+                                        RedirectAttributes redirectAttributes) {
+        PapPati pap = papPatiDao.getPapPatiByUsername(username);
+        if (pap == null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest PAP/PATI no existeix");
+            return "redirect:/admin/validarPapPati";
+        }
+
+        model.addAttribute("titol", "Confirmar activació del compte de PAP/PATI");
+        model.addAttribute("missatge",
+                "Estàs a punt d'activar el compte de " + pap.getNameAndSurname() + ".");
+        model.addAttribute("detall",
+                "El candidat podrà iniciar sessió i començar a rebre sol·licituds.");
+        model.addAttribute("actionUrl", "/admin/validarPapPati/" + username + "/activar");
+        model.addAttribute("cancelUrl", "/admin/gestionarPapPati/" + username + "?from=/admin/validarPapPati");
+        model.addAttribute("confirmLabel", "Sí, activar compte");
+        model.addAttribute("tipusAccio", "normal");
+        return "fragments/confirm";
+    }
+
+    @RequestMapping(value = "/validarPapPati/{username}/rebutjar/confirm", method = RequestMethod.GET)
+    public String confirmRebutjarPapPati(@PathVariable("username") String username,
+                                         Model model,
+                                         RedirectAttributes redirectAttributes) {
+        PapPati pap = papPatiDao.getPapPatiByUsername(username);
+        if (pap == null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest PAP/PATI no existeix");
+            return "redirect:/admin/validarPapPati";
+        }
+
+        model.addAttribute("titol", "Confirmar rebuig del compte de PAP/PATI");
+        model.addAttribute("missatge",
+                "Estàs a punt de rebutjar el compte de " + pap.getNameAndSurname() + ".");
+        model.addAttribute("detall",
+                "El candidat veurà el motiu en intentar iniciar sessió. Aquesta acció no es pot desfer.");
+        model.addAttribute("actionUrl", "/admin/validarPapPati/" + username + "/rebutjar");
+        model.addAttribute("cancelUrl", "/admin/gestionarPapPati/" + username + "?from=/admin/validarPapPati");
+        model.addAttribute("confirmLabel", "Sí, rebutjar compte");
+        model.addAttribute("tipusAccio", "perillosa");
+        model.addAttribute("textareaName", "rejectionReason");
+        model.addAttribute("textareaLabel", "Motiu del rebuig");
+        model.addAttribute("textareaPlaceholder", "Explica per què rebutges aquest candidat...");
+        model.addAttribute("textareaRequired", true);
+        return "fragments/confirm";
+    }
+
     // =====================================================================
     // GESTIONAR PAP/PATI (acceptats i rebutjats)
     // =====================================================================
@@ -140,6 +192,56 @@ public class AdminController {
         return "redirect:/admin/gestionarPapPati/" + username;
     }
 
+    @RequestMapping(value = "/gestionarPapPati/{username}/desactivar/confirm", method = RequestMethod.GET)
+    public String confirmDesactivarPapPati(@PathVariable("username") String username,
+                                           Model model,
+                                           RedirectAttributes redirectAttributes) {
+        PapPati pap = papPatiDao.getPapPatiByUsername(username);
+        if (pap == null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest PAP/PATI no existeix");
+            return "redirect:/admin/gestionarPapPati";
+        }
+
+        model.addAttribute("titol", "Confirmar desactivació del compte de PAP/PATI");
+        model.addAttribute("missatge",
+                "Estàs a punt de desactivar el compte de " + pap.getNameAndSurname() + ".");
+        model.addAttribute("detall",
+                "El PAP/PATI ja no podrà iniciar sessió ni rebre noves sol·licituds fins que el compte siga reactivat.");
+        model.addAttribute("actionUrl", "/admin/gestionarPapPati/" + username + "/desactivar");
+        model.addAttribute("cancelUrl", "/admin/gestionarPapPati/" + username);
+        model.addAttribute("confirmLabel", "Sí, desactivar compte");
+        model.addAttribute("tipusAccio", "perillosa");
+        model.addAttribute("textareaName", "rejectionReason");
+        model.addAttribute("textareaLabel", "Motiu de la desactivació (opcional)");
+        model.addAttribute("textareaPlaceholder", "Indica el motiu de la desactivació...");
+        model.addAttribute("textareaRequired", false);
+        return "fragments/confirm";
+    }
+
+    @RequestMapping(value = "/gestionarPapPati/{username}/activar/confirm", method = RequestMethod.GET)
+    public String confirmReactivarPapPati(@PathVariable("username") String username,
+                                          Model model,
+                                          RedirectAttributes redirectAttributes) {
+        PapPati pap = papPatiDao.getPapPatiByUsername(username);
+        if (pap == null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest PAP/PATI no existeix");
+            return "redirect:/admin/gestionarPapPati";
+        }
+
+        model.addAttribute("titol", "Confirmar reactivació del compte de PAP/PATI");
+        model.addAttribute("missatge",
+                "Estàs a punt de reactivar el compte de " + pap.getNameAndSurname() + ".");
+        model.addAttribute("detall",
+                "El PAP/PATI podrà tornar a iniciar sessió i rebre sol·licituds.");
+        model.addAttribute("actionUrl", "/admin/gestionarPapPati/" + username + "/activar");
+        model.addAttribute("cancelUrl", "/admin/gestionarPapPati/" + username);
+        model.addAttribute("confirmLabel", "Sí, reactivar compte");
+        model.addAttribute("tipusAccio", "normal");
+        return "fragments/confirm";
+    }
+
     // =====================================================================
     // VALIDAR OVI USERS
     // =====================================================================
@@ -173,6 +275,56 @@ public class AdminController {
         redirectAttributes.addFlashAttribute("successMessage",
                 "L'usuari OVI s'ha rebutjat correctament");
         return "redirect:/admin/validarOviUsers";
+    }
+
+    @RequestMapping(value = "/validarOviUsers/{username}/activar/confirm", method = RequestMethod.GET)
+    public String confirmActivarOviUser(@PathVariable("username") String username,
+                                        Model model,
+                                        RedirectAttributes redirectAttributes) {
+        OviUser user = oviUserDao.getOviUserByUsername(username);
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest usuari no existeix");
+            return "redirect:/admin/validarOviUsers";
+        }
+
+        model.addAttribute("titol", "Confirmar activació del compte d'usuari OVI");
+        model.addAttribute("missatge",
+                "Estàs a punt d'activar el compte de " + user.getNameAndSurname() + ".");
+        model.addAttribute("detall",
+                "L'usuari podrà iniciar sessió i accedir al portal complet.");
+        model.addAttribute("actionUrl", "/admin/validarOviUsers/" + username + "/activar");
+        model.addAttribute("cancelUrl", "/admin/validarOviUsers");
+        model.addAttribute("confirmLabel", "Sí, activar compte");
+        model.addAttribute("tipusAccio", "normal");
+        return "fragments/confirm";
+    }
+
+    @RequestMapping(value = "/validarOviUsers/{username}/rebutjar/confirm", method = RequestMethod.GET)
+    public String confirmRebutjarOviUser(@PathVariable("username") String username,
+                                         Model model,
+                                         RedirectAttributes redirectAttributes) {
+        OviUser user = oviUserDao.getOviUserByUsername(username);
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest usuari no existeix");
+            return "redirect:/admin/validarOviUsers";
+        }
+
+        model.addAttribute("titol", "Confirmar rebuig del compte d'usuari OVI");
+        model.addAttribute("missatge",
+                "Estàs a punt de rebutjar el compte de " + user.getNameAndSurname() + ".");
+        model.addAttribute("detall",
+                "L'usuari veurà el motiu en intentar iniciar sessió. Aquesta acció no es pot desfer.");
+        model.addAttribute("actionUrl", "/admin/validarOviUsers/" + username + "/rebutjar");
+        model.addAttribute("cancelUrl", "/admin/validarOviUsers");
+        model.addAttribute("confirmLabel", "Sí, rebutjar compte");
+        model.addAttribute("tipusAccio", "perillosa");
+        model.addAttribute("textareaName", "rejectionReason");
+        model.addAttribute("textareaLabel", "Motiu del rebuig");
+        model.addAttribute("textareaPlaceholder", "Explica per què rebutges aquest compte...");
+        model.addAttribute("textareaRequired", true);
+        return "fragments/confirm";
     }
 
     // =====================================================================
@@ -222,9 +374,59 @@ public class AdminController {
         return "redirect:/admin/gestionarOviUsers/" + username;
     }
 
+    @RequestMapping(value = "/gestionarOviUsers/{username}/desactivar/confirm", method = RequestMethod.GET)
+    public String confirmDesactivarOviUser(@PathVariable("username") String username,
+                                           Model model,
+                                           RedirectAttributes redirectAttributes) {
+        OviUser user = oviUserDao.getOviUserByUsername(username);
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest usuari no existeix");
+            return "redirect:/admin/gestionarOviUsers";
+        }
+
+        model.addAttribute("titol", "Confirmar desactivació del compte d'usuari OVI");
+        model.addAttribute("missatge",
+                "Estàs a punt de desactivar el compte de " + user.getNameAndSurname() + ".");
+        model.addAttribute("detall",
+                "L'usuari ja no podrà iniciar sessió fins que el compte siga reactivat.");
+        model.addAttribute("actionUrl", "/admin/gestionarOviUsers/" + username + "/desactivar");
+        model.addAttribute("cancelUrl", "/admin/gestionarOviUsers/" + username);
+        model.addAttribute("confirmLabel", "Sí, desactivar compte");
+        model.addAttribute("tipusAccio", "perillosa");
+        model.addAttribute("textareaName", "rejectionReason");
+        model.addAttribute("textareaLabel", "Motiu de la desactivació (opcional)");
+        model.addAttribute("textareaPlaceholder", "Indica el motiu de la desactivació...");
+        model.addAttribute("textareaRequired", false);
+        return "fragments/confirm";
+    }
+
+    @RequestMapping(value = "/gestionarOviUsers/{username}/activar/confirm", method = RequestMethod.GET)
+    public String confirmReactivarOviUser(@PathVariable("username") String username,
+                                          Model model,
+                                          RedirectAttributes redirectAttributes) {
+        OviUser user = oviUserDao.getOviUserByUsername(username);
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Aquest usuari no existeix");
+            return "redirect:/admin/gestionarOviUsers";
+        }
+
+        model.addAttribute("titol", "Confirmar reactivació del compte d'usuari OVI");
+        model.addAttribute("missatge",
+                "Estàs a punt de reactivar el compte de " + user.getNameAndSurname() + ".");
+        model.addAttribute("detall",
+                "L'usuari podrà tornar a iniciar sessió i accedir al portal.");
+        model.addAttribute("actionUrl", "/admin/gestionarOviUsers/" + username + "/activar");
+        model.addAttribute("cancelUrl", "/admin/gestionarOviUsers/" + username);
+        model.addAttribute("confirmLabel", "Sí, reactivar compte");
+        model.addAttribute("tipusAccio", "normal");
+        return "fragments/confirm";
+    }
+
     // =====================================================================
-// ESTADÍSTIQUES
-// =====================================================================
+    // ESTADÍSTIQUES
+    // =====================================================================
 
     @RequestMapping("/estadistiques")
     public String estadistiques(Model model) {
