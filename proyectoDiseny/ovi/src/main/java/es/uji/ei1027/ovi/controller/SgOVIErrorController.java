@@ -38,6 +38,10 @@ public class SgOVIErrorController implements ErrorController {
         }
 
         model.addAttribute("message", "Si el problema persisteix, contacta amb l'administrador.");
+
+        String backUrl = request.getHeader("Referer");
+        model.addAttribute("backUrl", backUrl != null ? backUrl : "/");
+
         return ERROR;
     }
 }
