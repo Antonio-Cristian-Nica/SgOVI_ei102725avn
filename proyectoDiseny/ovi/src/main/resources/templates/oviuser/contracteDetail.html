@@ -10,7 +10,7 @@
 
 <div layout:fragment="content">
 
-    <h1 class="section-title" th:text="'Contracte #' + ${contract.contractID}"></h1>
+    <h1 class="section-title" th:text="'Contracte entre ' + ${oviUser.nameAndSurname} + ' i ' + ${papPati.nameAndSurname}"></h1>
     <p class="section-subtitle">
         Estat actual:
         <span th:if="${contract.status == 'active'}" class="estat-actiu">Actiu</span>

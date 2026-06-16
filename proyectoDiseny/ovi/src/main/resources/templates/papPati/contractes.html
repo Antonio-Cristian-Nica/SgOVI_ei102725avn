@@ -21,7 +21,7 @@
         <article th:each="c : ${contractes}" class="pilar-card solicitud-rec-card">
             <div th:with="neg=${negotiations[c.contractID]}, ovi=${oviUsers[c.contractID]}">
 
-                <h2 th:text="'Contracte #' + ${c.contractID}"></h2>
+                <h2 th:text="'Contracte amb ' + ${ovi.nameAndSurname}"></h2>
 
                 <div class="filosofia-grid">
                     <div>

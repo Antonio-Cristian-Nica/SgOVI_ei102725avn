@@ -406,4 +406,43 @@ public class OviUserSolicitudController {
                 "La sol·licitud s'ha creat correctament");
         return "redirect:/oviUser/solicitudes";
     }
+
+    // =====================================================================
+    // PÀGINES INTERMÈDIES DE CONFIRMACIÓ (acions destructives)
+    // =====================================================================
+
+    @RequestMapping(value = "/delete/{requestID}/confirm", method = RequestMethod.GET)
+    public String confirmDelete(@PathVariable int requestID,
+                                @RequestParam(value = "nova", defaultValue = "false") boolean nova,
+                                HttpSession session,
+                                Model model) {
+        AssistanceRequest solicitud = getOwnedRequest(requestID, session);
+        if (solicitud == null) {
+            return REDIRECT_LIST;
+        }
+
+        if (nova) {
+            // Cancel·lació durant la creació d'una sol·licitud nova
+            model.addAttribute("titol", "Cancel·lar la creació de la sol·licitud");
+            model.addAttribute("missatge",
+                    "Estàs a punt de cancel·lar la creació d'aquesta sol·licitud.");
+            model.addAttribute("detall",
+                    "S'esborraran totes les dades i els horaris afegits fins ara. Aquesta acció no es pot desfer.");
+            model.addAttribute("confirmLabel", "Sí, cancel·lar sol·licitud");
+            model.addAttribute("actionUrl", "/oviUser/solicitudes/delete/" + requestID);
+            model.addAttribute("cancelUrl", "/oviUser/solicitudes/" + requestID + "/horaris?nova=true");
+        } else {
+            // Eliminació d'una sol·licitud existent des del llistat
+            model.addAttribute("titol", "Eliminar la sol·licitud");
+            model.addAttribute("missatge",
+                    "Estàs a punt d'eliminar aquesta sol·licitud d'assistència.");
+            model.addAttribute("detall",
+                    "S'esborraran la sol·licitud i tots els seus horaris associats. Aquesta acció no es pot desfer.");
+            model.addAttribute("confirmLabel", "Sí, eliminar sol·licitud");
+            model.addAttribute("actionUrl", "/oviUser/solicitudes/delete/" + requestID);
+            model.addAttribute("cancelUrl", "/oviUser/solicitudes");
+        }
+        model.addAttribute("tipusAccio", "perillosa");
+        return "fragments/confirm";
+    }
 }

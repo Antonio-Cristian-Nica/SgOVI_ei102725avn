@@ -339,6 +339,31 @@ public class OviUserController {
         return "redirect:/oviUser/tutor";
     }
 
+    // Mostra la pàgina de confirmació d'eliminació del tutor
+    @RequestMapping("/tutor/delete/confirm")
+    public String confirmDeleteTutor(HttpSession session, Model model,
+                                     RedirectAttributes redirectAttributes) {
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
+        OviUser oviUser = oviUserDao.getOviUserByUsername(credentials.getUsername());
+
+        if (oviUser.getTutorID() == null) {
+            return "redirect:/oviUser/tutor";
+        }
+
+        Tutor tutor = tutorDao.getTutor(oviUser.getTutorID());
+
+        model.addAttribute("titol", "Eliminar tutor legal");
+        model.addAttribute("missatge",
+                "Estàs segur/a que vols eliminar el tutor legal " + tutor.getNameAndSurname() + "?");
+        model.addAttribute("detall", "Aquesta acció no es pot desfer.");
+        model.addAttribute("actionUrl", "/oviUser/tutor/delete");
+        model.addAttribute("cancelUrl", "/oviUser/tutor");
+        model.addAttribute("confirmLabel", "Eliminar tutor");
+        model.addAttribute("tipusAccio", "perillosa");
+
+        return "fragments/confirm";
+    }
+
     // Elimina el tutor associat a l'usuari
     @Transactional
     @RequestMapping(value = "/tutor/delete", method = RequestMethod.POST)
@@ -415,6 +440,7 @@ public class OviUserController {
         List<RequestSchedule> horaris = requestScheduleDao.getRequestSchedulesByRequest(neg.getRequestID());
 
         model.addAttribute("contract", contract);
+        model.addAttribute("oviUser", oviUser);
         model.addAttribute("neg", neg);
         model.addAttribute("sol", sol);
         model.addAttribute("papPati", papPati);

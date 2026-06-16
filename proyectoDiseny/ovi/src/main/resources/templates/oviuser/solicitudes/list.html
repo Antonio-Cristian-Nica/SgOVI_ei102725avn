@@ -43,12 +43,9 @@
                 <td class="table-actions">
                     <a th:href="@{/oviUser/solicitudes/{id}(id=${sol.requestID})}"
                        class="btn btn-secondary btn-small">Veure</a>
-                    <form th:if="${sol.status == 'inProgress'}"
-                          th:action="@{/oviUser/solicitudes/delete/{id}(id=${sol.requestID})}"
-                          method="post"
-                          onsubmit="return confirm('Estàs segur/a que vols eliminar aquesta sol·licitud?');">
-                        <button type="submit" class="btn btn-rebutjar btn-small">Eliminar</button>
-                    </form>
+                    <a th:if="${sol.status == 'inProgress'}"
+                       th:href="@{/oviUser/solicitudes/delete/{id}/confirm(id=${sol.requestID})}"
+                       class="btn btn-rebutjar btn-small">Eliminar</a>
                 </td>
             </tr>
             </tbody>

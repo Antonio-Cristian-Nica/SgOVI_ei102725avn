@@ -44,8 +44,7 @@
                 <td th:text="${#temporals.format(horari.endHour, 'HH:mm')}"></td>
                 <td>
                     <form th:action="@{/oviUser/solicitudes/{rid}/horaris/delete/{hid}(rid=${requestID},hid=${horari.reqScheduleID})}"
-                          method="post"
-                          onsubmit="return confirm('Estàs segur/a que vols eliminar aquest horari?');">
+                          method="post" style="display:inline;">
                         <input type="hidden" name="nova" th:value="${esNova}" />
                         <button type="submit" class="btn btn-rebutjar btn-small">Eliminar</button>
                     </form>
@@ -101,14 +100,10 @@
     <!-- Accions de finalització / cancel·lació (fora del form principal) -->
     <div class="form-actions">
 
-        <!-- Cancel·lar sol·licitud nova: form POST separat -->
-        <form th:if="${esNova}"
-              th:action="@{/oviUser/solicitudes/delete/{id}(id=${requestID})}"
-              method="post"
-              onsubmit="return confirm('Estàs segur/a que vols cancel·lar la creació de la sol·licitud? S\'esborraran totes les dades.');"
-              style="display: inline;">
-            <button type="submit" class="btn btn-rebutjar">Cancel·lar sol·licitud</button>
-        </form>
+        <!-- Cancel·lar sol·licitud nova: enllaç a pàgina de confirmació -->
+        <a th:if="${esNova}"
+           th:href="@{/oviUser/solicitudes/delete/{id}/confirm(id=${requestID},nova=true)}"
+           class="btn btn-rebutjar">Cancel·lar sol·licitud</a>
 
         <form th:if="${!horaris.isEmpty() and esNova}"
               th:action="@{/oviUser/solicitudes/{id}/finalizar(id=${requestID})}"

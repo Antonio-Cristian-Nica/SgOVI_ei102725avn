@@ -23,7 +23,7 @@
         <article th:each="rec : ${recomanacions}" class="pilar-card solicitud-rec-card">
             <div th:with="sol=${solicituds[rec.requestID]}, ovi=${oviUsers[rec.requestID]}">
 
-                <h2 th:text="'Sol·licitud #' + ${sol.requestID}"></h2>
+                <h2 th:text="'Sol·licitud de ' + ${ovi.nameAndSurname}"></h2>
 
                 <div class="filosofia-grid">
                     <div>

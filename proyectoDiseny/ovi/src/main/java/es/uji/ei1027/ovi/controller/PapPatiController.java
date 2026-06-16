@@ -403,6 +403,7 @@ public class PapPatiController {
         model.addAttribute("neg", neg);
         model.addAttribute("sol", sol);
         model.addAttribute("oviUser", oviUser);
+        model.addAttribute("papPati", papPati);
         model.addAttribute("horaris", horaris);
         model.addAttribute("from", from);
 

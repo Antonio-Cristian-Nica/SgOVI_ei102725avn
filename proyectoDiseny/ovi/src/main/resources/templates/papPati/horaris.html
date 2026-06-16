@@ -42,8 +42,7 @@
                 <td th:text="${#temporals.format(schedule.endHour, 'HH:mm')}"></td>
                 <td>
                     <form th:action="@{/papPati/horaris/delete/{id}(id=${schedule.scheduleID})}"
-                          method="post"
-                          onsubmit="return confirm('Estàs segur/a que vols eliminar aquest horari?');">
+                          method="post">
                         <button type="submit" class="btn btn-rebutjar btn-small">Eliminar</button>
                     </form>
                 </td>
