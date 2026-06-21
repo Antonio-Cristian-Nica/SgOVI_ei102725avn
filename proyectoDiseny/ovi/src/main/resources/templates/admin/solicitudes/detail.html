@@ -109,24 +109,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- Accions del tècnic, només si la sol·licitud està en revisió -->
-            <div th:if="${solicitud.status == 'inProgress'}">
-
-                <!-- Avís si encara no hi ha recomanats: bloqueja l'acceptació -->
-                <div th:if="${recomanats.isEmpty()}" class="alert alert-info" role="status">
-                    Has d'afegir almenys un PAP/PATI recomanat abans de poder acceptar la sol·licitud.
-                </div>
-
-                <div class="form-actions">
-                    <a th:if="${!recomanats.isEmpty()}"
-                       th:href="@{/admin/solicitudes/{id}/acceptar/confirm(id=${solicitud.requestID})}"
-                       class="btn btn-primary">Acceptar sol·licitud</a>
-
-                    <a th:href="@{/admin/solicitudes/{id}/rebutjar/confirm(id=${solicitud.requestID})}"
-                       class="btn btn-rebutjar">Rebutjar sol·licitud</a>
-                </div>
-            </div>
         </div>
 
         <!-- COLUMNA DRETA: PAP/PATIs recomanats i compatibles -->
@@ -261,8 +243,36 @@
 
     </div>
 
-    <div class="form-actions">
-        <a th:href="@{/admin/solicitudes}" class="btn btn-secondary">Tornar al llistat</a>
+    <!-- ACCIONS GLOBALS A LA PART INFERIOR -->
+    <div class="bottom-actions">
+
+        <!-- Acciones del técnico SOLO si está en revisión -->
+        <div th:if="${solicitud.status == 'inProgress'}" class="form-actions">
+
+            <div th:if="${recomanats.isEmpty()}" class="alert alert-info" role="status">
+                Has d'afegir almenys un PAP/PATI recomanat abans de poder acceptar la sol·licitud.
+            </div>
+
+            <a th:if="${!recomanats.isEmpty()}"
+               th:href="@{/admin/solicitudes/{id}/acceptar/confirm(id=${solicitud.requestID})}"
+               class="btn btn-primary">
+                Acceptar sol·licitud
+            </a>
+
+            <a th:href="@{/admin/solicitudes/{id}/rebutjar/confirm(id=${solicitud.requestID})}"
+               class="btn btn-rebutjar">
+                Rebutjar sol·licitud
+            </a>
+
+        </div>
+
+        <!-- ESTE SIEMPRE -->
+        <div class="form-actions">
+            <a th:href="@{/admin/solicitudes}" class="btn btn-secondary">
+                Tornar al llistat
+            </a>
+        </div>
+
     </div>
 
 </div>

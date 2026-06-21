@@ -110,23 +110,6 @@
                     </dd>
                 </dl>
 
-                <!-- Botons OVI User -->
-                <div th:if="${rol == 'oviUser'}" class="form-actions">
-                    <a th:if="${!neg.oviUserConfirmed}"
-                       th:href="@{/oviUser/negociacio/{id}/confirmar/confirm(id=${neg.negotiationID})}"
-                       class="btn btn-primary">Confirmar acord</a>
-                    <a th:href="@{/oviUser/negociacio/{id}/noAcord/confirm(id=${neg.negotiationID})}"
-                       class="btn btn-rebutjar">No hi ha acord</a>
-                </div>
-
-                <!-- Botons PAP/PATI -->
-                <div th:if="${rol == 'papPati'}" class="form-actions">
-                    <a th:if="${!neg.papPatiConfirmed}"
-                       th:href="@{/papPati/negociacio/{id}/confirmar/confirm(id=${neg.negotiationID})}"
-                       class="btn btn-primary">Confirmar acord</a>
-                    <a th:href="@{/papPati/negociacio/{id}/noAcord/confirm(id=${neg.negotiationID})}"
-                       class="btn btn-rebutjar">No hi ha acord</a>
-                </div>
             </div>
 
             <div th:if="${neg.status == 'finished'}" class="alert alert-success" role="alert">
@@ -195,13 +178,61 @@
 
     </div>
 
-    <div class="form-actions">
-        <a th:if="${rol == 'oviUser'}"
-           th:href="@{/oviUser/solicitudes/{id}(id=${neg.requestID})}"
-           class="btn btn-secondary">Tornar a la sol·licitud</a>
-        <a th:if="${rol == 'papPati'}"
-           th:href="@{/papPati/solicitudes}"
-           class="btn btn-secondary">Tornar a les sol·licituds</a>
+    <!-- ACCIONS GLOBALS A LA PART INFERIOR -->
+    <div class="bottom-actions">
+
+        <!-- Accions de la negociació -->
+        <div th:if="${neg.status == 'inProgress'}" class="form-actions">
+
+            <!-- OVI User -->
+            <div th:if="${rol == 'oviUser'}">
+
+                <a th:if="${!neg.oviUserConfirmed}"
+                   th:href="@{/oviUser/negociacio/{id}/confirmar/confirm(id=${neg.negotiationID})}"
+                   class="btn btn-primary">
+                    Confirmar acord
+                </a>
+
+                <a th:href="@{/oviUser/negociacio/{id}/noAcord/confirm(id=${neg.negotiationID})}"
+                   class="btn btn-rebutjar">
+                    No hi ha acord
+                </a>
+
+            </div>
+
+            <!-- PAP/PATI -->
+            <div th:if="${rol == 'papPati'}">
+
+                <a th:if="${!neg.papPatiConfirmed}"
+                   th:href="@{/papPati/negociacio/{id}/confirmar/confirm(id=${neg.negotiationID})}"
+                   class="btn btn-primary">
+                    Confirmar acord
+                </a>
+
+                <a th:href="@{/papPati/negociacio/{id}/noAcord/confirm(id=${neg.negotiationID})}"
+                   class="btn btn-rebutjar">
+                    No hi ha acord
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- Sempre visible -->
+        <div class="form-actions">
+            <a th:if="${rol == 'oviUser'}"
+               th:href="@{/oviUser/solicitudes/{id}(id=${neg.requestID})}"
+               class="btn btn-secondary">
+                Tornar a la sol·licitud
+            </a>
+
+            <a th:if="${rol == 'papPati'}"
+               th:href="@{/papPati/solicitudes}"
+               class="btn btn-secondary">
+                Tornar a les sol·licituds
+            </a>
+        </div>
+
     </div>
 
 </div>
