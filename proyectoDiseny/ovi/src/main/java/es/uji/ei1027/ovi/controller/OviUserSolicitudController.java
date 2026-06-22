@@ -245,6 +245,14 @@ public class OviUserSolicitudController {
             return REDIRECT_LIST;
         }
 
+        // Només es pot eliminar una sol·licitud mentre està en revisió
+        if (!"inProgress".equals(solicitud.getStatus())) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Només es poden eliminar les sol·licituds que estiguen en revisió");
+            return REDIRECT_LIST;
+        }
+        
+        recommendedPapPatiDao.deleteRecommendationsByRequest(requestID);
         requestScheduleDao.deleteSchedulesByRequest(requestID);
         assistanceRequestDao.deleteAssistanceRequest(requestID);
 
