@@ -12,7 +12,7 @@
 
     <h1 class="section-title">Gestió de contractes</h1>
     <p class="section-subtitle">
-        Negociacions finalitzades amb acord. Genera els contractes pendents i consulta els ja creats.
+        Negociacions finalitzades amb acord. Registra els contractes pendents i consulta els ja creats.
     </p>
 
     <div th:if="${negociacions.isEmpty()}" class="alert alert-info">
@@ -45,7 +45,7 @@
                 <td>
                     <a th:if="${contracte == null}"
                        th:href="@{/admin/contractes/add/{id}(id=${neg.negotiationID})}"
-                       class="btn btn-primary btn-small">Generar contracte</a>
+                       class="btn btn-primary btn-small">Registrar contracte</a>
                     <a th:if="${contracte != null}"
                        th:href="@{/admin/contractes/{id}(id=${contracte.contractID})}"
                        class="btn btn-secondary btn-small">Veure contracte</a>

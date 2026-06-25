@@ -251,7 +251,7 @@ public class OviUserSolicitudController {
                     "Només es poden eliminar les sol·licituds que estiguen en revisió");
             return REDIRECT_LIST;
         }
-        
+
         recommendedPapPatiDao.deleteRecommendationsByRequest(requestID);
         requestScheduleDao.deleteSchedulesByRequest(requestID);
         assistanceRequestDao.deleteAssistanceRequest(requestID);

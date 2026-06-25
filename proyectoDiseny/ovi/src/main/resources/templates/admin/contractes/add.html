@@ -4,14 +4,14 @@
       layout:decorate="~{fragments/base}"
       lang="ca">
 <head>
-    <title>SgOVI - Generar contracte</title>
+    <title>SgOVI - Registrar contracte</title>
 </head>
 <body>
 
 <div layout:fragment="content">
     <div class="form-section">
 
-        <h1 class="section-title">Generar contracte</h1>
+        <h1 class="section-title">Registrar contracte</h1>
         <p class="section-subtitle">
             Omple les dades del contracte d'assistència personal. Els camps marcats amb
             <span aria-hidden="true">*</span><span class="sr-only">asterisc</span>
@@ -146,12 +146,12 @@
             </div>
 
             <div class="alert alert-info" role="status">
-                En generar el contracte, la sol·licitud associada quedarà marcada com a tancada amb contracte.
+                En registrar el contracte, la sol·licitud associada quedarà marcada com a tancada amb contracte.
             </div>
 
             <div class="form-actions">
                 <a th:href="@{/admin/contractes}" class="btn btn-secondary">Cancel·lar</a>
-                <button type="submit" class="btn btn-primary">Generar contracte</button>
+                <button type="submit" class="btn btn-primary">Registrar contracte</button>
             </div>
 
         </form>
