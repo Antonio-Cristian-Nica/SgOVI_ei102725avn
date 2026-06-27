@@ -1,22 +1,23 @@
 package es.uji.ei1027.ovi.controller;
 
 import es.uji.ei1027.ovi.dao.assistancerequest.AssistanceRequestDao;
+import es.uji.ei1027.ovi.dao.contract.ContractDao;
 import es.uji.ei1027.ovi.dao.negotiation.NegotiationDao;
 import es.uji.ei1027.ovi.dao.oviuser.OviUserDao;
 import es.uji.ei1027.ovi.dao.pappati.PapPatiDao;
 import es.uji.ei1027.ovi.dao.requestschedule.RequestScheduleDao;
 import es.uji.ei1027.ovi.model.*;
+import es.uji.ei1027.ovi.validator.ContractValidator;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -31,6 +32,7 @@ public class NegotiationController {
     private PapPatiDao papPatiDao;
     private AssistanceRequestDao assistanceRequestDao;
     private RequestScheduleDao requestScheduleDao;
+    private ContractDao contractDao;
 
     @Autowired
     public void setNegotiationDao(NegotiationDao negotiationDao) {
@@ -55,6 +57,11 @@ public class NegotiationController {
     @Autowired
     public void setRequestScheduleDao(RequestScheduleDao requestScheduleDao) {
         this.requestScheduleDao = requestScheduleDao;
+    }
+
+    @Autowired
+    public void setContractDao(ContractDao contractDao) {
+        this.contractDao = contractDao;
     }
 
     // =====================================================================
@@ -233,7 +240,7 @@ public class NegotiationController {
                     "Acord confirmat. La negociació s'ha tancat amb èxit.");
         } else {
             redirectAttributes.addFlashAttribute("successMessage",
-                    "Has confirmat l'acord. Esperant la confirmació del PAP/PATI.");
+                    "Has confirmat l'acord. Esperant la confirmació del professional d'assistència.");
         }
         negotiationDao.updateNegotiation(neg);
         return "redirect:/oviUser/negociacio/" + negociacioID;
@@ -454,5 +461,96 @@ public class NegotiationController {
         model.addAttribute("confirmLabel", "Sí, finalitzar sense acord");
         model.addAttribute("tipusAccio", "perillosa");
         return "fragments/confirm";
+    }
+
+    @RequestMapping(value = "/oviUser/negociacio/{negociacioID}/contracte/add", method = RequestMethod.GET)
+    public String showAddContract(@PathVariable int negociacioID, HttpSession session, Model model) {
+
+        Credentials credentials = (Credentials) session.getAttribute(USER_ATTR);
+        if (credentials == null) {
+            return "redirect:/login";
+        }
+
+        Negotiation neg = getOwnedNegotiationOvi(negociacioID, session);
+        if (neg == null) {
+            return "redirect:/oviUser/solicitudes";
+        }
+
+        if (!"finished".equals(neg.getStatus())) {
+            return "redirect:/oviUser/negociacio/" + negociacioID;
+        }
+
+        AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
+        if (sol == null) {
+            return "redirect:/oviUser/solicitudes";
+        }
+
+        OviUser oviUser = oviUserDao.getOviUser(sol.getOviID());
+        PapPati papPati = papPatiDao.getPapPati(neg.getPapID());
+
+        List<RequestSchedule> horaris =
+                requestScheduleDao.getRequestSchedulesByRequest(neg.getRequestID());
+
+        model.addAttribute("neg", neg);
+        model.addAttribute("sol", sol);
+        model.addAttribute("oviUser", oviUser);
+        model.addAttribute("papPati", papPati);
+        model.addAttribute("horaris", horaris);
+        model.addAttribute("contract", new Contract());
+
+        return "oviUser/contractes/add";
+    }
+
+    @Transactional
+    @RequestMapping(
+            value = "/oviUser/negociacio/{negociacioID}/contracte/add",
+            method = RequestMethod.POST)
+    public String addContractOvi(@PathVariable int negociacioID,
+                                 @ModelAttribute("contract") Contract contract,
+                                 BindingResult bindingResult,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes,
+                                 Model model) {
+
+        Negotiation neg = getOwnedNegotiationOvi(negociacioID, session);
+
+        if (neg == null) {
+            return "redirect:/oviUser/solicitudes";
+        }
+
+        if (!"finished".equals(neg.getStatus())) {
+            return "redirect:/oviUser/negociacio/" + negociacioID;
+        }
+
+        ContractValidator validator = new ContractValidator();
+        validator.validate(contract, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            AssistanceRequest sol = assistanceRequestDao.getAssistanceRequest(neg.getRequestID());
+
+            model.addAttribute("neg", neg);
+            model.addAttribute("sol", sol);
+            model.addAttribute("oviUser", oviUserDao.getOviUser(sol.getOviID()));
+            model.addAttribute("papPati", papPatiDao.getPapPati(neg.getPapID()));
+            model.addAttribute("horaris",
+                    requestScheduleDao.getRequestSchedulesByRequest(neg.getRequestID()));
+
+            return "oviUser/contractes/add";
+        }
+
+        // Creación
+        contract.setNegotiationID(negociacioID);
+        contract.setVersion(1);
+        contract.setCreationDate(LocalDate.now());
+        contract.setStatus("active");
+
+        contractDao.addContract(contract);
+
+        // cerrar solicitud
+        assistanceRequestDao.updateStatus(neg.getRequestID(), "closedWithContract");
+
+        redirectAttributes.addFlashAttribute("successMessage", "Contracte creat correctament");
+
+        return "redirect:/oviUser/negociacio/" + negociacioID;
     }
 }

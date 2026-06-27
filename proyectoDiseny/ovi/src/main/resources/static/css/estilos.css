@@ -301,7 +301,6 @@ main {
     background-color: #c0392b;
     color: #ffffff;
     border-color: #c0392b;
-    width: 100%;
 }
 
 .btn-rebutjar:hover {
@@ -808,7 +807,6 @@ textarea {
 
 .table-actions .btn,
 .table-actions .btn-rebutjar {
-    width: 100%;
     text-align: center;
 }
 
@@ -816,11 +814,9 @@ textarea {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    width: 100%;
 }
 
 .rebutjar-textarea {
-    width: 100%;
     padding: 8px;
     border: 2px solid #e0e0e0;
     border-radius: 4px;
@@ -1459,8 +1455,15 @@ footer {
     }
 
     .form-actions {
+        display: flex;
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .actions-row {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
     }
 
     .filosofia-grid {

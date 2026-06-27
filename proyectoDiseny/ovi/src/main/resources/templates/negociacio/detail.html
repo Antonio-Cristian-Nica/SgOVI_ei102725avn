@@ -103,7 +103,7 @@
                         <span th:if="${!neg.oviUserConfirmed}" class="estat-pending">Pendent</span>
                     </dd>
 
-                    <dt>PAP/PATI confirmat</dt>
+                    <dt>Professional d'assistència confirmat</dt>
                     <dd>
                         <span th:if="${neg.papPatiConfirmed}" class="estat-actiu">Sí</span>
                         <span th:if="${!neg.papPatiConfirmed}" class="estat-pending">Pendent</span>
@@ -113,7 +113,7 @@
             </div>
 
             <div th:if="${neg.status == 'finished'}" class="alert alert-success" role="alert">
-                Les dues parts han confirmat l'acord. El tècnic OVI procedirà a formalitzar el contracte.
+                Les dues parts han confirmat l'acord. Es procedirà a formalitzar el contracte.
             </div>
             <div th:if="${neg.status == 'noAgreement'}" class="alert alert-error" role="alert">
                 La negociació ha finalitzat sense acord.
@@ -185,7 +185,7 @@
         <div th:if="${neg.status == 'inProgress'}" class="form-actions">
 
             <!-- OVI User -->
-            <div th:if="${rol == 'oviUser'}">
+            <div th:if="${rol == 'oviUser'}" class="actions-row">
 
                 <a th:if="${!neg.oviUserConfirmed}"
                    th:href="@{/oviUser/negociacio/{id}/confirmar/confirm(id=${neg.negotiationID})}"
@@ -201,7 +201,7 @@
             </div>
 
             <!-- PAP/PATI -->
-            <div th:if="${rol == 'papPati'}">
+            <div th:if="${rol == 'papPati'}" class="actions-row">
 
                 <a th:if="${!neg.papPatiConfirmed}"
                    th:href="@{/papPati/negociacio/{id}/confirmar/confirm(id=${neg.negotiationID})}"
@@ -215,6 +215,16 @@
                 </a>
 
             </div>
+
+        </div>
+
+        <div th:if="${neg.status == 'finished' and rol == 'oviUser'}"
+             class="form-actions">
+
+            <a th:href="@{/oviUser/negociacio/{id}/contracte/add(id=${neg.negotiationID})}"
+               class="btn btn-primary">
+                Registrar contracte
+            </a>
 
         </div>
 
